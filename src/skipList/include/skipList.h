@@ -1,5 +1,5 @@
 #ifndef SKIPLIST_H
-#define SKIPLIST_H
+#define SKIPLIST_H // 防止头文件多次包含
 
 #include <cmath>   // 用于随机数生成 rand()
 #include <cstdlib> // 数学函数
@@ -9,12 +9,11 @@
 #include <mutex>
 
 #define STORE_FILE "store/dumpFile" // 定义跳表序列化数据的存储文件路径
-
 static std::string delimiter = ":"; // key 和 value 在序列化中使用的分隔符（例如 "100:abc"）
 
 
-// 跳表节点 Node 定义
-// Class template to implement node 模板类，K 和 V 是类型参数，在使用类时才具体指定
+// 跳表节点 Node --------------------------------------------------------------------------------
+// 模板类，K 和 V 是类型参数，在使用类时才具体指定
 template <typename K, typename V>
 class Node
 {
@@ -27,8 +26,7 @@ public:
     V get_value() const;
     void set_value(V);
 
-    // Linear array to hold pointers to next node of different level
-    Node<K, V> **forward; // 指向下一个节点的指针数组
+    Node<K, V> **forward; // 指向不同层级下一个节点的指针数组，跳表核心
     int node_level;       // 节点所在的最大层级
 
 private:
@@ -45,7 +43,7 @@ Node<K, V>::Node(const K k, const V v, int level) // 传入键、值和层级，
     this->node_level = level;
 
     // level + 1, because array index is from 0 - level
-    this->forward = new Node<K, V> *[level + 1];
+    this->forward = new Node<K, V> *[level + 1]; // 创建时指定 level 层级，则 forward 数组大小为 level + 1（含 0 层）
 
     // Fill forward array with 0(NULL)
     memset(this->forward, 0, sizeof(Node<K, V> *) * (level + 1)); // 初始化所有指针为 nullptr
@@ -82,12 +80,12 @@ void Node<K, V>::set_value(V value)
 
 
 
-// Class template to implement node
+// 用于跳表中节点的数据序列化和存储
 template <typename K, typename V>
 class SkipListDump
 {
 public:
-    friend class boost::serialization::access;
+    friend class boost::serialization::access; // 友元声明 允许 Boost.Serialization 库访问私有成员，实现序列化功能
 
     template <class Archive>
     void serialize(Archive &ar, const unsigned int version)
@@ -134,7 +132,7 @@ private:
 
 private:
     int _max_level;       // aximum level of the skip list 跳表允许的最大层级
-    int _skip_list_level; // current level of skip list 当前跳表的最大层级
+    int _skip_list_level; // current level of skip list 当前实际层数
 
     Node<K, V> *_header;  // pointer to header node 跳表的头节点，起始点
 
