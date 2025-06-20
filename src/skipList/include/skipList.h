@@ -104,12 +104,12 @@ public:
 };
 
 
-// insert()
+// insert() 把节点的键和值存入类成员的两个 std::vector 容器
 template <typename K, typename V>
 void SkipListDump<K, V>::insert(const Node<K, V> &node)
 {
-    keyDumpVt_.emplace_back(node.get_key());
-    valDumpVt_.emplace_back(node.get_value());
+    keyDumpVt_.emplace_back(node.get_key());  // 使用 emplace_back 向 keyDumpVt_ 向量末尾直接构造并插入该键
+    valDumpVt_.emplace_back(node.get_value());// 使用 emplace_back 向 keyDumpVt_ 向量末尾直接构造并插入该值
 }
 
 
@@ -132,7 +132,7 @@ public:
    
     bool search_element(K, V &value);   // 查找节点
     void delete_element(K);             // 删除节点
-    void clear(Node<K, V> *);           // 递归地释放跳表节点，用于析构时清理内存，防止内存泄漏
+    void clear(Node<K, V> *);           // 从传入节点开始，递归释放整条链表
     
     void display_list();                // 打印当前跳表的所有内容
 
@@ -398,61 +398,66 @@ bool SkipList<K, V>::search_element(K key, V &value)
 template <typename K, typename V>
 void SkipList<K, V>::delete_element(K key)
 {
-    _mtx.lock();
+    _mtx.lock(); // 加锁，确保操作线程安全
+
     Node<K, V> *current = this->_header;
-    Node<K, V> *update[_max_level + 1];
+    Node<K, V> *update[_max_level + 1]; // 记录各层中 “指向删除节点前驱节点” 的指针
     memset(update, 0, sizeof(Node<K, V> *) * (_max_level + 1));
 
-    // start from highest level of skip list
+    // 从最高层往下查找删除节点
     for (int i = _skip_list_level; i >= 0; i--)
     {
+        // 在每一层中，向右遍历直到找到第一个 forward[i] 大于等于 key 的节点
         while (current->forward[i] != NULL && current->forward[i]->get_key() < key)
         {
             current = current->forward[i];
         }
-        update[i] = current;
+        update[i] = current; // 前驱节点放入update
     }
 
+    // 到第0层找到目标节点，执行删除
     current = current->forward[0];
-    if (current != NULL && current->get_key() == key)
+    if (current != NULL && current->get_key() == key) // 判断目标节点是否就是我们要找的节点
     {
-        // start for lowest level and delete the current node of each level
+        // 从最低层开始向上，删除每一层的目标节点（跳过当前节点）
         for (int i = 0; i <= _skip_list_level; i++)
         {
-            // if at level i, next node is not target node, break the loop.
+            // 如果该层对应前驱节点指向的不是当前节点，说明该层不存在这个节点，停止
             if (update[i]->forward[i] != current)
                 break;
 
-            update[i]->forward[i] = current->forward[i];
+            update[i]->forward[i] = current->forward[i]; // 前驱节点跳过当前节点
         }
 
-        // Remove levels which have no elements
+        // 移除空层（如果最高层已没有节点则降层）
         while (_skip_list_level > 0 && _header->forward[_skip_list_level] == 0)
         {
             _skip_list_level--;
         }
 
         std::cout << "Successfully deleted key " << key << std::endl;
-        delete current;
-        _element_count--;
+        delete current; // 释放节点 （create_node内部调用了 new）
+        _element_count--; // 节点数量减少
     }
-    _mtx.unlock();
+
+    _mtx.unlock(); // 解锁
     return;
 }
 
 
 
-// clear() 
+// clear() 从传入节点开始，递归释放其后整条链表
 template <typename K, typename V>
 void SkipList<K, V>::clear(Node<K, V> *cur)
 {
-    if (cur->forward[0] != nullptr)
+    // 因为 forward[0] 是最底层链表，能保证所有节点都能通过这一链遍历出来，所以只用跟踪这一层
+    if (cur->forward[0] != nullptr) 
     {
-        clear(cur->forward[0]);
+        clear(cur->forward[0]); // 递归意味着从当前节点一直传递给最后一个节点，然后从尾节点开始往前依次释放。
     }
+
     delete (cur);
 }
-
 
 
 // display_list() 打印跳表所有内容
@@ -465,9 +470,9 @@ void SkipList<K, V>::display_list()
     {
         Node<K, V> *node = this->_header->forward[i];
         std::cout << "Level " << i << ": ";
-        while (node != NULL)
+        while (node != NULL) // 逐层显示每个节点的键值对
         {
-            std::cout << node->get_key() << ":" << node->get_value() << ";";
+            std::cout << node->get_key() << ":" << node->get_value() << ";"; 
             node = node->forward[i];
         }
         std::cout << std::endl;
@@ -475,7 +480,7 @@ void SkipList<K, V>::display_list()
 }
 
 
-// dump_file()
+// dump_file() 将节点数据从内存序列化成一个字符串
 template <typename K, typename V>
 std::string SkipList<K, V>::dump_file()
 {
@@ -483,8 +488,11 @@ std::string SkipList<K, V>::dump_file()
     //
     //
     // _file_writer.open(STORE_FILE);
-    Node<K, V> *node = this->_header->forward[0];
-    SkipListDump<K, V> dumper;
+    // 这行代码被注释，表示原先设计中想要打开一个文件（文件名STORE_FILE），准备写入数据，
+    // 但现在改成了用字符串流序列化，暂时不做文件操作
+
+    Node<K, V> *node = this->_header->forward[0]; 
+    SkipListDump<K, V> dumper; // 辅助类对象dumper，负责收集所有跳表节点的key和value
     while (node != nullptr)
     {
         dumper.insert(*node);
@@ -492,19 +500,27 @@ std::string SkipList<K, V>::dump_file()
         // std::cout << node->get_key() << ":" << node->get_value() << ";\n";
         node = node->forward[0];
     }
-    std::stringstream ss;
-    boost::archive::text_oarchive oa(ss);
-    oa << dumper;
-    return ss.str();
+
+    // Boost序列化库负责将数据结构转换成可保存或传输的文本格式
+
+    std::stringstream ss; // 创建一个字符串流对象ss (字符串流相当于一个内存中的文本缓冲区，用于存放序列化后的文本数据)
+    boost::archive::text_oarchive oa(ss); // 使用Boost序列化库，创建一个文本输出序列化档案oa，并绑定到字符串流ss
+    oa << dumper;    // 把辅助容器dumper中的数据序列化写入字符串流，这样跳表所有节点的key、value就变成一个序列化字符串
+    return ss.str(); // 返回字符串流ss中的内容
+    
     // _file_writer.flush();
     // _file_writer.close();
+    // 这两行文件写操作也被注释，原先可能想用文件流写入文件后刷新和关闭，
+    // 现在转为只返回字符串，不涉及直接文件操作。
 }
 
 
-// load_file()
+// load_file() 反序列化  字符串 --> 跳表节点
 template <typename K, typename V>
 void SkipList<K, V>::load_file(const std::string &dumpStr)
 {
+    // 原本是从文件逐行读取序列化数据，逐行提取 key 和 value 再插入跳表
+    // 目前被注释，表明改用基于 Boost 序列化的方式恢复数据
     // _file_reader.open(STORE_FILE);
     // std::cout << "load_file-----------------" << std::endl;
     // std::string line;
@@ -523,17 +539,22 @@ void SkipList<K, V>::load_file(const std::string &dumpStr)
     // delete value;
     // _file_reader.close();
 
+
+    // 如果传入的序列化字符串为空，直接返回，不做任何操作
     if (dumpStr.empty())
     {
         return;
     }
-    SkipListDump<K, V> dumper;
-    std::stringstream iss(dumpStr);
-    boost::archive::text_iarchive ia(iss);
-    ia >> dumper;
-    for (int i = 0; i < dumper.keyDumpVt_.size(); ++i)
+
+    SkipListDump<K, V> dumper;      // SkipListDump 类型对象 dumper，用于存放反序列化得到的键值对
+    std::stringstream iss(dumpStr); // 将传入的字符串 dumpStr 包装成字符串流 iss
+    boost::archive::text_iarchive ia(iss); // 创建一个 Boost 文本输入归档 ia，绑定到字符串流 iss
+    ia >> dumper; // 从 ia 归档流中读取数据，反序列化到 dumper 对象
+    
+    // 遍历反序列化后的所有键，向跳表中插入反序列化得到的键值对
+    for (int i = 0; i < dumper.keyDumpVt_.size(); ++i) 
     {
-        insert_element(dumper.keyDumpVt_[i], dumper.keyDumpVt_[i]);
+        insert_element(dumper.keyDumpVt_[i], dumper.valDumpVt_[i]);
     }
 }
 
@@ -550,11 +571,15 @@ int SkipList<K, V>::size()
 template <typename K, typename V>
 void SkipList<K, V>::get_key_value_from_string(const std::string &str, std::string *key, std::string *value)
 {
-    if (!is_valid_string(str))
+    if (!is_valid_string(str)) // 判断输入字符串是否符合预期格式
     {
         return;
     }
+
+    // 从字符串 str 开始位置，截取直到分隔符（delimiter 即 : ）第一次出现的位置之间的子串，作为键赋值给 *key
     *key = str.substr(0, str.find(delimiter));
+
+    // 从分隔符 ":" 后面的位置开始截取到字符串结尾的子串，作为值赋给 *value
     *value = str.substr(str.find(delimiter) + 1, str.length());
 }
 
@@ -564,19 +589,21 @@ void SkipList<K, V>::get_key_value_from_string(const std::string &str, std::stri
 template <typename K, typename V>
 bool SkipList<K, V>::is_valid_string(const std::string &str)
 {
+    // 首先判断字符串是否为空
     if (str.empty())
     {
         return false;
     }
+
+    // 判断字符串中是否包含指定的分隔符 delimiter " : "
     if (str.find(delimiter) == std::string::npos)
     {
         return false;
     }
+
     return true;
 }
 
 
-
-// vim: et tw=100 ts=4 sw=4 cc=120
 
 #endif // SKIPLIST_H
