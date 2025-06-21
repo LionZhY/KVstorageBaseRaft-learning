@@ -1,0 +1,2 @@
+/usr/bin/ar qc libraftRpcPro.a CMakeFiles/raftRpcPro.dir/kvServerRPC.pb.o CMakeFiles/raftRpcPro.dir/test.o
+/usr/bin/ranlib libraftRpcPro.a
