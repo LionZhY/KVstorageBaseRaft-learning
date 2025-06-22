@@ -1,0 +1,3 @@
+{
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/src/raftRpcPro/build/compile_commands.json"
+}
