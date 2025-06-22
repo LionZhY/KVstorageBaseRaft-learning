@@ -5,8 +5,6 @@ project(KVRaftCpp)
 
 
 
-
-
 set(CMAKE_CXX_STANDARD 20)
 # 生成debug版本，可以进行gdb调试
 set(CMAKE_BUILD_TYPE "Debug")

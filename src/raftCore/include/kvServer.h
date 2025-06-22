@@ -24,8 +24,32 @@
 #include "skipList.h"       // 跳表数据结构实现
 
 
-class KvServer : raftKVRpcProctoc::kvServerRpc
+class KvServer : raftKVRpcProctoc::kvServerRpc // 继承自 raftKVRpcProctoc 命名空间中的 kvServerRpc 类 (Protobuf 自动生成的接口类 kvServerRpc)
 {
+private:
+
+    std::mutex m_mtx;
+    int m_me;
+    std::shared_ptr<Raft> m_raftNode;
+    std::shared_ptr<LockQueue<ApplyMsg>> applyChan; // kvServer和raft节点的通信管道
+    int m_maxRaftState; // snapshot if log grows this big
+
+
+    // your definitions here
+    std::string m_seralizedKVData; // // todo ： 序列化后的kv数据，理论上可以不用，但是目前没有找到特别好的替代方法
+    
+
+
+
+
+
+
+
+
+public:
+
+
+
 
 
 
