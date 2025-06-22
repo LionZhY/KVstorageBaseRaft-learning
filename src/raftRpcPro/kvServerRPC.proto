@@ -1,5 +1,9 @@
 syntax = "proto3"; // 指定使用Protobuf的第三版语法
 
+package raftKVRpcProctoc; //所在的命名空间
+
+option cc_generic_services = true;  //开启stub服务 启用C++通用RPC服务代码的生成，方便C++端直接调用RPC接口
+
 
 /*
   .proto 文件是用于定义 Protocol Buffers（简称Protobuf） 数据结构和服务接口的描述文件
@@ -8,13 +12,6 @@ syntax = "proto3"; // 指定使用Protobuf的第三版语法
     - 重点是支持客户端标识与请求编号，方便实现请求幂等和去重
     - RPC接口只暴露两个核心操作：读（Get）和写（PutAppend）
 */
-
-
-//所在的命名空间
-package raftKVRpcProctoc; 
-
-//开启stub服务 启用C++通用RPC服务代码的生成，方便C++端直接调用RPC接口
-option cc_generic_services = true;  
 
 
 // 日志实体 消息定义（数据结构）

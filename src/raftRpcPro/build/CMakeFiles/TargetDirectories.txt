@@ -1,4 +1,0 @@
-/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/build/CMakeFiles/raftRpcPro.dir
-/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/build/CMakeFiles/test.dir
-/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/build/CMakeFiles/edit_cache.dir
-/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/build/CMakeFiles/rebuild_cache.dir
