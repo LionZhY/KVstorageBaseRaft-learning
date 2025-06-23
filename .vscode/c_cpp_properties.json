@@ -2,23 +2,11 @@
     "configurations": [
         {
             "name": "Linux",
-            "includePath": [ // 头文件搜索路径
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/src/raftCore/include", 
-                "${workspaceFolder}/src/raftRpcPro/include", 
-                "${workspaceFolder}/src/raftClerk/include", 
-                "${workspaceFolder}/src/rpc/include", 
-                "${workspaceFolder}/src/common/include", 
-                "${workspaceFolder}/src/fiber/include", 
-                "${workspaceFolder}/tests/include",
-                "/usr/include",           
-                "/usr/local/include",
-                "/usr/lib/gcc/x86_64-linux-gnu/11/include",
-                "/usr/include/x86_64-linux-gnu"
+            "includePath": [
+                "${workspaceFolder}/**"
             ],
-
             "defines": [],
-            "compilerPath": "/usr/bin/g++-11", // 编译器路径
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64"
