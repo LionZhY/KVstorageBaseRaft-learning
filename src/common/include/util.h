@@ -93,34 +93,39 @@ template <typename T>
 class LockQueue // 基于互斥锁和条件变量实现的阻塞安全队列
 {
 public:
-	// 多个worker线程都会写日志queue
+	// 线程安全入队  多个worker线程都会写日志queue
 	void Push(const T &data)
 	{
-	  std::lock_guard<std::mutex> lock(m_mutex); // 使用lock_gurad，即RAII的思想保证锁正确释放
+	  std::lock_guard<std::mutex> lock(m_mutex); // 使用 lock_guard 对互斥量加锁（RAII机制），防止同时有多个线程访问 m_queue
 	  m_queue.push(data);
-	  m_condvariable.notify_one();
+	  m_condvariable.notify_one(); // 唤醒一个等待线程（通常是 Pop() 中等待数据的线程）
 	}
 
-	// 一个线程读日志queue，写日志文件
+	// 线程安全出队（阻塞）  一个线程读日志queue，写日志文件
 	T Pop()
 	{
 		std::unique_lock<std::mutex> lock(m_mutex);
 		while (m_queue.empty())
 		{
-			// 日志队列为空，线程进入wait状态
+			// 日志队列为空，线程进入wait状态，线程会阻塞，直到notify_one()唤醒
 			m_condvariable.wait(lock); // 这里用unique_lock是因为lock_guard不支持解锁，而unique_lock支持
 	  	}
+
+		// 拿出队首元素并删除，返回给调用者
 		T data = m_queue.front();
 		m_queue.pop();
 		return data;
 	}
 
+	// 带超时的pop
 	bool timeOutPop(int timeout, T *ResData) // 添加一个超时时间参数，默认为 50 毫秒
 	{
 		std::unique_lock<std::mutex> lock(m_mutex);	
+		
 		// 获取当前时间点，并计算出超时时刻
 		auto now = std::chrono::system_clock::now();
 		auto timeout_time = now + std::chrono::milliseconds(timeout);	
+
 		// 在超时之前，不断检查队列是否为空
 		while (m_queue.empty())
 		{
@@ -133,7 +138,9 @@ public:
 			{
 				continue;
 			}
-		}	
+		}
+		
+		// 若成功取出数据，写入传入指针 ResData，返回 true
 		T data = m_queue.front();
 		m_queue.pop();
 		*ResData = data;
@@ -141,43 +148,40 @@ public:
 	}
 
 private:
-	std::queue<T> m_queue;
+	std::queue<T> m_queue; // 存储实际数据的标准队列
 	std::mutex m_mutex;
-	std::condition_variable m_condvariable;
+	std::condition_variable m_condvariable; // 条件变量，用于线程之间的阻塞等待 / 通知唤醒
 };
 
-// 两个对锁的管理用到了RAII的思想，防止中途出现问题而导致资源无法释放的问题！！！
-// std::lock_guard 和 std::unique_lock 都是 C++11 中用来管理互斥锁的工具类，它们都封装了 RAII（Resource Acquisition Is
-// Initialization）技术，使得互斥锁在需要时自动加锁，在不需要时自动解锁，从而避免了很多手动加锁和解锁的繁琐操作。
-// std::lock_guard 是一个模板类，它的模板参数是一个互斥量类型。当创建一个 std::lock_guard
-// 对象时，它会自动地对传入的互斥量进行加锁操作，并在该对象被销毁时对互斥量进行自动解锁操作。std::lock_guard
-// 不能手动释放锁，因为其所提供的锁的生命周期与其绑定对象的生命周期一致。 std::unique_lock
-// 也是一个模板类，同样的，其模板参数也是互斥量类型。不同的是，std::unique_lock 提供了更灵活的锁管理功能。可以通过
-// lock()、unlock()、try_lock() 等方法手动控制锁的状态。当然，std::unique_lock 也支持 RAII
-// 技术，即在对象被销毁时会自动解锁。另外， std::unique_lock 还支持超时等待和可中断等待的操作。
 
 
 
 
 // 数据序列化与命令封装 ----------------------------------------------------------------------------------
-class Op // 封装 KV 操作命令，支持基于 Boost 序列化的字符串序列化与反序列化。(这个Op是kv传递给raft的command)
-{
+class Op 
+{		 
+// 封装 [客户端对 kv 数据库的操作命令]，能变成字符串发给 Raft（序列化），还能还原回来执行（反序列化）
+// 用来描述单次 KV 操作请求（如 Get / Put / Append） 的类对象，是kv传递给raft的command
+
+// 简单来说，Op 就是一条客户端对键值数据库的操作指令
 public:
 	// Your definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
-	std::string Operation; // "Get" "Put" "Append"
-	std::string Key;
-	std::string Value;
-	std::string ClientId; // 客户端号码
-	int RequestId;        // 客户端号码请求的Request的序列号，为了保证线性一致性
+	std::string Operation; // 操作类型"Get" "Put" "Append"
+	std::string Key;		
+	std::string Value;		
+	std::string ClientId; // 发起请求的客户端id
+	int RequestId;        // 客户端号码请求的Request的序列号，即第几个请求
                  //  IfDuplicate bool // Duplicate command can't be applied twice , but only for PUT and APPEND
 
 public:
 	// todo
 	// 为了协调raftRPC中的command只设置成了string,这个的限制就是正常字符中不能包含|
 	// 当然后期可以换成更高级的序列化方法，比如protobuf
-	std::string asString() const
+
+	// 将当前 Op 对象序列化成字符串
+	std::string asString() const // 用于 在 KVServer 发送 command 给 Raft 时，把结构体变成字符串传入
 	{
 		std::stringstream ss;
 		boost::archive::text_oarchive oa(ss);	
@@ -187,7 +191,8 @@ public:
 		return ss.str();
 	}
 
-	bool parseFromString(std::string str)
+	// 字符串反序列化为 Op 对象
+	bool parseFromString(std::string str) // 用于 Raft 接收日志条目（string 类型）后，将其解析还原为 Op 命令结构
 	{
 		std::stringstream iss(str);
 		boost::archive::text_iarchive ia(iss);
@@ -197,19 +202,25 @@ public:
 	}
 
 public:
+	// 运算符重载：支持 std::cout << Op
 	friend std::ostream &operator<<(std::ostream &os, const Op &obj)
 	{
-	  os << "[MyClass:Operation{" + obj.Operation + "},Key{" + obj.Key + "},Value{" + obj.Value + "},ClientId{" +
-	            obj.ClientId + "},RequestId{" + std::to_string(obj.RequestId) + "}"; // 在这里实现自定义的输出格式
-	  return os;
+		// 使得可以直接打印 Op 对象，输出格式如：[MyClass:Operation{Put},Key{foo},Value{bar},ClientId{cli123},RequestId{42}
+		os << "[MyClass:Operation{" + obj.Operation + "},Key{" + obj.Key + "},Value{" + obj.Value + "},ClientId{" +
+		          obj.ClientId + "},RequestId{" + std::to_string(obj.RequestId) + "}"; // 在这里实现自定义的输出格式
+		return os;
 	}
 
 private:
-	friend class boost::serialization::access;
+	friend class boost::serialization::access; // 友元，让 Boost 的序列化框架 boost::serialization::access 类 可以访问 Op 的私有
+	
+	// Boost 序列化函数 （Boost 要求每个可序列化的类实现一个 serialize() 方法）
 	template <class Archive>
 	void serialize(Archive &ar, const unsigned int version)
 	{
-		ar & Operation;
+		// 在这个函数里明确指出：你要序列化哪些成员变量
+		// & 运算符表示「绑定」，根据是序列化器（写入）还是反序列化器（读取）自动决定方向，Boost 会自动推断这是序列化还是反序列化
+		ar & Operation; 
 		ar & Key;
 		ar & Value;
 		ar & ClientId;
@@ -218,10 +229,10 @@ private:
 };
 
 
-// 一些常量 -------------------------------------------------------------------------------------
-const std::string OK = "OK";
-const std::string ErrNoKey = "ErrNoKey";
-const std::string ErrWrongLeader = "ErrWrongLeader";
+// 一些常量  是 KVServer 给客户端返回的操作结果状态码（reply）--------------------------------------
+const std::string OK = "OK"; 						// 操作成功
+const std::string ErrNoKey = "ErrNoKey";			// 对于get操作，请求的key不存在
+const std::string ErrWrongLeader = "ErrWrongLeader";// 当前处理节点不是raft的leader，不能处理请求
 
 
 
