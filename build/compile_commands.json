@@ -1,0 +1,128 @@
+[
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/fiber/fd_manager.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fd_manager.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fd_manager.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/fiber/fd_manager.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/fiber/fiber.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fiber.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fiber.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/fiber/fiber.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/fiber/hook.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/hook.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/hook.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/fiber/hook.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/fiber/iomanager.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/iomanager.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/iomanager.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/fiber/iomanager.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/fiber/scheduler.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/scheduler.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/scheduler.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/fiber/scheduler.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/fiber/thread.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/thread.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/thread.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/fiber/thread.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/fiber/timer.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/timer.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/timer.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/fiber/timer.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/fiber/utils.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/utils.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/utils.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/fiber/utils.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/raftCore/Persister.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/Persister.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/Persister.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/raftCore/Persister.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/raftCore/raft.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/raft.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/raft.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/raftCore/raft.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/kvServerRPC.pb.cc.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/kvServerRPC.pb.cc",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/kvServerRPC.pb.cc",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/kvServerRPC.pb.cc.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/raftRPC.pb.cc.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/raftRPC.pb.cc",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/raftRPC.pb.cc",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/raftRPC.pb.cc.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o src/rpc/CMakeFiles/rpc_lib.dir/__/common/util.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/util.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/util.cpp",
+  "output": "src/rpc/CMakeFiles/rpc_lib.dir/__/common/util.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o src/fiber/CMakeFiles/fiber_lib.dir/fd_manager.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fd_manager.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fd_manager.cpp",
+  "output": "src/fiber/CMakeFiles/fiber_lib.dir/fd_manager.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o src/fiber/CMakeFiles/fiber_lib.dir/fiber.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fiber.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fiber.cpp",
+  "output": "src/fiber/CMakeFiles/fiber_lib.dir/fiber.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o src/fiber/CMakeFiles/fiber_lib.dir/hook.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/hook.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/hook.cpp",
+  "output": "src/fiber/CMakeFiles/fiber_lib.dir/hook.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o src/fiber/CMakeFiles/fiber_lib.dir/iomanager.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/iomanager.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/iomanager.cpp",
+  "output": "src/fiber/CMakeFiles/fiber_lib.dir/iomanager.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/scheduler.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/scheduler.cpp",
+  "output": "src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o src/fiber/CMakeFiles/fiber_lib.dir/thread.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/thread.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/thread.cpp",
+  "output": "src/fiber/CMakeFiles/fiber_lib.dir/thread.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o src/fiber/CMakeFiles/fiber_lib.dir/timer.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/timer.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/timer.cpp",
+  "output": "src/fiber/CMakeFiles/fiber_lib.dir/timer.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o src/fiber/CMakeFiles/fiber_lib.dir/utils.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/utils.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/utils.cpp",
+  "output": "src/fiber/CMakeFiles/fiber_lib.dir/utils.cpp.o"
+}
+]
