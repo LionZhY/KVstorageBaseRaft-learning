@@ -173,7 +173,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_raftRPC_2eproto::offsets[] PRO
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::raftRpcProctoc::AppendEntriesReply, logterm_),
+  PROTOBUF_FIELD_OFFSET(::raftRpcProctoc::AppendEntriesReply, term_),
   PROTOBUF_FIELD_OFFSET(::raftRpcProctoc::AppendEntriesReply, success_),
   PROTOBUF_FIELD_OFFSET(::raftRpcProctoc::AppendEntriesReply, updatenextindex_),
   PROTOBUF_FIELD_OFFSET(::raftRpcProctoc::AppendEntriesReply, appstate_),
@@ -238,26 +238,25 @@ const char descriptor_table_protodef_raftRPC_2eproto[] PROTOBUF_SECTION_VARIABLE
   "\004Term\030\001 \001(\005\022\020\n\010LeaderId\030\002 \001(\005\022\024\n\014PrevLog"
   "Index\030\003 \001(\005\022\023\n\013PrevLogTerm\030\004 \001(\005\022)\n\007Entr"
   "ies\030\005 \003(\0132\030.raftRpcProctoc.LogEntry\022\024\n\014L"
-  "eaderCommit\030\006 \001(\005\"a\n\022AppendEntriesReply\022"
-  "\017\n\007LogTerm\030\001 \001(\005\022\017\n\007Success\030\002 \001(\010\022\027\n\017Upd"
-  "ateNextIndex\030\003 \001(\005\022\020\n\010AppState\030\004 \001(\005\"_\n\017"
-  "RequestVoteArgs\022\014\n\004Term\030\001 \001(\005\022\023\n\013Candida"
-  "teId\030\002 \001(\005\022\024\n\014LastLogIndex\030\003 \001(\005\022\023\n\013Last"
-  "LogTerm\030\004 \001(\005\"H\n\020RequestVoteReply\022\014\n\004Ter"
-  "m\030\001 \001(\005\022\023\n\013VoteGranted\030\002 \001(\010\022\021\n\tVoteStat"
-  "e\030\003 \001(\005\"\211\001\n\026InstallSnapshotRequest\022\020\n\010Le"
-  "aderId\030\001 \001(\005\022\014\n\004Term\030\002 \001(\005\022 \n\030LastSnapSh"
-  "otIncludeIndex\030\003 \001(\005\022\037\n\027LastSnapShotIncl"
-  "udeTerm\030\004 \001(\005\022\014\n\004Data\030\005 \001(\014\"\'\n\027InstallSn"
-  "apshotResponse\022\014\n\004Term\030\001 \001(\0052\227\002\n\007raftRpc"
-  "\022V\n\rAppendEntries\022!.raftRpcProctoc.Appen"
-  "dEntriesArgs\032\".raftRpcProctoc.AppendEntr"
-  "iesReply\022b\n\017InstallSnapshot\022&.raftRpcPro"
-  "ctoc.InstallSnapshotRequest\032\'.raftRpcPro"
-  "ctoc.InstallSnapshotResponse\022P\n\013RequestV"
-  "ote\022\037.raftRpcProctoc.RequestVoteArgs\032 .r"
-  "aftRpcProctoc.RequestVoteReplyB\003\200\001\001b\006pro"
-  "to3"
+  "eaderCommit\030\006 \001(\005\"^\n\022AppendEntriesReply\022"
+  "\014\n\004Term\030\001 \001(\005\022\017\n\007Success\030\002 \001(\010\022\027\n\017Update"
+  "NextIndex\030\003 \001(\005\022\020\n\010AppState\030\004 \001(\005\"_\n\017Req"
+  "uestVoteArgs\022\014\n\004Term\030\001 \001(\005\022\023\n\013CandidateI"
+  "d\030\002 \001(\005\022\024\n\014LastLogIndex\030\003 \001(\005\022\023\n\013LastLog"
+  "Term\030\004 \001(\005\"H\n\020RequestVoteReply\022\014\n\004Term\030\001"
+  " \001(\005\022\023\n\013VoteGranted\030\002 \001(\010\022\021\n\tVoteState\030\003"
+  " \001(\005\"\211\001\n\026InstallSnapshotRequest\022\020\n\010Leade"
+  "rId\030\001 \001(\005\022\014\n\004Term\030\002 \001(\005\022 \n\030LastSnapShotI"
+  "ncludeIndex\030\003 \001(\005\022\037\n\027LastSnapShotInclude"
+  "Term\030\004 \001(\005\022\014\n\004Data\030\005 \001(\014\"\'\n\027InstallSnaps"
+  "hotResponse\022\014\n\004Term\030\001 \001(\0052\227\002\n\007raftRpc\022V\n"
+  "\rAppendEntries\022!.raftRpcProctoc.AppendEn"
+  "triesArgs\032\".raftRpcProctoc.AppendEntries"
+  "Reply\022b\n\017InstallSnapshot\022&.raftRpcProcto"
+  "c.InstallSnapshotRequest\032\'.raftRpcProcto"
+  "c.InstallSnapshotResponse\022P\n\013RequestVote"
+  "\022\037.raftRpcProctoc.RequestVoteArgs\032 .raft"
+  "RpcProctoc.RequestVoteReplyB\003\200\001\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_raftRPC_2eproto_deps[1] = {
 };
@@ -272,7 +271,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_raf
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_raftRPC_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_raftRPC_2eproto = {
-  false, false, descriptor_table_protodef_raftRPC_2eproto, "raftRPC.proto", 1003,
+  false, false, descriptor_table_protodef_raftRPC_2eproto, "raftRPC.proto", 1000,
   &descriptor_table_raftRPC_2eproto_once, descriptor_table_raftRPC_2eproto_sccs, descriptor_table_raftRPC_2eproto_deps, 7, 0,
   schemas, file_default_instances, TableStruct_raftRPC_2eproto::offsets,
   file_level_metadata_raftRPC_2eproto, 7, file_level_enum_descriptors_raftRPC_2eproto, file_level_service_descriptors_raftRPC_2eproto,
@@ -897,16 +896,16 @@ AppendEntriesReply::AppendEntriesReply(::PROTOBUF_NAMESPACE_ID::Arena* arena)
 AppendEntriesReply::AppendEntriesReply(const AppendEntriesReply& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&logterm_, &from.logterm_,
+  ::memcpy(&term_, &from.term_,
     static_cast<size_t>(reinterpret_cast<char*>(&appstate_) -
-    reinterpret_cast<char*>(&logterm_)) + sizeof(appstate_));
+    reinterpret_cast<char*>(&term_)) + sizeof(appstate_));
   // @@protoc_insertion_point(copy_constructor:raftRpcProctoc.AppendEntriesReply)
 }
 
 void AppendEntriesReply::SharedCtor() {
-  ::memset(&logterm_, 0, static_cast<size_t>(
+  ::memset(&term_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&appstate_) -
-      reinterpret_cast<char*>(&logterm_)) + sizeof(appstate_));
+      reinterpret_cast<char*>(&term_)) + sizeof(appstate_));
 }
 
 AppendEntriesReply::~AppendEntriesReply() {
@@ -940,9 +939,9 @@ void AppendEntriesReply::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&logterm_, 0, static_cast<size_t>(
+  ::memset(&term_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&appstate_) -
-      reinterpret_cast<char*>(&logterm_)) + sizeof(appstate_));
+      reinterpret_cast<char*>(&term_)) + sizeof(appstate_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -954,10 +953,10 @@ const char* AppendEntriesReply::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
     switch (tag >> 3) {
-      // int32 LogTerm = 1;
+      // int32 Term = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
-          logterm_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          term_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -1010,10 +1009,10 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 LogTerm = 1;
-  if (this->logterm() != 0) {
+  // int32 Term = 1;
+  if (this->term() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_logterm(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_term(), target);
   }
 
   // bool Success = 2;
@@ -1050,11 +1049,11 @@ size_t AppendEntriesReply::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 LogTerm = 1;
-  if (this->logterm() != 0) {
+  // int32 Term = 1;
+  if (this->term() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_logterm());
+        this->_internal_term());
   }
 
   // bool Success = 2;
@@ -1107,8 +1106,8 @@ void AppendEntriesReply::MergeFrom(const AppendEntriesReply& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.logterm() != 0) {
-    _internal_set_logterm(from._internal_logterm());
+  if (from.term() != 0) {
+    _internal_set_term(from._internal_term());
   }
   if (from.success() != 0) {
     _internal_set_success(from._internal_success());
@@ -1145,9 +1144,9 @@ void AppendEntriesReply::InternalSwap(AppendEntriesReply* other) {
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(AppendEntriesReply, appstate_)
       + sizeof(AppendEntriesReply::appstate_)
-      - PROTOBUF_FIELD_OFFSET(AppendEntriesReply, logterm_)>(
-          reinterpret_cast<char*>(&logterm_),
-          reinterpret_cast<char*>(&other->logterm_));
+      - PROTOBUF_FIELD_OFFSET(AppendEntriesReply, term_)>(
+          reinterpret_cast<char*>(&term_),
+          reinterpret_cast<char*>(&other->term_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata AppendEntriesReply::GetMetadata() const {

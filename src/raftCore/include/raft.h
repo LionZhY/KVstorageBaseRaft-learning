@@ -3,6 +3,7 @@
 
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
+
 #include <chrono>   // 提供时间操作
 #include <cmath>    
 #include <iostream> 
@@ -46,81 +47,35 @@ constexpr int Normal = 3; // 投票状态正常
 class Raft : public raftRpcProctoc::raftRpc // 继承 Protobuf 生成的 RPC 基类 raftRpc，实现远程过程调用接口，供集群内节点之间通信
 {
 public:
-	// 初始化和持久化 -------------------------------------------------------------------------------------
-
+	// 初始化 ---------------------------------------------------------------------------------------
 	// 初始化Raft节点，传入集群成员代理、节点ID、持久化模块和日志应用通道
 	void init(std::vector<std::shared_ptr<RaftRpcUtil>> peers, int me,
 			  std::shared_ptr<Persister> persister,
 			  std::shared_ptr<LockQueue<ApplyMsg>> applyCh);
 	
-	// 当前状态持久化到磁盘
-	void persist();
-	// 读取持久化数据，恢复状态
-	void readPersist(std::string data);
-	// 获取当前状态序列化后的字符串，供持久化存储
-	std::string persistData();
-
-	// 获取当前持久化状态的大小
-	int GetRaftStateSize();
 
 
-
-	// 日志信息辅助获取 --------------------------------------------------------------------------------------
-	int getLastLogIndex();  // 获取当前日志数组中最后一条日志的索引
-	int getLastLogTerm();	// 获取当前日志数组中最后一条日志的任期号
-	void getLastLogIndexAndTerm(int *lastLogIndex, int *lastLogTerm);// 同时获取最后一条日志的索引和任期
-	int getLogTermFromLogIndex(int logIndex);	 // 根据给定的日志下标获取其对应的任期
-	int getSlicesIndexFromLogIndex(int logIndex);// 将逻辑日志索引转换为数组中的切片索引
-
-
-
-	// 客户端交互与状态查询 ----------------------------------------------------------------------------
-
-	// 外部接口，客户端调用提交新的命令
-	void Start(Op command, int *newLogIndex, int *newLogTerm, bool *isLeader);
-
-	// 获取当前可以追加新日志的索引位置
-	int getNewCommanIndex();
-
-	// 获取待应用日志列表
-	std::vector<ApplyMsg> getApplyLogs();
-
-	// 获取当前节点的任期
-	void GetState(int *term, bool *isLeader);
-
-	// 将应用消息推送给KV服务层
-	void pushMsgToKvServer(ApplyMsg msg);
-
-
-	// 选举流程 -------------------------------------------------------------------------------------
-
-	// 发起一次选举
-	void doElection(); 
 	
-	// 周期性检查选举是否超时
-	void electionTimeOutTicker();
-	
-	// 处理投票请求RPC
-	void RequestVote(const raftRpcProctoc::RequestVoteArgs *args, raftRpcProctoc::RequestVoteReply *reply);
-	
+	// 选举 ------------------------------------------------------------------------------------------
+	void electionTimeOutTicker(); // 选举定时器：周期性检查选举是否超时，触发新一轮选举
+	void doElection(); // 发起一次选举
 	// 作为候选者，发送请求投票RPC给指定服务器
 	bool sendRequestVote(int server,
-				 	 std::shared_ptr<raftRpcProctoc::RequestVoteArgs> args,
-				 	 std::shared_ptr<raftRpcProctoc::RequestVoteReply> reply,
-				 	 std::shared_ptr<int> votedNum);
+				 	 	 std::shared_ptr<raftRpcProctoc::RequestVoteArgs> args,
+				 	 	 std::shared_ptr<raftRpcProctoc::RequestVoteReply> reply,
+				 	 	 std::shared_ptr<int> votedNum);
 	
-					 // 判断另一个节点（如候选人）的日志是否“足够新”，用于投票判断是否接受候选人
-	bool UpToDate(int index, int term);
+	// 处理投票请求 RPC
+	void RequestVote(const raftRpcProctoc::RequestVoteArgs *args, raftRpcProctoc::RequestVoteReply *reply);
+	bool UpToDate(int index, int term); // 判断候选人日志是否更新（用于投票）
+	
+	void doHeartBeat(); // leader 周期性主动发送心跳
+	
 
 
 
-	// 日志复制与心跳机制 ------------------------------------------------------------------------------
 
-	// leader周期性发送心跳
-	void doHeartBeat();
-
-	// leader 心跳定时器
-	void leaderHearBeatTicker();
+	// 日志复制 -------------------------------------------------------------------------------------
 
 	// 内部处理追加日志请求 （实际处理 AppendEntries 的内部实现）
 	void AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, raftRpcProctoc::AppendEntriesReply* reply);
@@ -138,28 +93,63 @@ public:
 	// 判断本地日志指定位置和任期是否匹配，用于日志一致性检测
 	bool matchLog(int logIndex, int logTerm);
 
-	// leader 根据多数节点复制日志进度，更新提交索引
+	// leader 根据多数节点复制日志进度，更新提交索引 CommitIndex
 	void leaderUpdateCommitIndex();
 
 
 
+	// 定时器维护 -------------------------------------------------------------------------------------
+	void applierTicker(); 		 // 循环检查 commitIndex 并应用日志到状态机（独立线程或协程定时调用）
+	void leaderHearBeatTicker(); // leader 心跳定时器，周期性检查是否要发起心跳
+	
 
 
 
+
+	
+	// 持久化 ---------------------------------------------------------------------------------------
+	void persist(); 					// 当前状态持久化到磁盘
+	void readPersist(std::string data); // 读取持久化数据，恢复状态
+	std::string persistData();			// 获取当前应持久化的数据（状态序列化后的字符串）
+	int GetRaftStateSize();				// 获取当前持久化状态的大小
+
+	
+	// 客户端命令提交 ---------------------------------------------------------------------------------
+	void Start(Op command, int *newLogIndex, int *newLogTerm, bool *isLeader); // 客户端调用提交新的命令，封装为日志条目
+
+
+	// 日志信息辅助获取 ---------------------------------------------------------------------------------
+	int getLastLogIndex();  // 获取当前日志数组中最后一条日志的索引
+	int getLastLogTerm();	// 获取当前日志数组中最后一条日志的任期号
+	void getLastLogIndexAndTerm(int *lastLogIndex, int *lastLogTerm);// 同时获取最后一条日志的索引和任期
+	int getLogTermFromLogIndex(int logIndex);	 // 根据给定的日志下标获取其对应的任期
+	int getSlicesIndexFromLogIndex(int logIndex);// 将逻辑日志索引转换为数组中的切片索引
+
+
+
+	// 状态查询与工具函数 ----------------------------------------------------------------------------
+
+	void GetState(int *term, bool *isLeader); // 获取当前节点的任期
+	int getNewCommandIndex(); 				  // 获取下一条待提交日志的索引
+	void pushMsgToKvServer(ApplyMsg msg); 	  // 将应用消息推送给KV服务层
+	
+	
+
+
+
+	
 	// 快照相关 -------------------------------------------------------------------------------------
 
-	// 上层服务通知Raft快照数据及应用到哪个日志索引，Raft截断日志，保存快照
+	// 主动安装快照，抛弃旧日志
 	void Snapshot(int index, std::string snapshot);
 
 	// 条件安装快照，判断快照是否比当前状态新，决定是否安装
 	bool CondInstallSnapshot(int lastIncludeTerm, int lastIncludeIndex, std::string snapshot);
 
-	// leader 向落后follower发送快照，防止日志复制因差距过大失败
+	// leader 向落后follower发送快照
 	void leaderSendSnapShot(int server);
 
-
-
-	// 处理快照安装RPC请求
+	// follower 安装 snapshot（直接 RPC 调用）
 	void InstallSnapshot(const raftRpcProctoc::InstallSnapshotRequest *args,
 						 raftRpcProctoc::InstallSnapshotResponse *reply);
 
@@ -173,9 +163,15 @@ public:
 	// 即服务层主动发起请求raft保存snapshot里面的数据，index是用来表示snapshot快照执行到了哪条命令
 	
 
+	
+	// Apply机制 -------------------------------------------------------------------------------------
+	std::vector<ApplyMsg> getApplyLogs();// 获取所有已提交但尚未应用的日志
+	
 
 
-	// RPC 接口 -------------------------------------------------------------------------------------
+
+
+	// RPC 接口重写 ------------------------------------------------------------------------------------
 
 	// RPC接口重写，接收远程追加日志请求
 	// 重写基类方法,因为rpc远程调用真正调用的是这个方法
@@ -200,14 +196,6 @@ public:
 
 
 
-
-	// 日志应用相关 -------------------------------------------------------------------------------------
-	
-	// 独立线程或协程定时调用，应用已提交日志到状态机
-	void applierTicker();
-
-
-
 private:
 	std::mutex m_mtx; // 保护 Raft 节点内部共享状态，防止多线程访问冲突
 
@@ -216,7 +204,7 @@ private:
 
 	int m_me;          // 当前节点ID
 	int m_currentTerm; // 当前任期号
-	int m_votedFor;    // 本任期已投票的候选人ID (未投票时一般为-1)
+	int m_votedFor;    // 当前任期中投票给了哪个候选人 (未投票时一般为-1)
 
 	std::vector<raftRpcProctoc::LogEntry> m_logs; // 日志条目数组，每条日志包括 [客户端状态机命令] 和 [产生该日志的任期]
 
@@ -253,35 +241,40 @@ private:
 	std::unique_ptr<monsoon::IOManager> m_ioManager = nullptr;
 
 
-	// 内部持久化类  配合 Boost 序列化，保存当前 Term、投票信息、日志内容等状态
+	// 内部私有持久化类  用于封装需持久化的数据
 	class BoostPersistRaftNode 
 	{
 	public:
-		friend class boost::serialization::access;
-		// When the class Archive corresponds to an output archive, the
-		// & operator is defined similar to <<.  Likewise, when the class Archive
-		// is a type of input archive the & operator is defined similar to >>.
+		/* BoostPersistRaftNode 提供哪些字段需要被保存 + 怎么序列化 */
+		
+		// 友元 （Boost 定义的特殊访问类, Boost 框架内部通过它来调用 serialize 函数）
+		friend class boost::serialization::access; 
+
+		// Boost 要求实现的序列化函数模板: 指定哪些成员变量需要持久化，如何持久化
 		template <class Archive>
 		void serialize(Archive &ar, const unsigned int version) 
 		{
+			// 这些成员变量通过 & 运算符绑定到序列化器 ar
 			ar & m_currentTerm;
 			ar & m_votedFor;
 			ar & m_lastSnapshotIncludeIndex;
 			ar & m_lastSnapshotIncludeTerm;
 			ar & m_logs;
-		}
-		int m_currentTerm;
-		int m_votedFor;
-		int m_lastSnapshotIncludeIndex;
-		int m_lastSnapshotIncludeTerm;
-		std::vector<std::string> m_logs;
-		std::unordered_map<std::string, int> umap;
 
+			// 当 Archive 类对应于输出档案时，& 运算符的定义类似于 <<
+			// 当 Archive 类是输入档案类型时，& 运算符的定义类似于 >>
+		}
+
+		int m_currentTerm;							// 当前节点的任期（term）
+		int m_votedFor;								// 当前任期中投票给了哪个候选人
+		int m_lastSnapshotIncludeIndex;				// 最近一次快照中包含的最后日志索引
+		int m_lastSnapshotIncludeTerm;				// 最近一次快照中包含的最后日志任期
+		std::vector<std::string> m_logs;			// 当前节点保存的日志条目（字符串格式）
+		std::unordered_map<std::string, int> umap;	// 哈希表，未参与序列化，可能用于辅助索引或调试
 	};
 
 
 };
-
 
 
 #endif //PATH_H

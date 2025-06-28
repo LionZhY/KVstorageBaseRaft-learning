@@ -580,18 +580,18 @@ class AppendEntriesReply PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kLogTermFieldNumber = 1,
+    kTermFieldNumber = 1,
     kSuccessFieldNumber = 2,
     kUpdateNextIndexFieldNumber = 3,
     kAppStateFieldNumber = 4,
   };
-  // int32 LogTerm = 1;
-  void clear_logterm();
-  ::PROTOBUF_NAMESPACE_ID::int32 logterm() const;
-  void set_logterm(::PROTOBUF_NAMESPACE_ID::int32 value);
+  // int32 Term = 1;
+  void clear_term();
+  ::PROTOBUF_NAMESPACE_ID::int32 term() const;
+  void set_term(::PROTOBUF_NAMESPACE_ID::int32 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_logterm() const;
-  void _internal_set_logterm(::PROTOBUF_NAMESPACE_ID::int32 value);
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_term() const;
+  void _internal_set_term(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
   // bool Success = 2;
@@ -628,7 +628,7 @@ class AppendEntriesReply PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::int32 logterm_;
+  ::PROTOBUF_NAMESPACE_ID::int32 term_;
   bool success_;
   ::PROTOBUF_NAMESPACE_ID::int32 updatenextindex_;
   ::PROTOBUF_NAMESPACE_ID::int32 appstate_;
@@ -1652,24 +1652,24 @@ inline void AppendEntriesArgs::set_leadercommit(::PROTOBUF_NAMESPACE_ID::int32 v
 
 // AppendEntriesReply
 
-// int32 LogTerm = 1;
-inline void AppendEntriesReply::clear_logterm() {
-  logterm_ = 0;
+// int32 Term = 1;
+inline void AppendEntriesReply::clear_term() {
+  term_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 AppendEntriesReply::_internal_logterm() const {
-  return logterm_;
+inline ::PROTOBUF_NAMESPACE_ID::int32 AppendEntriesReply::_internal_term() const {
+  return term_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 AppendEntriesReply::logterm() const {
-  // @@protoc_insertion_point(field_get:raftRpcProctoc.AppendEntriesReply.LogTerm)
-  return _internal_logterm();
+inline ::PROTOBUF_NAMESPACE_ID::int32 AppendEntriesReply::term() const {
+  // @@protoc_insertion_point(field_get:raftRpcProctoc.AppendEntriesReply.Term)
+  return _internal_term();
 }
-inline void AppendEntriesReply::_internal_set_logterm(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void AppendEntriesReply::_internal_set_term(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
-  logterm_ = value;
+  term_ = value;
 }
-inline void AppendEntriesReply::set_logterm(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_logterm(value);
-  // @@protoc_insertion_point(field_set:raftRpcProctoc.AppendEntriesReply.LogTerm)
+inline void AppendEntriesReply::set_term(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_term(value);
+  // @@protoc_insertion_point(field_set:raftRpcProctoc.AppendEntriesReply.Term)
 }
 
 // bool Success = 2;

@@ -37,7 +37,7 @@ message AppendEntriesArgs
 // 日志追加响应：Follower 对追加的响应，反馈追加是否成功
 message AppendEntriesReply 
 {
-	int32 LogTerm         = 1; // follower当前任期（可能比leader大）
+	int32 Term         = 1; // follower当前任期（可能比leader大）
 	bool Success          = 2; // 是否追加成功
 	int32 UpdateNextIndex = 3; // 如果失败，提示leader下一次该从哪里发起
 	int32 AppState        = 4; // 节点状态：正常/网络异常/正在恢复等（可自定义使用）
