@@ -3,9 +3,12 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <chrono>
 #include <memory>
+#include <mutex>
 #include <ratio>
+#include <sys/ioctl.h>
 #include <unistd.h>
 #include "config.h"
+#include "raftRPC.pb.h"
 #include "util.h"
 
 /**
@@ -81,7 +84,6 @@ void Raft::init(std::vector<std::shared_ptr<RaftRpcUtil>> peers,
 	// start ticker 启动三个循环定时器
 	m_ioManager->scheduler([this]() -> void { this->leaderHearBeatTicker(); });
 	m_ioManager->scheduler([this]() -> void { this->electionTimeOutTicker(); });
-
 	std::thread t3(&Raft::applierTicker, this);
 	t3.detach();
 
@@ -108,7 +110,6 @@ void Raft::electionTimeOutTicker()
 		当当前节点不是 Leader 且超过一定时间未收到心跳，则发起新一轮选举（Candidate 状态）
 	*/
 
-	
 	while (true) // 无限循环，不断检测是否需要发起选举
 	{
 		
@@ -124,56 +125,191 @@ void Raft::electionTimeOutTicker()
 			*/	
 		}
 
-		
+		// 计算当前节点可以睡多久再醒来，判断是否超时开始选举
 		std::chrono::duration<signed long int, std::ratio<1, 1000000000>> suitableSleepTime{};// 适合的睡眠时间
 		std::chrono::system_clock::time_point wakeTime{};// 唤醒时间点
 
 		{
 			m_mtx.lock();
 			wakeTime = now(); 
-			// 距离下一次超时应该睡眠的时间 = 上次重置选举超时计时器的时间 + 随机化的选举超时时间 - 唤醒时间点
+			// 距离下一次超时可以睡眠的时间 = 上次重置选举超时计时器的时间 + 随机化的选举超时时间 - 唤醒时间点
 			suitableSleepTime = m_lastResetElectionTime + getRandomizedElectionTimeout() - wakeTime;
 			m_mtx.unlock();
 		}
 
-		// 如果应该睡眠时间大于 1 毫秒，就 sleep，避免睡眠太短而频繁切换线程
-		if (std::chrono::duration<double, std::milli>(suitableSleepTime).count() > 1)
+		// 根据 suitableSleepTime 判断是否需要 sleep
+		if (std::chrono::duration<double, std::milli>(suitableSleepTime).count() > 1) // 转换成单位为 毫秒
 		{
-			auto start = std::chrono::steady_clock::now(); // 获取当前时间点
+			/* 如果应该睡眠时间大于 1 毫秒，就 sleep，避免睡眠太短而频繁切换线程 */
 
-			usleep(std::chrono::duration_cast<std::chrono::microseconds>(suitableSleepTime).count());
-			// std::this_thread::sleep_for(suitableSleepTime);
+			auto start = std::chrono::steady_clock::now(); // 获取当前时间点，表示 sleep 之前的“起点”
 
-			auto end = std::chrono::steady_clock::now(); // 获取函数运行结束后的时间点
+			// 开始睡眠
+			// usleep(std::chrono::duration_cast<std::chrono::microseconds>(suitableSleepTime).count()); // 转换成微秒
+			std::this_thread::sleep_for(suitableSleepTime); // 也可以用这种形式，更现代安全
 
-			// 计算时间差，记录sleep的实际时间（单位为毫秒）
+			auto end = std::chrono::steady_clock::now();   // sleep 结束时间点
+
+
+			// 计算 & 打印 sleep 实际耗时（单位为毫秒）
 			std::chrono::duration<double, std::milli> duration = end - start;
-
 			// 输出，使用ANSI控制序列将输出颜色改为紫色
-			std::cout << "\033[1;35m electionTimeOutTicker();函数设置睡眠时间为："
+			std::cout << "\033[1;35m electionTimeOutTicker();函数设置睡眠时间为：" // 期望值
 					  << std::chrono::duration_cast<std::chrono::milliseconds>(suitableSleepTime).count() 
 					  << "毫秒\033[0m" 
 					  << std::endl;
 			
-			std::cout << "\033[1;35m electionTimeOutTicker();函数实际睡眠时间为："
+			std::cout << "\033[1;35m electionTimeOutTicker();函数实际睡眠时间为：" // 实际睡眠时间可能略大
 					  << duration.count()
 					  << "毫秒\033[0m"
 					  << std::endl;
-		
 		}
 
-		// 如果这段时间内 m_lastResetElectionTime 被重置，说明 Leader 发来了心跳，不能选举，继续等待
+		// “睡眠期间” 收到 Leader 的心跳（m_lastResetElectionTime 被更新），跳过选举
 		if (std::chrono::duration<double, std::milli>(m_lastResetElectionTime - wakeTime).count() > 0)
 		{
-			// 每次 AppendEntries 成功处理（Leader 心跳）时都会更新 m_lastResetElectionTime，从而推迟选举
-			// 如果睡眠的这段时间有重置定时器，那么就没有超时，再次睡眠
+			// 每次 AppendEntries 成功处理（Leader 心跳）时都会更新 m_lastResetElectionTime
+			
+			// 比较当前时间点 wakeTime 和 m_lastResetElectionTime
+			// 如果 m_lastResetElectionTime 更晚，说明m_lastResetElectionTime 就被更新了，这段睡眠期间收到了 Leader 心跳
+			// 收到心跳，就跳过选举。continue 重新进入 while 循环，重新计算下一次睡眠时间
 			continue;
 		}
 
+		// 发起选举
 		doElection();
-
   	}
 }
+
+
+
+// 发起选举  （Candidate 角色的主要职责）
+void Raft::doElection() 
+{
+	std::lock_guard<std::mutex> g(m_mtx); // 加锁
+
+	// 只有在当前节点不是leader的情况下，才允许转为 Candidate 发起选举
+	if (m_status != Leader)
+	{
+		DPrintf("[       ticker-func-rf(%d)              ]  选举定时器到期且不是leader，开始选举 \n", m_me);
+
+		m_status = Candidate; 	// 变更状态为 Candidate
+		m_currentTerm += 1;		// 任期 + 1 （无论是刚开始竞选，还是超时重新竞选，term都要增加）
+		m_votedFor = m_me; 		// 给自己投，也避免candidate给同辈的candidate投
+		persist();				// 持久化当前的 term 和 voteFor
+
+		// 使用共享指针计数投票数，初始化为1（表示自己投自己的一票）
+		std::shared_ptr<int> votedNum = std::make_shared<int>(1); // 使用 make_shared 函数初始化 ！！ 亮点
+
+		// 更新选举超时定时器，避免在发起投票后马上又触发下一轮选举
+		m_lastResetElectionTime = now();
+
+		
+		// 向其他集群节点发送投票请求 RequestVote RPC 
+		for (int i = 0; i < m_peers.size(); i++)
+		{
+			if (i == m_me)	continue; // 跳过自己
+
+			int lastLogIndex = -1, lastLogTerm = -1;
+			getLastLogIndexAndTerm(&lastLogIndex, &lastLogTerm); // 获取当前节点的最后一条日志的 index 和 term
+
+			// 构造 RequestVote RPC 请求
+			std::shared_ptr<raftRpcProctoc::RequestVoteArgs> requestVoteArgs = 
+							std::make_shared<raftRpcProctoc::RequestVoteArgs>();
+			requestVoteArgs->set_term(m_currentTerm);
+			requestVoteArgs->set_candidateid(m_me);
+			requestVoteArgs->set_lastlogindex(lastLogIndex);
+			requestVoteArgs->set_lastlogterm(lastLogTerm);
+
+			// 创建 RPC 响应对象（占位，后续在子线程中填充）
+			auto requestVoteReply = std::make_shared<raftRpcProctoc::RequestVoteReply>();
+
+			// 启动一个线程异步向节点 i 发送 RequestVote RPC， 避免在持锁状态下执行 RPC（防止阻塞其他线程）
+			std::thread t(&Raft::sendRequestVote, this, i, requestVoteArgs, requestVoteReply, votedNum); // 创建新线程并执行b函数，并传递参数
+			t.detach();
+		}
+	}
+}
+
+
+
+// candidate 发送请求投票RPC给指定节点
+bool Raft::sendRequestVote(int server, 												// 目标节点下标
+						   std::shared_ptr<raftRpcProctoc::RequestVoteArgs> args,	// RPC请求参数（term，候选人id，最后日志）
+                           std::shared_ptr<raftRpcProctoc::RequestVoteReply> reply, // RPC响应结果
+						   std::shared_ptr<int> votedNum) 							// 记录当前获得投票数的共享指针
+{
+	
+	auto start = now(); // 记录耗时
+	DPrintf("[func-sendRequestVote rf{%d}] 向server{%d} 发送 RequestVote 开始", 
+			 m_me, m_currentTerm, getLastLogIndex());
+
+	// 调用远程代理对象 m_peers[server]->RequestVote() 发起实际的投票请求
+	bool ok = m_peers[server]->RequestVote(args.get(), reply.get()); // ok 仅表示网络通信是否成功，不代表投票是否成功
+	DPrintf("[func-sendRequestVote rf{%d}] 向server{%d} 发送 RequestVote 完毕，耗时:{%d} ms", 
+			 m_me, m_currentTerm, getLastLogIndex(), now() - start);
+
+	// rpc通信失败就立即返回，避免资源消耗
+	if (!ok)
+	{
+		return ok; //不知道为什么不加这个的话如果服务器宕机会出现问题的，通不过2B  todo
+  	}
+
+	// 通信ok 进入临界区处理RPC响应结果 --------------------------------------------------------------------
+	std::lock_guard<std::mutex> lg(m_mtx);
+	
+	if (reply->term() > m_currentTerm) 		// reply.term > 当前任期，说明自己已经过期，转为 Follower 
+	{
+		m_status = Follower;
+		m_currentTerm = reply->term();
+		m_votedFor = -1;
+		persist();
+		return true;
+	}
+	else if (reply->term() < m_currentTerm) // reply.term < 当前任期：term过期恢复，忽略该投票，返回
+	{
+		return true; 
+	}
+
+	// 断言 reply.term == 当前任期
+	myAssert(reply->term() == m_currentTerm, format("assert {reply.Term==rf.currentTerm} fail"));
+	
+	if (!reply->votegranted()) 				// reply.term == 当前任期，处理投票结果 --------------------------------
+	{
+		return true; // 如果没投票给我，忽略
+	}
+	
+	*votedNum = *votedNum + 1; // 收到投票，更新 votedNum
+	if (*votedNum >= m_peers.size() / 2 + 1) // 若获得超过半数票，成为 Leader ！！！！！！
+	{
+		*votedNum = 0;
+		// 如果已经是leader了，那么不会进行下一步处理
+		if (m_status == Leader) 
+		{
+			myAssert(false, format("[func-sendRequestVote-rf{%d}]  term:{%d} 同一个term当两次领导，error", m_me, m_currentTerm));
+		}
+
+		// 第一次变成leader，改身份，初始化nextIndex 和 matchIndex，通知其他节点
+		m_status = Leader; 							 
+		DPrintf("[func-sendRequestVote rf{%d}] elect success  ,current term:{%d} ,lastLogIndex:{%d}\n",
+				 m_me, m_currentTerm, getLastLogIndex());
+		
+		int lastLogIndex = getLastLogIndex(); 
+		for (int i = 0; i < m_nextIndex.size(); i++) 
+		{
+			m_nextIndex[i] = lastLogIndex + 1; // 有效下标从1开始，因此要+1
+			m_matchIndex[i] = 0;
+		}
+
+		std::thread t(&Raft::doHeartBeat, this); // 异步启动 doHeartBeat()，马上通知其他节点自己就是新leader
+		t.detach();
+
+		persist(); // 持久化最新状态
+	}
+
+	return true;
+}
+
 
 
 
@@ -194,6 +330,7 @@ void Raft::AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, raftRpc
 }
 
 
+
 void Raft::applierTicker() 
 {
   
@@ -201,16 +338,12 @@ void Raft::applierTicker()
 }
 
 
+
 bool Raft::CondInstallSnapshot(int lastIncludedTerm, int lastIncludedIndex, std::string snapshot) 
 {
   
 }
 
-
-void Raft::doElection() 
-{
-  
-}
 
 
 void Raft::doHeartBeat() 
@@ -364,11 +497,7 @@ int Raft::getSlicesIndexFromLogIndex(int logIndex)
 
 
 
-bool Raft::sendRequestVote(int server, std::shared_ptr<raftRpcProctoc::RequestVoteArgs> args,
-                           std::shared_ptr<raftRpcProctoc::RequestVoteReply> reply, std::shared_ptr<int> votedNum) 
-{
 
-}
 
 
 
