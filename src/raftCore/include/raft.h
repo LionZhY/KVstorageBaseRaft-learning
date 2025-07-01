@@ -54,19 +54,20 @@ public:
 			  std::shared_ptr<LockQueue<ApplyMsg>> applyCh);
 	
 
-
 	
 	// 选举 ------------------------------------------------------------------------------------------
 	void electionTimeOutTicker(); // 选举定时器：周期性检查选举是否超时，触发新一轮选举
-	void doElection(); // 发起一次选举
-	// 作为候选者，发送请求投票RPC给指定服务器
+	void doElection(); 			  // 发起一次选举
+	
+	// candidate发送请求投票RPC给指定服务器
 	bool sendRequestVote(int server,
 				 	 	 std::shared_ptr<raftRpcProctoc::RequestVoteArgs> args,
 				 	 	 std::shared_ptr<raftRpcProctoc::RequestVoteReply> reply,
 				 	 	 std::shared_ptr<int> votedNum);
 	
-	// 处理投票请求 RPC
+	// 处理其他节点发来的投票请求 RPC
 	void RequestVote(const raftRpcProctoc::RequestVoteArgs *args, raftRpcProctoc::RequestVoteReply *reply);
+	
 	bool UpToDate(int index, int term); // 判断候选人日志是否更新（用于投票）
 	
 	void doHeartBeat(); // leader 周期性主动发送心跳

@@ -244,7 +244,7 @@ bool Raft::sendRequestVote(int server, 												// 目标节点下标
 	DPrintf("[func-sendRequestVote rf{%d}] 向server{%d} 发送 RequestVote 开始", 
 			 m_me, m_currentTerm, getLastLogIndex());
 
-	// 调用远程代理对象 m_peers[server]->RequestVote() 发起实际的投票请求
+	// 调用远程代理对象 m_peers[server]->RequestVote() 发起实际的投票请求 -----------------------------------
 	bool ok = m_peers[server]->RequestVote(args.get(), reply.get()); // ok 仅表示网络通信是否成功，不代表投票是否成功
 	DPrintf("[func-sendRequestVote rf{%d}] 向server{%d} 发送 RequestVote 完毕，耗时:{%d} ms", 
 			 m_me, m_currentTerm, getLastLogIndex(), now() - start);
@@ -274,22 +274,25 @@ bool Raft::sendRequestVote(int server, 												// 目标节点下标
 	// 断言 reply.term == 当前任期
 	myAssert(reply->term() == m_currentTerm, format("assert {reply.Term==rf.currentTerm} fail"));
 	
-	if (!reply->votegranted()) 				// reply.term == 当前任期，处理投票结果 --------------------------------
+	// reply.term == 当前任期，处理投票结果 ---------------------------------------------------------------
+	if (!reply->votegranted()) 				
 	{
 		return true; // 如果没投票给我，忽略
 	}
 	
-	*votedNum = *votedNum + 1; // 收到投票，更新 votedNum
-	if (*votedNum >= m_peers.size() / 2 + 1) // 若获得超过半数票，成为 Leader ！！！！！！
+	// 收到投票，更新 votedNum
+	*votedNum = *votedNum + 1; 
+	if (*votedNum >= m_peers.size() / 2 + 1) // 若获得超过半数票，成为 Leader ！！！！！！-------------------
 	{
 		*votedNum = 0;
+
 		// 如果已经是leader了，那么不会进行下一步处理
 		if (m_status == Leader) 
 		{
 			myAssert(false, format("[func-sendRequestVote-rf{%d}]  term:{%d} 同一个term当两次领导，error", m_me, m_currentTerm));
 		}
 
-		// 第一次变成leader，改身份，初始化nextIndex 和 matchIndex，通知其他节点
+		// 第一次变成leader，改身份，初始化nextIndex 和 matchIndex，通知其他节点 -----------------------------
 		m_status = Leader; 							 
 		DPrintf("[func-sendRequestVote rf{%d}] elect success  ,current term:{%d} ,lastLogIndex:{%d}\n",
 				 m_me, m_currentTerm, getLastLogIndex());
@@ -301,20 +304,113 @@ bool Raft::sendRequestVote(int server, 												// 目标节点下标
 			m_matchIndex[i] = 0;
 		}
 
-		std::thread t(&Raft::doHeartBeat, this); // 异步启动 doHeartBeat()，马上通知其他节点自己就是新leader
+		// 异步启动 doHeartBeat()，马上通知其他节点自己就是新leader
+		std::thread t(&Raft::doHeartBeat, this); 
 		t.detach();
 
-		persist(); // 持久化最新状态
+		// 持久化最新状态
+		persist(); 
 	}
 
-	return true;
+	return true; // 返回true 只表示RPC通信成功（不包括投票状态）
 }
 
 
 
+// 处理其他节点发来的投票请求 RPC
+void Raft::RequestVote (const raftRpcProctoc::RequestVoteArgs *args, // 请求投票RPC参数结构(candidate发来的)
+						raftRpcProctoc::RequestVoteReply *reply)	 // 当前节点的投票回复RPC参数结构
+{
+	std::lock_guard<std::mutex> lg(m_mtx); 
+	DEFER // 延迟执行，持久化保存当前状态
+	{
+		persist(); //应该先持久化，再撤销lock，所以写在lock后面
+	};
+
+	/*	投票的三大条件：
+		1 候选人的 term ≥ 我当前 term （比我新）
+		2 候选人的日志不比我旧 （保证leader日志完整性）
+		3 我还没投票或投给了同一个候选人 （一个任期内只能投一票）
+	*/
+
+	// ------------------------------------------  term 新 ------------------------------------------
+	// 对方任期小于我 → 拒绝投票（过时）
+	if (args->term() < m_currentTerm)
+	{
+		reply->set_term(m_currentTerm);	// 设置响应中的term (告诉候选人我的term比较新，你应该更新你的term)
+		reply->set_votestate(Expire);	// 投票状态标记：过期
+		reply->set_votegranted(false);	// 告诉候选人，拒绝投票
+		return;
+	}
+
+	// 对方任期更大 → 更新自己的 term + 退回 Follower
+	if (args->term() > m_currentTerm)
+	{
+		/* Raft 协议规定：只要收到更高的 term，就必须更新自己的 term，并退回 Follower 状态 */
+		m_status = Follower;
+		m_currentTerm = args->term(); 
+		m_votedFor = -1; // 新任期，重置投票记录（刚才的任期内已经投给了现在这个Candidate，现在是新任期）
+	}
+
+	// 断言：节点相同
+	myAssert(args->term() == m_currentTerm,
+			 format("[func--rf{%d}] 前面校验过args.Term==rf.currentTerm，这里却不等", m_me));
+	
+
+	// ----------------------------------------- log 不落后-----------------------------------------
+
+	// 现在节点任期都是相同的 (前面已经处理了不同任期的，任期小的也已经更新到新的 args 的 term 了)
+	// 还需要检查 log 的 term 和 index 是不是匹配的
+
+	// 日志是否 “更新” → 决定是否有资格投票
+
+	int lastLogTerm = getLastLogTerm();
+
+	// 没投票，且candidate的日志的新的程度 >= 接收者的日志新的程度，才会投票
+	if (!UpToDate(args->lastlogindex(), args->lastlogterm())) 
+	{
+    	// 日志不够新，拒绝投票
+		reply->set_term(m_currentTerm);
+    	reply->set_votestate(Voted);	// 拒绝投票的状态码（用于调试或日志）
+    	reply->set_votegranted(false);	// 拒绝投票
+    	return;
+	}	 
 
 
+	// ------------------------------------ 一个term内，投一次票 ------------------------------------
 
+	// 是否已经投过票 → 限制一个term内 只投一次票
+	if (m_votedFor != -1 && m_votedFor != args->candidateid())
+	{
+		// 已经投过票，但当前请求不是我投过票的人，拒绝这次投票
+
+		// m_votedFor != args->candidateid() 如果是我刚投过的候选人，会进入下面else，再次确认投票，这是允许的
+		// 网络丢包/重传场景 —— 候选人可能因超时或网络不稳定重新发送 RequestVote 请求
+
+		reply->set_term(m_currentTerm);
+		reply->set_votestate(Voted);	
+		reply->set_votegranted(false);	
+		return;
+	}
+	else // 满足所有条件 → 投票通过
+	{
+		m_votedFor = args->candidateid(); // 记录投票对象，防止重复投
+		m_lastResetElectionTime = now();  // 重置选举计时器，避免误判超时
+
+		reply->set_term(m_currentTerm);
+		reply->set_votestate(Normal);	  // 投票正常
+		reply->set_votegranted(true);	  // 同意投票
+		return;
+	}
+	
+}
+
+
+// 判断候选人日志是否更新（用于投票）
+bool Raft::UpToDate(int index, int term) 
+{
+  
+}
 
 
 
@@ -435,16 +531,17 @@ void Raft::persist()
 }
 
 
-void Raft::RequestVote(const raftRpcProctoc::RequestVoteArgs* args, raftRpcProctoc::RequestVoteReply* reply) 
+// RPC接口重写，用于接收其他节点发来的 “投票请求”
+void Raft::RequestVote(google::protobuf::RpcController* controller, const ::raftRpcProctoc::RequestVoteArgs* request,
+                       ::raftRpcProctoc::RequestVoteReply* response, ::google::protobuf::Closure* done) 
 {
-  
+  RequestVote(request, response);
+  done->Run();
 }
 
 
-bool Raft::UpToDate(int index, int term) 
-{
-  
-}
+
+
 
 
 void Raft::getLastLogIndexAndTerm(int* lastLogIndex, int* lastLogTerm) 
@@ -464,6 +561,8 @@ int Raft::getLastLogIndex()
 }
 
 
+
+// 获取当前日志数组中最后一条日志的任期号
 int Raft::getLastLogTerm() 
 {
   
@@ -528,11 +627,6 @@ void Raft::InstallSnapshot(google::protobuf::RpcController* controller,
 
 
 
-void Raft::RequestVote(google::protobuf::RpcController* controller, const ::raftRpcProctoc::RequestVoteArgs* request,
-                       ::raftRpcProctoc::RequestVoteReply* response, ::google::protobuf::Closure* done) 
-{
-
-}
 
 
 
