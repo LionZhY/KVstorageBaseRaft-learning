@@ -65,24 +65,20 @@ public:
 				 	 	 std::shared_ptr<raftRpcProctoc::RequestVoteReply> reply,
 				 	 	 std::shared_ptr<int> votedNum);
 	
-	// 处理其他节点发来的投票请求 RPC
+	// follower 处理 Candidate 发来的投票请求 RPC
 	void RequestVote(const raftRpcProctoc::RequestVoteArgs *args, raftRpcProctoc::RequestVoteReply *reply);
 	
 	bool UpToDate(int index, int term); // 判断候选人日志是否更新（用于投票）
 	
+	
+	
+
+
+
+
+	// 日志复制，心跳 -------------------------------------------------------------------------------------
+    void leaderHearBeatTicker(); // leader 心跳定时器，周期性检查是否要发起心跳
 	void doHeartBeat(); // leader 周期性主动发送心跳
-	
-
-
-
-
-	// 日志复制 -------------------------------------------------------------------------------------
-
-	// 内部处理追加日志请求 （实际处理 AppendEntries 的内部实现）
-	void AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, raftRpcProctoc::AppendEntriesReply* reply);
-	
-	// 获取某个 Follower 上一条日志的信息，用于发送 AppendEntries
-	void getPrevLogInfo(int server, int *preIndex, int *preTerm);
 
 	// leader 向指定节点发送追加日志RPC
 	bool sendAppendEntries(int server,
@@ -90,18 +86,27 @@ public:
 						   std::shared_ptr<raftRpcProctoc::AppendEntriesReply> reply,
 				 		   std::shared_ptr<int> appendNums);
 
+	
+	// leader 向落后follower发送快照					   
+	void leaderSendSnapShot(int server);
+	
+	// 接收leader发来的日志请求（实际处理 AppendEntries 的内部实现）
+	void AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, raftRpcProctoc::AppendEntriesReply* reply);
+	
+	// 接收leader发来的快照请求，同步快照到本机（直接 RPC 调用）
+	void InstallSnapshot(const raftRpcProctoc::InstallSnapshotRequest *args,
+						 raftRpcProctoc::InstallSnapshotResponse *reply);
 
-	// 判断本地日志指定位置和任期是否匹配，用于日志一致性检测
-	bool matchLog(int logIndex, int logTerm);
 
-	// leader 根据多数节点复制日志进度，更新提交索引 CommitIndex
-	void leaderUpdateCommitIndex();
+	void getPrevLogInfo(int server, int *preIndex, int *preTerm); // 获取某个 Follower 上一条日志的信息，用于发送 AppendEntries
+	bool matchLog(int logIndex, int logTerm); // 判断本地日志指定位置和任期是否匹配，用于日志一致性检测
+	void leaderUpdateCommitIndex(); // leader 根据多数节点复制日志进度，更新提交索引 CommitIndex
 
 
 
 	// 定时器维护 -------------------------------------------------------------------------------------
 	void applierTicker(); 		 // 循环检查 commitIndex 并应用日志到状态机（独立线程或协程定时调用）
-	void leaderHearBeatTicker(); // leader 心跳定时器，周期性检查是否要发起心跳
+	
 	
 
 
@@ -147,12 +152,8 @@ public:
 	// 条件安装快照，判断快照是否比当前状态新，决定是否安装
 	bool CondInstallSnapshot(int lastIncludeTerm, int lastIncludeIndex, std::string snapshot);
 
-	// leader 向落后follower发送快照
-	void leaderSendSnapShot(int server);
+	
 
-	// follower 安装 snapshot（直接 RPC 调用）
-	void InstallSnapshot(const raftRpcProctoc::InstallSnapshotRequest *args,
-						 raftRpcProctoc::InstallSnapshotResponse *reply);
 
 
 	// Snapshot the service says it has created a snapshot that has

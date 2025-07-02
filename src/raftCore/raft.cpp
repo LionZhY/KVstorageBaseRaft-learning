@@ -2,6 +2,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <chrono>
+#include <cstdint>
 #include <memory>
 #include <mutex>
 #include <ratio>
@@ -20,6 +21,8 @@
 */
 
 
+/////////////////////////////////////////////  leader 选举  /////////////////////////////////////////////
+
 // 初始化Raft节点，传入集群成员代理、节点ID、持久化模块和日志应用通道
 void Raft::init(std::vector<std::shared_ptr<RaftRpcUtil>> peers, 
                 int me, 
@@ -30,7 +33,7 @@ void Raft::init(std::vector<std::shared_ptr<RaftRpcUtil>> peers,
 	m_persister = persister; // 持久化类
 	m_me = me; 				 // 当前节点编号（本地Raft ID）
 	
-	m_mtx.lock(); // 状态变量初始化过程加锁 *****************************************************************
+	m_mtx.lock(); // 状态变量初始化过程加锁
 
 	// applier
 	this->applyChan = applyCh; // 保存应用层日志提交通道 (Raft会将已提交日志通过该队列发送给 KVServer 或上层状态机模块)
@@ -73,7 +76,7 @@ void Raft::init(std::vector<std::shared_ptr<RaftRpcUtil>> peers,
   	DPrintf("[Init&ReInit] Sever %d, term %d, lastSnapshotIncludeIndex {%d} , lastSnapshotIncludeTerm {%d}", 
 			m_me, m_currentTerm, m_lastSnapshotIncludeIndex, m_lastSnapshotIncludeTerm);
 
-  	m_mtx.unlock(); // 解锁 *******************************************************************************
+  	m_mtx.unlock(); 
 
 	
 	// 初始化协程调度器  
@@ -224,7 +227,7 @@ void Raft::doElection()
 			// 创建 RPC 响应对象（占位，后续在子线程中填充）
 			auto requestVoteReply = std::make_shared<raftRpcProctoc::RequestVoteReply>();
 
-			// 启动一个线程异步向节点 i 发送 RequestVote RPC， 避免在持锁状态下执行 RPC（防止阻塞其他线程）
+			// 启动一个新线程异步向节点 i 发送 RequestVote RPC， 避免在持锁状态下执行 RPC（防止阻塞其他线程）
 			std::thread t(&Raft::sendRequestVote, this, i, requestVoteArgs, requestVoteReply, votedNum); // 创建新线程并执行b函数，并传递参数
 			t.detach();
 		}
@@ -317,7 +320,7 @@ bool Raft::sendRequestVote(int server, 												// 目标节点下标
 
 
 
-// 处理其他节点发来的投票请求 RPC
+// follower 处理 Candidate 发来的投票请求 RPC
 void Raft::RequestVote (const raftRpcProctoc::RequestVoteArgs *args, // 请求投票RPC参数结构(candidate发来的)
 						raftRpcProctoc::RequestVoteReply *reply)	 // 当前节点的投票回复RPC参数结构
 {
@@ -406,14 +409,197 @@ void Raft::RequestVote (const raftRpcProctoc::RequestVoteArgs *args, // 请求�
 }
 
 
-// 判断候选人日志是否更新（用于投票）
-bool Raft::UpToDate(int index, int term) 
+// 判断候选人日志是否不比自己旧（用于投票）
+bool Raft::UpToDate(int index, int term) // 候选人最后一条日志的 Term 和 index
 {
-  
+	/*
+	判断日志 “新不新” 的标准是：
+		先比较最后一条日志的 Term
+		如果 Term 相同，再比较日志索引（Index）
+	*/
+	int lastIndex = -1; 
+	int lastTerm = -1;
+	getLastLogIndexAndTerm(&lastIndex, &lastTerm); // 当前节点（即 Follower）自己维护的最后一条日志的 Term 和 Index
+	
+	// 候选人term更新，或者term相同但候选人的日志索引不比自己落后，都可以投票
+	return term > lastTerm || (term == lastTerm && index >= lastIndex);
 }
 
 
 
+/////////////////////////////////////////////  日志复制 心跳  /////////////////////////////////////////////
+
+// leader 心跳定时器，周期性检查是否要发起心跳
+void Raft::leaderHearBeatTicker() 
+{
+	/* 定期向所有 Follower 发送心跳（即 AppendEntries RPC）以维持 Leader 身份 */
+
+	while (true) // 一旦成为 Leader，就一直循环判断是否该发送心跳
+	{
+		// 当前节点不是leader，进入暂时休眠
+		while (m_status != Leader)
+		{
+			usleep(1000 * HeartBeatTimeout);
+		}
+
+		static std::atomic<int32_t> atomicCount = 0; // 原子计数器，记录心跳发送次数，用于调试打印
+
+		
+		// 计算 “下一次” 心跳前还需等待多久
+		std::chrono::duration<signed long int, std::ratio<1, 1000000000>> suitableSleepTime{};
+		std::chrono::system_clock::time_point wakeTime{};
+
+		{
+			std::lock_guard<std::mutex> lock(m_mtx);
+			wakeTime = now();
+			// 距离下次心跳还有多久 = (上次发心跳的时间 + 心跳间隔) - 当前时间
+			suitableSleepTime = std::chrono::milliseconds(HeartBeatTimeout) + m_lastResetHeartBeatTime - wakeTime;
+		}
+
+
+		// 如果当前距离下一次心跳还有较长时间（>1ms），sleep 等待，避免频繁切线程
+		if (std::chrono::duration<double, std::milli>(suitableSleepTime).count() > 1)
+		{
+			std::cout << atomicCount << "\033[1;35m leaderHearBeatTicker();函数设置睡眠时间为: "
+					  << std::chrono::duration_cast<std::chrono::milliseconds>(suitableSleepTime).count() << "毫秒\033[0m"
+					  << std::endl;
+			
+			auto start = std::chrono::steady_clock::now(); // 获取当前时间点
+
+			std::this_thread::sleep_for(suitableSleepTime);
+			// usleep(std::chrono::duration_cast<std::chrono::microseconds>(suitableSleepTime).count());
+
+			auto end = std::chrono::steady_clock::now(); // 获取睡眠结束后的时间点
+
+			// 计算sleep时长并打印（毫秒）
+			std::chrono::duration<double, std::milli> duration = end - start;
+
+			std::cout << atomicCount << "\033[1;35m leaderHearBeatTicker();函数实际睡眠时间为: " 
+					  << duration.count() << " 毫秒\033[0m" << std::endl;
+			
+			// 心跳次数 + 1
+			++atomicCount; 
+		}
+
+		// 如果sleep期间定时器被重置了，就再次等待（不用发心跳）
+		if (std::chrono::duration<double, std::milli>(m_lastResetHeartBeatTime - wakeTime).count() > 0)
+		{
+			// 说明在 sleep 期间，其他线程已经重置了 m_lastResetHearBeatTime（即这个 Leader 在其他线程发过心跳了）
+			continue;
+		}
+
+
+		// 发送心跳
+		doHeartBeat();
+
+	}
+
+}
+
+
+// leader 周期性主动发送心跳
+void Raft::doHeartBeat() 
+{
+	std::lock_guard<std::mutex> lg(m_mtx);
+
+	if (m_status == Leader) // 确保当前节点是Leader才执行心跳发送
+	{
+		DPrintf("[func-Raft::doHeartBeat()-Leader: {%d}] Leader的心跳定时器触发了且拿到mutex，开始发送AE\n", m_me);
+		
+		auto appendNums = std::make_shared<int>(1); // 统计有多少节点成功响应心跳（初始认为Leader自己成功一票）
+
+		
+    	// todo 这里肯定是要修改的，最好使用一个单独的goruntime来负责管理发送log，因为后面的log发送涉及优化之类的
+    	// 最少要单独写一个函数来管理，而不是在这一坨
+
+		// 遍历所有Follower（向除了自己外的所有节点发送AE）
+		for (int i = 0; i < m_peers.size(); i++)
+		{
+			if (i == m_me) // 跳过自己
+			{
+				continue;
+			}
+
+			// 打印每一个发送目标的编号
+			DPrintf("[func-Raft::doHeartBeat()-Leader: {%d}] Leader的心跳定时器触发了 index:{%d}\n", m_me, i);
+			// 断言保证 每个 Follower 的 nextIndex（下次应发送的日志索引）必须合法
+			myAssert(m_nextIndex[i] >= 1, format("rf.nextIndex[%d] = {%d}", i, m_nextIndex[i]));
+
+			// 判断是否需要发送快照 (若 nextIndex 已被压缩)
+			if (m_nextIndex[i] <= m_lastSnapshotIncludeIndex)
+			{
+				// 如果 nextIndex <= 快照起始点，说明该 Follower 已落后太久，当前 Leader 日志中不再包含这么早的数据（已被截断）
+				std::thread t(&Raft::leaderSendSnapShot, this, i); // 启动一个线程，发送快照，代替AE
+				t.detach();
+				continue;
+			}
+
+			/* 下面是 m_nextIndex[i] > m_lastSnapshotIncludeIndex 的情况*/
+
+
+			// Leader 想要发送给 Follower 的日志条目中，新日志的前一条日志的索引 (preLogIndex = m_nextIndex - 1)
+			int preLogIndex = -1; 
+			int preLogTerm = -1;  
+			getPrevLogInfo(i, &preLogIndex, &preLogTerm);
+			
+			
+			// 构造 AppendEntries RPC 参数结构
+			std::shared_ptr<raftRpcProctoc::AppendEntriesArgs> appendEntriesArgs = std::make_shared<raftRpcProctoc::AppendEntriesArgs>();
+			appendEntriesArgs->set_term(m_currentTerm);
+			appendEntriesArgs->set_leaderid(m_me);
+			appendEntriesArgs->set_prevlogindex(preLogIndex);
+			appendEntriesArgs->set_prevlogterm(preLogTerm);
+			appendEntriesArgs->set_leadercommit(m_commitIndex);
+			appendEntriesArgs->clear_entries(); // 清空日志条目列表，准备添加
+			
+
+			// 判断是直接从m_logs 里 preLogIndex + 1 开始发，还是直接发送全部 m_logs
+			if (preLogIndex != m_lastSnapshotIncludeIndex) 
+			{
+				// preLogIndex 是出现在日志数组 m_logs 中的（不是快照里），说明它可以从 m_logs 中继续发日志
+				for (int j = getSlicesIndexFromLogIndex(preLogIndex) + 1; j < m_logs.size(); ++j) // 索引转换 getSlicesIndexFromLogIndex()
+				{
+					// 从 preLogIndex + 1 开始，把所有后续日志 m_logs[j] 打包到发送日志 entries 里
+					raftRpcProctoc::LogEntry* sendEntryPtr = appendEntriesArgs->add_entries();
+					*sendEntryPtr = m_logs[j];
+				}
+			}
+			else 
+			{	
+				// 如果 preLogIndex == m_lastSnapshotIncludeIndex， preLogIndex就是在快照中的最后一条
+				// Leader 只能把 m_logs 中所有日志打包发送
+				for (const auto& item : m_logs)
+				{
+					raftRpcProctoc::LogEntry* sendEntryPtr = appendEntriesArgs->add_entries();
+					*sendEntryPtr = item;
+				}
+			}
+
+			
+			int lastLogIndex = getLastLogIndex(); // 当前 Leader 最后一条日志的索引值
+
+			// Leader请求前本地断言：发送的日志前一条的日志索引 + 要发送的日志条目数量 = 当前日志末尾
+			myAssert(appendEntriesArgs->prevlogindex() + appendEntriesArgs->entries_size() == lastLogIndex,
+					 format("appendEntriesArgs.PrevLogIndex{%d}+len(appendEntriesArgs.Entries){%d} != lastLogIndex{%d}",
+                     		 appendEntriesArgs->prevlogindex(), appendEntriesArgs->entries_size(), lastLogIndex));
+
+
+			// 构造 RPC 响应
+			const std::shared_ptr<raftRpcProctoc::AppendEntriesReply> appendEntriesReply = std::make_shared<raftRpcProctoc::AppendEntriesReply>();
+			appendEntriesReply->set_appstate(Disconnected); // 初始设为未连接
+			
+
+			// 创建新线程异步发送 AppendEntries RPC -- 正式发送
+			std::thread t(&Raft::sendAppendEntries, this, i, appendEntriesArgs, appendEntriesReply, appendNums);
+			t.detach();
+			
+		}
+
+		// 本轮心跳已完成，刷新心跳时间点
+		m_lastResetHeartBeatTime = now(); 
+	}
+
+}
 
 
 
@@ -442,10 +628,7 @@ bool Raft::CondInstallSnapshot(int lastIncludedTerm, int lastIncludedIndex, std:
 
 
 
-void Raft::doHeartBeat() 
-{
-  
-}
+
 
 
 
@@ -470,7 +653,14 @@ int Raft::getNewCommandIndex()
 // leader调用，传入：服务器index，传出：发送的AE的preLogIndex和PrevLogTerm
 void Raft::getPrevLogInfo(int server, int* preIndex, int* preTerm) 
 {
-  
+	/* Leader 想发送给 Follower 的日志条目中，新日志的前一条日志的索引和term*/
+
+	// 假设：
+	// Leader日志为索引：[1, 2, 3, 4, 5]
+	// Follower日志为索引：[1, 2, 3]
+	// 当Leader想追加索引4和5的日志时，leader就会自己确定preLogIndex = 3
+	// 然后RPC发送给follower告诉Follower，follower去判断这些信息是否与自己的日志一致
+
 }
 
 
@@ -498,11 +688,7 @@ void Raft::pushMsgToKvServer(ApplyMsg msg)
 
 
 
-void Raft::leaderHearBeatTicker() 
-{
-  
-	
-}
+
 
 
 void Raft::leaderSendSnapShot(int server) 
@@ -518,7 +704,7 @@ void Raft::leaderUpdateCommitIndex()
 }
 
 
-//进来前要保证logIndex是存在的，即≥rf.lastSnapshotIncludeIndex	，而且小于等于rf.getLastLogIndex()
+// 进来前要保证logIndex是存在的，即≥rf.lastSnapshotIncludeIndex	，而且小于等于rf.getLastLogIndex()
 bool Raft::matchLog(int logIndex, int logTerm) 
 {
  
