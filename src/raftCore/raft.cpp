@@ -1,4 +1,5 @@
 #include "raft.h"
+#include <algorithm>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <chrono>
@@ -602,6 +603,151 @@ void Raft::doHeartBeat()
 }
 
 
+// leader 向指定节点发送追加日志 AppendEntries RPC，并处理响应
+bool Raft::sendAppendEntries(int server,											// 目标follower的编号
+					   std::shared_ptr<raftRpcProctoc::AppendEntriesArgs> args,		// 本次 AppendEntries RPC 的参数
+					   std::shared_ptr<raftRpcProctoc::AppendEntriesReply> reply,	// Follower 对请求的响应
+			 		   std::shared_ptr<int> appendNums) 							// 成功响应心跳的节点个数
+{
+  	/* 通信ok => 响应正常 => term相同 => 是Leader=> 日志匹配 => 多数成功响应 => 发送日志都是当前term => 提交 */
+
+	DPrintf("[func-Raft::sendAppendEntries-raft{%d}] leader 向节点{%d}发送AE rpc开始 ， args->entries_size():{%d}",
+			 m_me, server, args->entries_size());
+	
+	
+	// 发送 RPC 请求并判断网络是否通畅
+	bool ok = m_peers[server]->AppendEntries(args.get(), reply.get()); // ok只表示RPC通信是否成功
+	if (!ok)
+	{
+		DPrintf("[func-Raft::sendAppendEntries-raft{%d}] leader 向节点{%d}发送AE rpc失败", m_me, server);
+		return ok; // 如果网络断开，不会进入后续的逻辑，直接退出
+	}
+	DPrintf("[func-Raft::sendAppendEntries-raft{%d}] leader 向节点{%d}发送AE rpc成功", m_me, server);
+
+
+	// 响应状态判断：若对方返回了“断开连接”的状态，直接跳过处理（Follower 未启动或挂掉）
+	if (reply->appstate() == Disconnected) 
+	{
+		return ok;
+	}
+
+
+	// ----------------------------------------- 处理 reply -------------------------------------------------
+	std::lock_guard<std::mutex> lg1(m_mtx);
+
+	// 检查 follower 返回的 term
+	if (reply->term() > m_currentTerm) 		// 自己的 term 落后，转为 Follower
+	{
+		m_status = Follower;
+		m_currentTerm = reply->term();
+		m_votedFor = -1;
+		return ok;
+	}
+	else if (reply->term() < m_currentTerm) // 对方 term 落后，忽略
+	{
+		DPrintf("[func -sendAppendEntries  rf{%d}]  节点：{%d}的term{%d}<rf{%d}的term{%d}\n", 
+				 m_me, server, reply->term(), m_me, m_currentTerm);
+		return ok;
+	}
+
+
+	// 如果当前节点不是Leader，不处理，直接返回
+	if (m_status != Leader) 
+	{
+		return ok;
+	}
+
+
+	// term 相等
+	myAssert(reply->term() == m_currentTerm,
+			 format("reply.Term{%d} != rf.currentTerm{%d}   ", reply->term(), m_currentTerm));
+	
+	
+	// 判断日志匹配是否失败
+	if (!reply->success()) // 日志追加失败，Follower 拒绝日志追加
+	{
+		// 原因一般是：Leader 提供的 prevLogIndex/prevLogTerm 与 Follower 本地日志不一致，无法通过一致性校验
+
+		// reply->updatenextindex() 表示 Follower 主动返回的建议 Leader 下次应从哪个日志 index 开始发
+		if (reply->updatenextindex() != -100) // -100只是一个特殊标记，没有具体含义
+		{
+			DPrintf("[func -sendAppendEntries  rf{%d}]  返回的日志term相等，但是不匹配，回缩nextIndex[%d]：{%d}\n", 
+					m_me, server, reply->updatenextindex());
+
+			m_nextIndex[server] = reply->updatenextindex(); 
+		}
+	}
+	else // 日志匹配成功，follower同意接收本次心跳或者日志 -----------------------------------------------------
+	{
+		*appendNums = *appendNums + 1; // 成功响应节点数 + 1
+		DPrintf("---------------------------tmp------------------------- 节点{%d}返回true,当前*appendNums{%d}", 
+				server, *appendNums);
+
+		// 更新该 Follower 的 matchIndex（匹配到 Leader 的最大 index）和 nextIndex（下次要发送的 index）
+		m_matchIndex[server] = std::max(m_matchIndex[server], args->prevlogindex() + args->entries_size());
+		m_nextIndex[server] = m_matchIndex[server] + 1;
+		
+
+		// 防止 nextIndex 越界：保证 nextIndex 不超过当前最后一条日志的下一个位置
+		int lastLogIndex = getLastLogIndex();
+		myAssert(m_nextIndex[server] <= lastLogIndex + 1,
+					format("error msg:rf.nextIndex[%d] > lastLogIndex+1, len(rf.logs) = %d   lastLogIndex{%d} = %d", 
+						server, m_logs.size(), server, lastLogIndex));
+
+					
+		// 多数节点成功响应 --> 考虑提交日志 --------------------------------------------------------------------
+		if (*appendNums >= 1 + m_peers.size() / 2)
+		{
+			*appendNums = 0;
+			if (args->entries_size() > 0)
+			{
+				DPrintf("args->entries(args->entries_size()-1).logterm(){%d}   m_currentTerm{%d}",
+						args->entries(args->entries_size() - 1).logterm(), m_currentTerm);
+			}
+						
+			/*
+				领导人完备性（Leader Completeness）：
+				"Leader 只能提交当前 term 的日志。只有当这些日志被提交，才会一并视作之前 term 的日志也已提交。"
+			*/
+
+			// 必须是当前 term 的日志才能提交 -------------------------------------------------------------------
+			if (args->entries_size() > 0 && 
+				args->entries(args->entries_size() - 1).logterm() == m_currentTerm)// 检查最后一条被发送日志是否属于当前term
+			{
+				DPrintf("---------------------------tmp------------------------- 当前term有log成功提交，更新leader的m_commitIndex "
+						"from{%d} to{%d}",
+						m_commitIndex, args->prevlogindex() + args->entries_size());
+				
+				// 更新 m_commitIndex
+				m_commitIndex = std::max(m_commitIndex, args->prevlogindex() + args->entries_size());
+			}
+
+			myAssert(m_commitIndex < lastLogIndex, 
+					format("[func-sendAppendEntries,rf{%d}] lastLogIndex:%d  rf.commitIndex:%d\n", m_me, lastLogIndex, m_commitIndex));	
+		}
+	}
+
+
+	return ok;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -786,12 +932,7 @@ int Raft::getSlicesIndexFromLogIndex(int logIndex)
 
 
 
-bool Raft::sendAppendEntries(int server, std::shared_ptr<raftRpcProctoc::AppendEntriesArgs> args,
-                             std::shared_ptr<raftRpcProctoc::AppendEntriesReply> reply,
-                             std::shared_ptr<int> appendNums) 
-{
-  
-}
+
 
 
 
