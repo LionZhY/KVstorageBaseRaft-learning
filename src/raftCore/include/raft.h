@@ -86,12 +86,15 @@ public:
 						   std::shared_ptr<raftRpcProctoc::AppendEntriesReply> reply,
 				 		   std::shared_ptr<int> appendNums);
 
+	// follower 处理 leader发来的日志请求（实际处理 AppendEntries 的内部实现）
+	void AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, raftRpcProctoc::AppendEntriesReply* reply);
+	
+	
 	
 	// leader 向落后follower发送快照					   
 	void leaderSendSnapShot(int server);
 	
-	// 接收leader发来的日志请求（实际处理 AppendEntries 的内部实现）
-	void AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, raftRpcProctoc::AppendEntriesReply* reply);
+	
 	
 	// 接收leader发来的快照请求，同步快照到本机（直接 RPC 调用）
 	void InstallSnapshot(const raftRpcProctoc::InstallSnapshotRequest *args,
@@ -236,7 +239,7 @@ private:
 	std::chrono::_V2::system_clock::time_point m_lastResetHeartBeatTime; // 上一次发送心跳的时间点
 
 	// 快照相关
-	int m_lastSnapshotIncludeIndex; // 快照包含的最新日志索引
+	int m_lastSnapshotIncludeIndex; // 快照包含的最后一个日志索引（最新）
 	int m_lastSnapshotIncludeTerm;  // 对应的任期
 
 	// 协程调度

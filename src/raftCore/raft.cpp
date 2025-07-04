@@ -734,28 +734,173 @@ bool Raft::sendAppendEntries(int server,											// 目标follower的编号
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void Raft::AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, raftRpcProctoc::AppendEntriesReply* reply) 
+// follower 处理 leader 发来的日志追加请求，包括心跳（实际处理 AppendEntries 的内部实现）
+void Raft::AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, 
+						  raftRpcProctoc::AppendEntriesReply* reply) 
 {
-  
+	std::lock_guard<std::mutex> locker(m_mtx);
+
+	reply->set_appstate(AppNormal); // 设置 AppState 告诉 Leader 网络连接是正常的
+
+	// leader 的 term 落后
+	if (args->term() < m_currentTerm)
+	{
+		reply->set_success(false);			// 拒绝追加
+		reply->set_term(m_currentTerm); 	// 返回当前自己的term
+		reply->set_updatenextindex(-100); 	// 提示 Leader 应回退日志
+		DPrintf("[func-AppendEntries-rf{%d}] 拒绝了 因为Leader{%d}的term{%v}< rf{%d}.term{%d}\n", 
+				m_me, args->leaderid(), args->term(), m_me, m_currentTerm);
+		
+		return; // 注意从过期的Leader那收到消息，不需要重设定时器
+	}
+
+	// 延迟执行持久化
+	DEFER { persist(); };// 由于DEFER创建在锁之后，因此执行persist的时候，锁仍然处于持有状态，确保线程安全
+	
+	// leader 的 term 更新
+	if (args->term() > m_currentTerm)
+	{
+		// term合理，三变：身份，term，投票
+		m_status = Follower;			// 退回follower(当前有可能是Candidate)
+		m_currentTerm = args->term();	// 更新自己的term
+		m_votedFor = -1;				// 重置 votedFor，可以重新投票
+
+		// 这里不返回，让该节点尝试接收日志
+	}
+
+
+	// term 相等 ---------------------------------------------------------------------------------------------
+	myAssert(args->term() == m_currentTerm, format("assert {args.Term == rf.currentTerm} fail"));
+	
+	m_status = Follower;			 // Leader/Follower/Candidate 收到当前 term 的 Leader 心跳，都必须退为 Follower						 
+	m_lastResetElectionTime = now(); // 重置选举定时器
+
+
+	// 不能无脑的从 prevlogIndex 开始截断日志，因为rpc可能会延迟，导致发过来的log是很久之前的
+	// 那么就比较日志，日志有 3 种情况
+
+	// 日志一致性检查
+	if (args->prevlogindex() > getLastLogIndex()) 
+	{
+		// Leader 要追加的 prevLogIndex 太新，和follower不衔接
+		reply->set_success(false);
+		reply->set_term(m_currentTerm);
+		reply->set_updatenextindex(getLastLogTerm() + 1); // 提示 Leader 应从哪里开始发
+		return;
+	}
+	else if (args->prevlogindex() < m_lastSnapshotIncludeIndex) 
+	{
+		// Leader 的 prevLogIndex 太旧，已被快照收录走了，过时日志，已经不在m_logs中
+		reply->set_success(false);
+		reply->set_term(m_currentTerm);
+		reply->set_updatenextindex(m_lastSnapshotIncludeTerm + 1); 
+	}
+	
+
+	// Leader 的 prevLogIndex合适，判断日志匹配，尝试复制日志 -------------------------------------------------------
+	if (matchLog(args->prevlogindex(), args->prevlogterm()))
+	{
+		// 遍历每条要追加的日志
+		for (int i = 0; i < args->entries_size(); i++)
+		{
+			auto log = args->entries(i);
+			if (log.logindex() > getLastLogIndex()) // 要添加的logindex超过自己的lastLogIndex，新日志，直接添加
+			{
+				m_logs.push_back(log);
+			}
+			else // 本地已存在该条目或同位置的日志 (可能因为网络重传或日志覆盖，Leader发送的日志有一部分是本地已有的旧日志)
+			{
+				// 需要逐条比对该日志条目是否与本地相同: term 和 command
+
+				// term 和 command 都相同，说明该日志已经存在，不用修改
+
+				// term 相同但 command 不同，说明日志冲突，属于协议异常，断言失败
+				if (m_logs[getSlicesIndexFromLogIndex(log.logindex())].logterm() == log.logterm() && 
+					m_logs[getSlicesIndexFromLogIndex(log.logindex())].command() != log.command())
+				{
+					myAssert(false, format("[func-AppendEntries-rf{%d}] 两节点logIndex{%d}和term{%d}相同，但是其command{%d:%d}   "
+                                 		   " {%d:%d}却不同！！\n",
+										   m_me, log.logindex(), log.logterm(), m_me, m_logs[getSlicesIndexFromLogIndex(log.logindex())].command(), 
+										   args->leaderid(), log.command()));
+				}
+
+				// 如果 term 不同，说明日志冲突，要用新日志替换本地旧日志
+				if (m_logs[getSlicesIndexFromLogIndex(log.logindex())].logterm() != log.logterm())
+				{
+					m_logs[getSlicesIndexFromLogIndex(log.logindex())] = log;
+				}
+			}
+		}
+
+
+		// 追加日志完成，断言确认日志末尾至少覆盖了追加的所有日志条目
+		myAssert(getLastLogIndex() >= args->prevlogindex() + args->entries_size(), 
+				 format("[func-AppendEntries1-rf{%d}]rf.getLastLogIndex(){%d} != args.PrevLogIndex{%d}+len(args.Entries){%d}",
+    	           		m_me, getLastLogIndex(), args->prevlogindex(), args->entries_size()));		
+
+		// 更新 commitIndex  
+		if (args->leadercommit() > m_commitIndex)
+		{
+			// 如果 Leader 的 commitIndex 比 Follower 本地的更大，Follower 跟进提交，但是不能超过自己的日志范围
+			// 但是也可能存在args->leadercommit() 落后于 getLastLogIndex()的情况，所以取 min()
+			m_commitIndex = std::min(args->leadercommit(), getLastLogIndex());	
+		}
+
+
+		// 断言 Follower 的 commitIndex 不应该超过自己当前拥有的日志条目
+		myAssert(getLastLogIndex() >= m_commitIndex, 
+				 format("[func-AppendEntries1-rf{%d}]  rf.getLastLogIndex{%d} < rf.commitIndex{%d}", 
+						m_me, getLastLogIndex(), m_commitIndex));
+
+
+		// 返回成功 -----------------------------------------------------------------------------------------
+		reply->set_success(true);
+		reply->set_term(m_currentTerm);
+		return;
+
+	}
+	else // 日志不匹配  !matchLog(args->prevlogindex(), args->prevlogterm())
+	{
+		// 这是 Raft 论文中日志一致性检查失败的情况：
+		// args->prevlogindex() 在 Follower 本地存在；但 args->prevlogterm() 与本地该 index 的 term 不一致
+
+		/*
+			如果不优化，原始论文中 Leader 就会退一格重发，直到找到一个匹配点。很慢
+
+			优化： 
+    		PrevLogIndex 长度合适，但是不匹配，因此往前寻找 矛盾的term的第一个元素，然后从这个位置往后都重新发
+    		为什么该term的日志都是矛盾的呢？也不一定都是矛盾的，只是这么优化减少rpc而已
+    		什么时候term会矛盾呢？很多情况，比如leader接收了日志之后马上就崩溃等等
+		*/
+
+		// 保守处理：告诉 Leader 退一步，下次从 prevLogIndex 发
+		reply->set_updatenextindex(args->prevlogindex());
+
+		// 优化：follower 直接建议 Leader 出现矛盾的整段 term 都重新发
+		for (int index = args->prevlogindex(); index >= m_lastSnapshotIncludeIndex; --index)
+		{
+			// Follower 从 prevlogindex() 开始往前回退，退到和现在这个本地term不一样的位置（其实就是上一个term的边界）
+			if (getLogTermFromLogIndex(index) != getLogTermFromLogIndex(args->prevlogindex()))
+			{
+				reply->set_updatenextindex(index + 1); // 建议Leader从这个位置重新发
+				break;
+				// 相当于是跳过了现在出现不匹配的这个term的日志，告诉Leader这个term都重新发
+				// 比起一格一格试，Leader 能一次跳回一整段有冲突的 term
+			}
+		}
+
+		reply->set_success(false);
+		reply->set_term(m_currentTerm);
+		return;
+	}
+
+
 }
+
+
+
+
+
 
 
 
@@ -887,6 +1032,7 @@ void Raft::getLastLogIndexAndTerm(int* lastLogIndex, int* lastLogTerm)
  * 可见：getLastLogIndexAndTerm()
  */
 
+// 获取当前节点最后一条日志条目的 逻辑索引（LogIndex） 的函数
 int Raft::getLastLogIndex() 
 {
   
@@ -906,6 +1052,8 @@ int Raft::getLastLogTerm()
  * @return
  */
 
+
+// 根据给定的日志下标获取其对应的任期
 int Raft::getLogTermFromLogIndex(int logIndex) 
 {
 
