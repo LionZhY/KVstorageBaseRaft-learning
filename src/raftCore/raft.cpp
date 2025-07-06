@@ -22,7 +22,7 @@
 */
 
 
-/////////////////////////////////////////////  leader 选举  /////////////////////////////////////////////
+//////////////////////////////////////////////  初始化节点  //////////////////////////////////////////////
 
 // 初始化Raft节点，传入集群成员代理、节点ID、持久化模块和日志应用通道
 void Raft::init(std::vector<std::shared_ptr<RaftRpcUtil>> peers, 
@@ -105,6 +105,11 @@ void Raft::init(std::vector<std::shared_ptr<RaftRpcUtil>> peers,
 	// t3.detach();
 }
 
+
+
+
+
+//////////////////////////////////////////////  leader 选举  //////////////////////////////////////////////
 
 
 // 选举定时器：周期性检查选举是否超时，触发新一轮选举
@@ -428,6 +433,7 @@ bool Raft::UpToDate(int index, int term) // 候选人最后一条日志的 Term 
 
 
 
+
 /////////////////////////////////////////////  日志复制 心跳  /////////////////////////////////////////////
 
 // leader 心跳定时器，周期性检查是否要发起心跳
@@ -729,7 +735,6 @@ bool Raft::sendAppendEntries(int server,											// 目标follower的编号
 
 
 	return ok;
-
 }
 
 
@@ -776,8 +781,6 @@ void Raft::AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args,
 	m_lastResetElectionTime = now(); // 重置选举定时器
 
 
-	// 不能无脑的从 prevlogIndex 开始截断日志，因为rpc可能会延迟，导致发过来的log是很久之前的
-	// 那么就比较日志，日志有 3 种情况
 
 	// 日志一致性检查
 	if (args->prevlogindex() > getLastLogIndex()) 
@@ -869,7 +872,7 @@ void Raft::AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args,
 
 			优化： 
     		PrevLogIndex 长度合适，但是不匹配，因此往前寻找 矛盾的term的第一个元素，然后从这个位置往后都重新发
-    		为什么该term的日志都是矛盾的呢？也不一定都是矛盾的，只是这么优化减少rpc而已
+    		该term的日志也不一定都是矛盾的，只是这么优化减少rpc而已
     		什么时候term会矛盾呢？很多情况，比如leader接收了日志之后马上就崩溃等等
 		*/
 
@@ -894,50 +897,14 @@ void Raft::AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args,
 		return;
 	}
 
-
 }
 
 
-
-
-
-
-
-
-void Raft::applierTicker() 
+// 进来前要保证logIndex是存在的，即≥rf.lastSnapshotIncludeIndex	，而且小于等于rf.getLastLogIndex()
+bool Raft::matchLog(int logIndex, int logTerm) 
 {
-  
-  
+ 
 }
-
-
-
-bool Raft::CondInstallSnapshot(int lastIncludedTerm, int lastIncludedIndex, std::string snapshot) 
-{
-  
-}
-
-
-
-
-
-
-
-
-std::vector<ApplyMsg> Raft::getApplyLogs() 
-{
-  
-
-}
-
-
-
-// 获取新命令应该分配的Index
-int Raft::getNewCommandIndex() 
-{
-  
-}
-
 
 
 // getPrevLogInfo
@@ -955,76 +922,17 @@ void Raft::getPrevLogInfo(int server, int* preIndex, int* preTerm)
 }
 
 
-
-// GetState return currentTerm and whether this server
-// believes it is the Leader.
-void Raft::GetState(int* term, bool* isLeader) 
-{
-  
-}
-
-
-void Raft::InstallSnapshot(const raftRpcProctoc::InstallSnapshotRequest* args,
-                           raftRpcProctoc::InstallSnapshotResponse* reply) 
-{
-  
-  
-}
-
-
-void Raft::pushMsgToKvServer(ApplyMsg msg) 
-{ 
-	
-}
-
-
-
-
-
-
-void Raft::leaderSendSnapShot(int server) 
-{
-  
-   
-}
-
-
+// leader 根据多数节点复制日志进度，更新提交索引 CommitIndex
 void Raft::leaderUpdateCommitIndex() 
 {
  
 }
 
 
-// 进来前要保证logIndex是存在的，即≥rf.lastSnapshotIncludeIndex	，而且小于等于rf.getLastLogIndex()
-bool Raft::matchLog(int logIndex, int logTerm) 
-{
- 
-}
-
-
-void Raft::persist() 
-{
-  
-}
-
-
-// RPC接口重写，用于接收其他节点发来的 “投票请求”
-void Raft::RequestVote(google::protobuf::RpcController* controller, const ::raftRpcProctoc::RequestVoteArgs* request,
-                       ::raftRpcProctoc::RequestVoteReply* response, ::google::protobuf::Closure* done) 
-{
-  RequestVote(request, response);
-  done->Run();
-}
 
 
 
-
-
-
-void Raft::getLastLogIndexAndTerm(int* lastLogIndex, int* lastLogTerm) 
-{
-  
-}
+////////////////////////////////////////////  日志信息辅助获取  ////////////////////////////////////////////
 
 /**
  *
@@ -1046,6 +954,14 @@ int Raft::getLastLogTerm()
   
 }
 
+
+void Raft::getLastLogIndexAndTerm(int* lastLogIndex, int* lastLogTerm) 
+{
+  
+}
+
+
+
 /**
  *
  * @param logIndex log的逻辑index。注意区别于m_logs的物理index
@@ -1060,12 +976,6 @@ int Raft::getLogTermFromLogIndex(int logIndex)
 }
 
 
-int Raft::GetRaftStateSize() 
-{ 
-	return m_persister->RaftStateSize(); 
-}
-
-
 
 // 找到index对应的真实下标位置！！！
 // 限制，输入的logIndex必须保存在当前的logs里面（不包含snapshot）
@@ -1076,49 +986,111 @@ int Raft::getSlicesIndexFromLogIndex(int logIndex)
 
 
 
-
-
-
-
-
-
-
-
-void Raft::AppendEntries(google::protobuf::RpcController* controller,
-                         const ::raftRpcProctoc::AppendEntriesArgs* request,
-                         ::raftRpcProctoc::AppendEntriesReply* response, ::google::protobuf::Closure* done) 
+// GetState return currentTerm and whether this server
+// believes it is the Leader.
+void Raft::GetState(int* term, bool* isLeader) 
 {
-
+  
 }
 
-
-
-void Raft::InstallSnapshot(google::protobuf::RpcController* controller,
-                           const ::raftRpcProctoc::InstallSnapshotRequest* request,
-                           ::raftRpcProctoc::InstallSnapshotResponse* response, ::google::protobuf::Closure* done) 
-{
-
-}
-
-
-
-
-
-
-void Raft::Start(Op command, int* newLogIndex, int* newLogTerm, bool* isLeader) 
-{
-
-}
-
-
-
-std::string Raft::persistData() 
+// 获取下一条待提交日志的索引
+int Raft::getNewCommandIndex() 
 {
   
 }
 
 
 
+
+
+
+
+/////////////////////////////////////////////  RPC 接口重写  /////////////////////////////////////////////
+
+// RPC接口重写，接收远程追加日志请求
+// 重写基类方法,因为rpc远程调用真正调用的是这个方法
+// 序列化，反序列化等操作rpc框架都已经做完了，因此这里只需要获取值然后真正调用本地方法即可。
+void Raft::AppendEntries(google::protobuf::RpcController* controller,
+                         const ::raftRpcProctoc::AppendEntriesArgs* request,
+                         ::raftRpcProctoc::AppendEntriesReply* response, 
+						 ::google::protobuf::Closure* done) 
+{
+
+}
+
+// RPC接口重写，用于接收其他节点发来的 “投票请求”
+void Raft::RequestVote(google::protobuf::RpcController* controller, 
+					   const ::raftRpcProctoc::RequestVoteArgs* request,
+					   ::raftRpcProctoc::RequestVoteReply* response, 
+					   ::google::protobuf::Closure* done) 
+{
+  RequestVote(request, response);
+  done->Run();
+}
+
+
+// RPC接口重写，接收远程快照安装请求
+void Raft::InstallSnapshot(google::protobuf::RpcController* controller,
+                           const ::raftRpcProctoc::InstallSnapshotRequest* request,
+                           ::raftRpcProctoc::InstallSnapshotResponse* response, 
+						   ::google::protobuf::Closure* done) 
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////  快照相关  //////////////////////////////////////////////
+
+// 主动安装快照，抛弃旧日志
+void Raft::Snapshot(int index, std::string snapshot) 
+{
+  
+}
+
+// 条件安装快照，判断快照是否比当前状态新，决定是否安装
+bool Raft::CondInstallSnapshot(int lastIncludedTerm, int lastIncludedIndex, std::string snapshot) 
+{
+  
+}
+
+
+// leader 向落后follower发送快照
+void Raft::leaderSendSnapShot(int server) 
+{
+  
+   
+}
+
+
+// 接收leader发来的快照请求，同步快照到本机（直接 RPC 调用）
+void Raft::InstallSnapshot(const raftRpcProctoc::InstallSnapshotRequest* args,
+                           raftRpcProctoc::InstallSnapshotResponse* reply) 
+{
+  
+  
+}
+
+
+
+
+////////////////////////////////////////////////  持久化  ////////////////////////////////////////////////
+
+// 当前状态持久化到磁盘
+void Raft::persist() 
+{
+  
+}
+
+
+// 读取持久化数据，恢复状态
 void Raft::readPersist(std::string data) 
 {
   
@@ -1126,8 +1098,122 @@ void Raft::readPersist(std::string data)
 
 
 
-
-void Raft::Snapshot(int index, std::string snapshot) 
+// 获取当前应持久化的数据（状态序列化后的字符串）
+std::string Raft::persistData() 
 {
   
 }
+
+
+// 获取当前持久化状态的大小
+int Raft::GetRaftStateSize() 
+{ 
+	return m_persister->RaftStateSize(); 
+}
+
+
+
+
+
+/////////////////////////////////////////////  客户端命令提交  /////////////////////////////////////////////
+
+// 客户端调用提交新的命令，封装为日志条目
+void Raft::Start(Op command, int* newLogIndex, int* newLogTerm, bool* isLeader) 
+{
+
+}
+
+
+
+
+/////////////////////////////////////////////  Apply 机制  /////////////////////////////////////////////
+
+// 获取所有已提交但尚未应用的日志
+std::vector<ApplyMsg> Raft::getApplyLogs() 
+{
+  
+
+}
+
+// 循环检查 commitIndex 并应用日志到状态机（独立线程或协程定时调用）
+void Raft::applierTicker() 
+{
+  
+  
+}
+
+
+
+
+
+
+// 将应用消息推送给KV服务层
+void Raft::pushMsgToKvServer(ApplyMsg msg) 
+{ 
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

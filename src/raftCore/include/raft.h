@@ -90,27 +90,26 @@ public:
 	void AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, raftRpcProctoc::AppendEntriesReply* reply);
 	
 	
-	
-	// leader 向落后follower发送快照					   
-	void leaderSendSnapShot(int server);
-	
-	
-	
-	// 接收leader发来的快照请求，同步快照到本机（直接 RPC 调用）
-	void InstallSnapshot(const raftRpcProctoc::InstallSnapshotRequest *args,
-						 raftRpcProctoc::InstallSnapshotResponse *reply);
 
-
+	
+	
 	void getPrevLogInfo(int server, int *preIndex, int *preTerm); // 获取某个 Follower 上一条日志的信息，用于发送 AppendEntries
 	bool matchLog(int logIndex, int logTerm); // 判断本地日志指定位置和任期是否匹配，用于日志一致性检测
 	void leaderUpdateCommitIndex(); // leader 根据多数节点复制日志进度，更新提交索引 CommitIndex
 
 
 
-	// 定时器维护 -------------------------------------------------------------------------------------
-	void applierTicker(); 		 // 循环检查 commitIndex 并应用日志到状态机（独立线程或协程定时调用）
-	
-	
+
+
+	// 日志信息辅助获取 ---------------------------------------------------------------------------------
+	int getLastLogIndex();  // 获取当前日志数组中最后一条日志的索引
+	int getLastLogTerm();	// 获取当前日志数组中最后一条日志的任期号
+	void getLastLogIndexAndTerm(int *lastLogIndex, int *lastLogTerm);// 同时获取最后一条日志的索引和任期
+	int getLogTermFromLogIndex(int logIndex);	 // 根据给定的日志下标获取其对应的任期
+	int getSlicesIndexFromLogIndex(int logIndex);// 将逻辑日志索引转换为数组中的切片索引
+
+	void GetState(int *term, bool *isLeader); // 获取当前节点的任期
+	int getNewCommandIndex(); 				  // 获取下一条待提交日志的索引
 
 
 
@@ -124,25 +123,8 @@ public:
 
 	
 	// 客户端命令提交 ---------------------------------------------------------------------------------
-	void Start(Op command, int *newLogIndex, int *newLogTerm, bool *isLeader); // 客户端调用提交新的命令，封装为日志条目
+	void Start(Op command, int *newLogIndex, int *newLogTerm, bool *isLeader); 
 
-
-	// 日志信息辅助获取 ---------------------------------------------------------------------------------
-	int getLastLogIndex();  // 获取当前日志数组中最后一条日志的索引
-	int getLastLogTerm();	// 获取当前日志数组中最后一条日志的任期号
-	void getLastLogIndexAndTerm(int *lastLogIndex, int *lastLogTerm);// 同时获取最后一条日志的索引和任期
-	int getLogTermFromLogIndex(int logIndex);	 // 根据给定的日志下标获取其对应的任期
-	int getSlicesIndexFromLogIndex(int logIndex);// 将逻辑日志索引转换为数组中的切片索引
-
-
-
-	// 状态查询与工具函数 ----------------------------------------------------------------------------
-
-	void GetState(int *term, bool *isLeader); // 获取当前节点的任期
-	int getNewCommandIndex(); 				  // 获取下一条待提交日志的索引
-	void pushMsgToKvServer(ApplyMsg msg); 	  // 将应用消息推送给KV服务层
-	
-	
 
 
 
@@ -155,7 +137,12 @@ public:
 	// 条件安装快照，判断快照是否比当前状态新，决定是否安装
 	bool CondInstallSnapshot(int lastIncludeTerm, int lastIncludeIndex, std::string snapshot);
 
-	
+	// leader 向落后follower发送快照					   
+	void leaderSendSnapShot(int server);
+
+	// 接收leader发来的快照请求，同步快照到本机（直接 RPC 调用）
+	void InstallSnapshot(const raftRpcProctoc::InstallSnapshotRequest *args,
+						 raftRpcProctoc::InstallSnapshotResponse *reply);
 
 
 
@@ -171,7 +158,7 @@ public:
 	
 	// Apply机制 -------------------------------------------------------------------------------------
 	std::vector<ApplyMsg> getApplyLogs();// 获取所有已提交但尚未应用的日志
-	
+	void applierTicker(); 		 // 循环检查 commitIndex 并应用日志到状态机（独立线程或协程定时调用）
 
 
 
@@ -179,8 +166,7 @@ public:
 	// RPC 接口重写 ------------------------------------------------------------------------------------
 
 	// RPC接口重写，接收远程追加日志请求
-	// 重写基类方法,因为rpc远程调用真正调用的是这个方法
-	// 序列化，反序列化等操作rpc框架都已经做完了，因此这里只需要获取值然后真正调用本地方法即可。
+	
 	void AppendEntries(google::protobuf::RpcController *controller,
 					   const ::raftRpcProctoc::AppendEntriesArgs *request,
 					   ::raftRpcProctoc::AppendEntriesReply *response,
@@ -198,6 +184,16 @@ public:
 						 const ::raftRpcProctoc::InstallSnapshotRequest *request,
 						 ::raftRpcProctoc::InstallSnapshotResponse *response,
 						 ::google::protobuf::Closure *done) override;
+
+
+
+
+	// 状态查询与工具函数 ----------------------------------------------------------------------------
+
+	void pushMsgToKvServer(ApplyMsg msg); 	  // 将应用消息推送给KV服务层
+	
+	
+
 
 
 
