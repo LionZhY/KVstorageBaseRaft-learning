@@ -87,14 +87,11 @@ public:
 				 		   std::shared_ptr<int> appendNums);
 
 	// follower 处理 leader发来的日志请求（实际处理 AppendEntries 的内部实现）
-	void AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, raftRpcProctoc::AppendEntriesReply* reply);
-	
-	
-
+	void AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args, raftRpcProctoc::AppendEntriesReply* reply);		
 	
 	
 	void getPrevLogInfo(int server, int *preIndex, int *preTerm); // 获取某个 Follower 上一条日志的信息，用于发送 AppendEntries
-	bool matchLog(int logIndex, int logTerm); // 判断本地日志指定位置和任期是否匹配，用于日志一致性检测
+	bool matchLog(int logIndex, int logTerm); // 判断本地日志项 LogIndex 的 term 和 Leader 发来的是否匹配
 	void leaderUpdateCommitIndex(); // leader 根据多数节点复制日志进度，更新提交索引 CommitIndex
 
 
@@ -105,11 +102,13 @@ public:
 	int getLastLogIndex();  // 获取当前日志数组中最后一条日志的索引
 	int getLastLogTerm();	// 获取当前日志数组中最后一条日志的任期号
 	void getLastLogIndexAndTerm(int *lastLogIndex, int *lastLogTerm);// 同时获取最后一条日志的索引和任期
-	int getLogTermFromLogIndex(int logIndex);	 // 根据给定的日志下标获取其对应的任期
-	int getSlicesIndexFromLogIndex(int logIndex);// 将逻辑日志索引转换为数组中的切片索引
 
-	void GetState(int *term, bool *isLeader); // 获取当前节点的任期
-	int getNewCommandIndex(); 				  // 获取下一条待提交日志的索引
+	int getLogTermFromLogIndex(int logIndex);	 // 获取指定 logIndex 的对应 term 
+
+	int getSlicesIndexFromLogIndex(int logIndex);// 找到逻辑索引 logIndex 对应的物理索引 SliceIndex
+
+	void GetState(int *term, bool *isLeader); 	 // 获取当前节点的任期和是否是Leader
+	int getNewCommandIndex(); 				  	 // 获取一个新客户端命令 应该分配的逻辑日志索引（LogIndex）
 
 
 
@@ -213,7 +212,7 @@ private:
 	int m_lastApplied; // 已经应用到状态机的最大日志索引
 
 	std::vector<int> m_nextIndex; // 对每个follower，leader下次要发送给它的日志索引，初始化为领导者最后日志索引 + 1。
-	std::vector<int> m_matchIndex;// 对每个follower，已知其匹配成功的最大日志索引
+	std::vector<int> m_matchIndex;// 对每个follower，已知和Leader同步的最新日志index
 
 	// 节点身份枚举
 	enum Status

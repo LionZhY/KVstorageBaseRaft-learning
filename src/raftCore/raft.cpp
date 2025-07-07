@@ -900,32 +900,83 @@ void Raft::AppendEntries1(const raftRpcProctoc::AppendEntriesArgs* args,
 }
 
 
-// 进来前要保证logIndex是存在的，即≥rf.lastSnapshotIncludeIndex	，而且小于等于rf.getLastLogIndex()
-bool Raft::matchLog(int logIndex, int logTerm) 
+// leader调用 获取想发给 Follower 的新日志的上一条日志的信息：prevLogIndex 和 prevLogTerm
+void Raft::getPrevLogInfo(int server, int* preIndex, int* preTerm) // 传入：服务器index，传出：AE请求的preLogIndex和PrevLogTerm
 {
- 
-}
-
-
-// getPrevLogInfo
-// leader调用，传入：服务器index，传出：发送的AE的preLogIndex和PrevLogTerm
-void Raft::getPrevLogInfo(int server, int* preIndex, int* preTerm) 
-{
-	/* Leader 想发送给 Follower 的日志条目中，新日志的前一条日志的索引和term*/
+	/* Leader 想发送给 Follower 的日志条目中，新日志的前一条日志的索引和term */
 
 	// 假设：
-	// Leader日志为索引：[1, 2, 3, 4, 5]
-	// Follower日志为索引：[1, 2, 3]
-	// 当Leader想追加索引4和5的日志时，leader就会自己确定preLogIndex = 3
-	// 然后RPC发送给follower告诉Follower，follower去判断这些信息是否与自己的日志一致
+	// 	Leader日志为索引：  [1, 2, 3, 4, 5]
+	// 	Follower日志为索引：[1, 2, 3]
+	// 	当Leader想追加索引4和5的日志时，leader就会自己确定 preLogIndex = 3
+	// 	然后RPC发送给follower，follower去判断这些信息是否与自己的日志一致
+
+	// Leader下一个要发送的日志正好是 lastSnapshotIncludeIndex + 1，说明 Leader 只能从快照后第一条日志开始发起同步
+	if (m_nextIndex[server] == m_lastSnapshotIncludeIndex + 1)
+	{
+		// 要发送的日志是第一个日志，因此直接返回 m_lastSnapshotIncludeIndex 和 m_lastSnapshotIncludeTerm
+		*preIndex = m_lastSnapshotIncludeIndex;
+		*preTerm = m_lastSnapshotIncludeTerm;
+		return;
+		// Leader 告诉 Follower：“我认为你上一次收到的最后一条日志是快照最后一项”
+	}
+
+	// 否则从日志中提取
+	auto nextIndex = m_nextIndex[server];
+	*preIndex = nextIndex - 1; // 从本地日志中获取 nextIndex - 1 对应的日志项作为 “prevLog”
+	*preTerm = m_logs[getSlicesIndexFromLogIndex(*preIndex)].logterm();
 
 }
 
 
-// leader 根据多数节点复制日志进度，更新提交索引 CommitIndex
+
+// 判断本地日志项 LogIndex 的 term 和 Leader 发来的是否匹配
+bool Raft::matchLog(int logIndex, int logTerm) 
+{
+	/* 某个日志项 logIndex 在当前 Follower 节点是否存在，并且 term 是否与 Leader 发来的匹配 */
+	
+	myAssert(logIndex >= m_lastSnapshotIncludeIndex && logIndex <= getLastLogIndex(), // 检查 logIndex 是否落在合法范围内
+			format("不满足：logIndex{%d}>=rf.lastSnapshotIncludeIndex{%d}&&logIndex{%d}<=rf.getLastLogIndex{%d}",
+                  logIndex, m_lastSnapshotIncludeIndex, logIndex, getLastLogIndex()));
+	
+	return logTerm == getLogTermFromLogIndex(logIndex); 
+}
+
+
+// leader 根据多数节点复制日志进度，更新 CommitIndex
 void Raft::leaderUpdateCommitIndex() 
 {
- 
+	/* Leader 根据每个 Follower 的 matchIndex[]，决定当前有哪些日志已经被「多数派节点」复制成功 */
+	/* Raft 只能提交本 term 由 Leader 新生成且多数派复制成功的日志条目 */
+
+	m_commitIndex = m_lastSnapshotIncludeIndex; // 重置 commitIndex 为快照最后一条日志的 index，作为最低基线
+
+	// 从最新日志项往前查，尝试找到一个满足 “多数派复制成功” 的日志 index
+	for (int index = getLastLogIndex(); index >= m_lastSnapshotIncludeIndex + 1; index--)
+	{
+		int sum = 0;
+		for (int i = 0; i < m_peers.size(); i++)
+		{
+			if (i == m_me) // Leader 本身也算一个确认
+			{
+				sum += 1;
+				continue;
+			}
+			if (m_matchIndex[i] >= index) 
+			{
+				sum += i; // 有几个 Follower 的日志 index >= 当前 index
+			}
+		}
+
+		
+		// sum >= n/2 + 1 即为多数派，且日志的任期等于当前任期，才会更新commitIndex！！！！(只能提交当前 term 的日志)
+		if (sum >= m_peers.size() / 2 + 1 && getLogTermFromLogIndex(index) == m_currentTerm)
+		{
+			m_commitIndex = index;
+			break;
+		}
+
+	}
 }
 
 
@@ -934,71 +985,119 @@ void Raft::leaderUpdateCommitIndex()
 
 ////////////////////////////////////////////  日志信息辅助获取  ////////////////////////////////////////////
 
-/**
- *
- * @return 最新的log的logindex，即log的逻辑index。区别于log在m_logs中的物理index
- * 可见：getLastLogIndexAndTerm()
- */
+/*
+	逻辑索引（logIndex）：Raft 日志全局编号，不变，即使前面被快照清除。
+	物理索引（slice index）：实际在 m_logs 数组中的下标，从 0 开始。
+*/
 
-// 获取当前节点最后一条日志条目的 逻辑索引（LogIndex） 的函数
-int Raft::getLastLogIndex() 
-{
-  
-}
-
-
-
-// 获取当前日志数组中最后一条日志的任期号
-int Raft::getLastLogTerm() 
-{
-  
-}
-
-
+// 获取当前节点最后一条日志项的逻辑索引和任期
 void Raft::getLastLogIndexAndTerm(int* lastLogIndex, int* lastLogTerm) 
 {
-  
+	// 若日志为空，表示当前日志都被快照清理了，只能返回快照中最后一项
+	if (m_logs.empty())
+	{
+		*lastLogIndex = m_lastSnapshotIncludeIndex;
+		*lastLogTerm = m_lastSnapshotIncludeTerm;
+		return;
+	}
+	else // 从本地日志中获取最新一条日志条目的索引 (logindex) 和任期 (logterm)
+	{
+		*lastLogIndex = m_logs[m_logs.size() - 1].logindex();
+		*lastLogTerm = m_logs[m_logs.size() - 1].logterm();
+		return;
+	}
+}
+
+// 获取当前节点最后一条日志条目的逻辑索引（LogIndex）
+int Raft::getLastLogIndex() 
+{
+	int lastLogIndex = -1;
+	int _ = -1; // 占位变量（约定俗成的“哑变量名”）
+	getLastLogIndexAndTerm(&lastLogIndex, &_);
+	return lastLogIndex;
+}
+
+// 获取当前日志数组中最后一条日志的 term
+int Raft::getLastLogTerm() 
+{
+	int _ = -1;
+	int lastLogTerm = -1;
+	getLastLogIndexAndTerm(&_, &lastLogTerm);
+	return lastLogTerm;
 }
 
 
 
-/**
- *
- * @param logIndex log的逻辑index。注意区别于m_logs的物理index
- * @return
- */
-
-
-// 根据给定的日志下标获取其对应的任期
+// 获取指定 logIndex 的对应 term  
 int Raft::getLogTermFromLogIndex(int logIndex) 
 {
+	/* logIndex 是逻辑索引，不是m_logs数组下标，因为中间可能存在快照截断 */
 
+	// 要求 logIndex 必须在 [m_lastSnapshotIncludeIndex, getLastLogIndex()] 之间
+	myAssert(logIndex >= m_lastSnapshotIncludeIndex,
+             format("[func-getSlicesIndexFromLogIndex-rf{%d}]  index{%d} < rf.lastSnapshotIncludeIndex{%d}", 
+					m_me, logIndex, m_lastSnapshotIncludeIndex));
+	
+	int lastLogIndex = getLastLogIndex();
+	myAssert(logIndex <= lastLogIndex, 
+			 format("[func-getSlicesIndexFromLogIndex-rf{%d}]  logIndex{%d} > lastLogIndex{%d}",
+                    m_me, logIndex, lastLogIndex));
+
+
+	// 如果请求的是快照中最后一条的 term
+	if (logIndex == m_lastSnapshotIncludeIndex)
+	{
+		return m_lastSnapshotIncludeTerm;
+	}
+	else  // 否则查找日志数组中对应的日志 term
+	{
+		return m_logs[getSlicesIndexFromLogIndex(logIndex)].logterm();
+	}	
 }
 
 
 
-// 找到index对应的真实下标位置！！！
-// 限制，输入的logIndex必须保存在当前的logs里面（不包含snapshot）
+// 找到逻辑索引 logIndex 对应的物理索引 SliceIndex
 int Raft::getSlicesIndexFromLogIndex(int logIndex) 
 {
+	/* 将某条日志的 “逻辑索引（logIndex）” 转换为 m_logs 容器中的真实下标（物理索引） */
 
+	// 要求 logIndex 必须在 (m_lastSnapshotIncludeIndex, getLastLogIndex()] 之间 （不包含snapshot）
+	myAssert(logIndex > m_lastSnapshotIncludeIndex,
+	 		  format("[func-getSlicesIndexFromLogIndex-rf{%d}]  index{%d} <= rf.lastSnapshotIncludeIndex{%d}",
+					 m_me, logIndex, m_lastSnapshotIncludeIndex));
+	int lastLogIndex = getLastLogIndex();
+	myAssert(logIndex <= lastLogIndex, 
+			 format("[func-getSlicesIndexFromLogIndex-rf{%d}]  logIndex{%d} > lastLogIndex{%d}",
+                    m_me, logIndex, lastLogIndex));
+
+	// m_logs 容器中的下标
+	int SliceIndex = logIndex - m_lastSnapshotIncludeIndex - 1;
+	return SliceIndex;
 }
 
 
 
-// GetState return currentTerm and whether this server
-// believes it is the Leader.
+
+// 用于外部模块获取当前 Raft 节点的两个状态：term，是否是Leader
 void Raft::GetState(int* term, bool* isLeader) 
 {
-  
+	m_mtx.lock();
+	DEFER { m_mtx.unlock();	};
+
+	*term = m_currentTerm;
+	*isLeader = (m_status == Leader);
 }
 
-// 获取下一条待提交日志的索引
+
+
+// 获取一个新客户端命令 应该分配的逻辑日志索引（LogIndex）
 int Raft::getNewCommandIndex() 
 {
-  
+	// 如果len(logs)==0,就为快照的index+1，否则为log最后一个日志+1
+	auto lastLogIndex = getLastLogIndex();
+	return lastLogIndex + 1;
 }
-
 
 
 
@@ -1049,25 +1148,135 @@ void Raft::InstallSnapshot(google::protobuf::RpcController* controller,
 
 //////////////////////////////////////////////  快照相关  //////////////////////////////////////////////
 
-// 主动安装快照，抛弃旧日志
+// 在当前服务器上 生成快照并截断旧日志
 void Raft::Snapshot(int index, std::string snapshot) 
 {
-  
-}
+	/* 	Snapshot 没有主动 “生成快照” 的操作，只是：
+		更新了快照元信息（m_lastSnapshotIncludeIndex 和 m_lastSnapshotIncludeTerm）；
+		截断了旧日志;
+		把 snapshot 写入了持久化层
+	*/
+	
+	/* 	
+		快照内容不是 Raft 层生成的，而是上层状态机主动传入的
+	   	上层状态机（如 KVServer）在合适的 applyIndex 时机，序列化当前状态（如 KV map），生成 snapshot string
+		Raft::Snapshot() 接收 snapshot --> 截断日志，更新快照最后日志信息，持久化snapshot
+	*/
+
+	std::lock_guard<std::mutex> lg(m_mtx);
+	
+	if (m_lastSnapshotIncludeIndex >= index ||  // 当前已有的快照索引超过新快照索引（重复或倒退）
+		index > m_commitIndex) // 或请求快照的 index 超过当前 commitIndex（即尚未提交的日志不能被截断）
+	{
+		// 拒绝操作，直接返回
+		DPrintf(
+        	"[func-Snapshot-rf{%d}] rejects replacing log with snapshotIndex %d as current snapshotIndex %d is larger or smaller ",
+        	m_me, index, m_lastSnapshotIncludeIndex);
+		return;
+	}
+	
+	auto lastLogIndex = getLastLogIndex(); // 为了检查snapshot前后日志是否一样，防止多截取或者少截取日志
+
+	int newLastSnapshotIncludeIndex = index; // 新快照的最后 index 和 term
+	int newLastSnapshotIncludeTerm = m_logs[getSlicesIndexFromLogIndex(index)].logterm();
+
+
+	// 构造保留的日志列表（index+1 到末尾，收集所有未被快照包含的日志条目）
+	std::vector<raftRpcProctoc::LogEntry> trunckedLogs;
+	for (int i = index + 1; i <= getLastLogIndex(); i++) // 包括等号，确保保留最后一个日志
+	{
+		trunckedLogs.push_back(m_logs[getSlicesIndexFromLogIndex(i)]);
+	}
+
+
+	// 直接用保留日志覆盖 m_logs，更新快照最后日志信息
+	m_lastSnapshotIncludeIndex = newLastSnapshotIncludeIndex;
+	m_lastSnapshotIncludeTerm = newLastSnapshotIncludeTerm;
+	m_logs = trunckedLogs;
+
+
+	// 快照生成代表 index 之前的数据已被“安全应用”，因此将 commitIndex 和 lastApplied 至少推进到 index
+	m_commitIndex = std::max(m_commitIndex, index);
+	m_lastApplied = std::max(m_lastApplied, index);
+
+
+	// 持久化状态和快照内容
+	m_persister->Save(persistData(), snapshot);
+
+	DPrintf("[SnapShot]Server %d snapshot snapshot index {%d}, term {%d}, loglen {%d}", 
+			m_me, index, m_lastSnapshotIncludeTerm, m_logs.size());
+  	
+	// 断言检查 当前日志条目数量 + 快照覆盖条目数量 = 原始日志数量
+	myAssert(m_logs.size() + m_lastSnapshotIncludeIndex == lastLogIndex,
+           	 format("len(rf.logs){%d} + rf.lastSnapshotIncludeIndex{%d} != lastLogjInde{%d}", 
+					m_logs.size(), m_lastSnapshotIncludeIndex, lastLogIndex));
+} 
+
+
 
 // 条件安装快照，判断快照是否比当前状态新，决定是否安装
 bool Raft::CondInstallSnapshot(int lastIncludedTerm, int lastIncludedIndex, std::string snapshot) 
 {
-  
+	return true; // ???
 }
 
 
 // leader 向落后follower发送快照
 void Raft::leaderSendSnapShot(int server) 
 {
-  
-   
+	m_mtx.lock();
+
+	// 构造 InstallSnapshotRequest
+	raftRpcProctoc::InstallSnapshotRequest args;
+	args.set_leaderid(m_me);
+	args.set_term(m_currentTerm);
+	args.set_lastsnapshotincludeindex(m_lastSnapshotIncludeIndex);
+	args.set_lastsnapshotincludeterm(m_lastSnapshotIncludeTerm);
+	args.set_data(m_persister->ReadSnapshot()); // 读取持久化的快照数据（完整快照准备发送给follower）
+
+	// 构造 InstallSnapshotResponse
+	raftRpcProctoc::InstallSnapshotResponse reply;
+
+	m_mtx.unlock();
+
+
+	// 发送RPC请求，ok 表示网络是否成功响应
+	bool ok = m_peers[server]->InstallSnapshot(&args, &reply); // InstallSnapshot() 是 RPC 方法，阻塞式等待响应
+	
+
+	// RPC 返回后重新加锁
+	m_mtx.lock();
+	DEFER { m_mtx.unlock(); };
+
+	// RPC 失败，直接返回
+	if (!ok) { 
+	  return;
+	}
+
+	// 检查当前节点是否还处于 Leader  (可能刚刚 RPC 过程中发生了选举或状态变化)
+	if (m_status != Leader || m_currentTerm != args.term()) 
+	{
+	  return;  //中间释放过锁，可能状态已经改变了
+	}
+
+	// 检查 term
+	if (reply.term() > m_currentTerm) 
+	{
+	  // 自己落后，三变：Term、角色、投票记录
+	  m_currentTerm = reply.term();
+	  m_votedFor = -1;
+	  m_status = Follower;
+
+	  persist();
+	  m_lastResetElectionTime = now(); 
+	  return;
+	}
+
+	// RPC正常返回，则更新该 Follower 的同步进度
+	m_matchIndex[server] = args.lastsnapshotincludeindex();
+	m_nextIndex[server] = m_matchIndex[server] + 1;
 }
+
 
 
 // 接收leader发来的快照请求，同步快照到本机（直接 RPC 调用）
