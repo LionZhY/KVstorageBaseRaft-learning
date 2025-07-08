@@ -111,22 +111,6 @@ public:
 	int getNewCommandIndex(); 				  	 // 获取一个新客户端命令 应该分配的逻辑日志索引（LogIndex）
 
 
-
-
-	
-	// 持久化 ---------------------------------------------------------------------------------------
-	void persist(); 					// 当前状态持久化到磁盘
-	void readPersist(std::string data); // 读取持久化数据，恢复状态
-	std::string persistData();			// 获取当前应持久化的数据（状态序列化后的字符串）
-	int GetRaftStateSize();				// 获取当前持久化状态的大小
-
-	
-	// 客户端命令提交 ---------------------------------------------------------------------------------
-	void Start(Op command, int *newLogIndex, int *newLogTerm, bool *isLeader); 
-
-
-
-
 	
 	// 快照相关 -------------------------------------------------------------------------------------
 
@@ -145,13 +129,25 @@ public:
 
 
 
-	// Snapshot the service says it has created a snapshot that has
-	// all info up to and including index. this means the
-	// service no longer needs the log through (and including)
-	// that index. Raft should now trim its log as much as possible.
-	// index代表是快照apply应用的index,而snapshot代表的是上层service传来的快照字节流，包括了Index之前的数据
-	// 这个函数的目的是把安装到快照里的日志抛弃，并安装快照数据，同时更新快照下标，属于peers自身主动更新，与leader发送快照不冲突
-	// 即服务层主动发起请求raft保存snapshot里面的数据，index是用来表示snapshot快照执行到了哪条命令
+	
+	// 持久化 ---------------------------------------------------------------------------------------
+	void persist(); 					// 当前状态持久化 (写入磁盘)
+	std::string persistData();			// 将需要持久化的状态打包为字符串（即序列化）
+	void readPersist(std::string data); // 从持久化数据中恢复 Raft 状态（即反序列化）
+	int GetRaftStateSize();				// 获取当前持久化状态的大小
+
+	
+	
+	// 客户端命令提交 ---------------------------------------------------------------------------------
+	void Start(Op command, int *newLogIndex, int *newLogTerm, bool *isLeader); 
+
+
+
+
+	// 推送给KV服务层 ----------------------------------------------------------------------------
+
+	void pushMsgToKvServer(ApplyMsg msg); 	  // 将应用消息推送给KV服务层
+
 	
 
 	
@@ -187,9 +183,7 @@ public:
 
 
 
-	// 状态查询与工具函数 ----------------------------------------------------------------------------
 
-	void pushMsgToKvServer(ApplyMsg msg); 	  // 将应用消息推送给KV服务层
 	
 	
 

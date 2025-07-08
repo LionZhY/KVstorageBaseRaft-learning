@@ -1104,48 +1104,6 @@ int Raft::getNewCommandIndex()
 
 
 
-/////////////////////////////////////////////  RPC 接口重写  /////////////////////////////////////////////
-
-// RPC接口重写，接收远程追加日志请求
-// 重写基类方法,因为rpc远程调用真正调用的是这个方法
-// 序列化，反序列化等操作rpc框架都已经做完了，因此这里只需要获取值然后真正调用本地方法即可。
-void Raft::AppendEntries(google::protobuf::RpcController* controller,
-                         const ::raftRpcProctoc::AppendEntriesArgs* request,
-                         ::raftRpcProctoc::AppendEntriesReply* response, 
-						 ::google::protobuf::Closure* done) 
-{
-
-}
-
-// RPC接口重写，用于接收其他节点发来的 “投票请求”
-void Raft::RequestVote(google::protobuf::RpcController* controller, 
-					   const ::raftRpcProctoc::RequestVoteArgs* request,
-					   ::raftRpcProctoc::RequestVoteReply* response, 
-					   ::google::protobuf::Closure* done) 
-{
-  RequestVote(request, response);
-  done->Run();
-}
-
-
-// RPC接口重写，接收远程快照安装请求
-void Raft::InstallSnapshot(google::protobuf::RpcController* controller,
-                           const ::raftRpcProctoc::InstallSnapshotRequest* request,
-                           ::raftRpcProctoc::InstallSnapshotResponse* response, 
-						   ::google::protobuf::Closure* done) 
-{
-
-}
-
-
-
-
-
-
-
-
-
-
 //////////////////////////////////////////////  快照相关  //////////////////////////////////////////////
 
 // 在当前服务器上 生成快照并截断旧日志
@@ -1279,12 +1237,76 @@ void Raft::leaderSendSnapShot(int server)
 
 
 
-// 接收leader发来的快照请求，同步快照到本机（直接 RPC 调用）
+// followr 接收 leader 发来的快照请求，同步快照到本机（直接 RPC 调用）
 void Raft::InstallSnapshot(const raftRpcProctoc::InstallSnapshotRequest* args,
                            raftRpcProctoc::InstallSnapshotResponse* reply) 
 {
-  
-  
+	m_mtx.lock();
+	DEFER { m_mtx.unlock(); };
+
+	// 检查 term
+	if (args->term() < m_currentTerm)
+	{
+		reply->set_term(m_currentTerm);
+		return;
+	}
+
+	if (args->term() > m_currentTerm)
+	{
+		m_currentTerm = args->term();
+		m_votedFor = -1;
+		m_status = Follower;
+		persist();
+	}
+
+	// 无论什么身份都确保退回 Follower，重置选举超时计时器
+	m_status = Follower;
+	m_lastResetElectionTime = now();
+
+
+	// 检查 args->snapshot 是否过时 (比自己已有的还旧)
+	if (args->lastsnapshotincludeindex() <= m_lastSnapshotIncludeIndex)
+	{
+		return;
+	}
+
+
+	// term相同，args->snapshot不过时 ==> 根据 args->lastsnapshotincludeindex() 处理 m_logs
+	auto lastLogIndex = getLastLogIndex();
+
+	if (lastLogIndex > args->lastsnapshotincludeindex())
+	{
+		// lastSnapshotIncludeIndex < args->lastsnapshot < lastLogIndex 部分日志过期，截断
+		m_logs.erase(m_logs.begin(), m_logs.begin() + getSlicesIndexFromLogIndex(args->lastsnapshotincludeindex()) + 1);
+	}
+	else 
+	{
+		// lastLogIndex < args->lastsnapshot 日志全过期，清空
+		m_logs.clear();
+	}
+
+	// 更新本地状态，这些字段的更新代表了本地已经应用了该快照
+	m_commitIndex = std::max(m_commitIndex, args->lastsnapshotincludeindex());
+	m_lastApplied = std::max(m_lastApplied, args->lastsnapshotincludeindex());
+	m_lastSnapshotIncludeIndex = args->lastsnapshotincludeindex();
+	m_lastSnapshotIncludeTerm = args->lastsnapshotincludeterm();
+
+	// 回复RPC成功
+	reply->set_term(m_currentTerm);
+
+
+	// 异步将快照交给状态机（KV Server）
+	ApplyMsg msg; // ApplyMsg 类型的消息结构，用于向上层状态机发送应用信息
+	msg.SnapshotValid = true;
+	msg.Snapshot = args->data();
+	msg.SnapshotTerm = args->lastsnapshotincludeterm();
+	msg.SnapshotIndex = args->lastsnapshotincludeindex();
+
+	std::thread t(&Raft::pushMsgToKvServer, this, msg); // 创建新线程并执行 pushMsgToKvServer()
+	t.detach();
+
+	// 持久化状态与快照
+	m_persister->Save(persistData(), args->data());
 }
 
 
@@ -1292,29 +1314,69 @@ void Raft::InstallSnapshot(const raftRpcProctoc::InstallSnapshotRequest* args,
 
 ////////////////////////////////////////////////  持久化  ////////////////////////////////////////////////
 
-// 当前状态持久化到磁盘
+// 当前状态持久化 (写入磁盘)
 void Raft::persist() 
 {
-  
+    auto data = persistData(); 		  // 序列化所有应持久化的字段
+  	m_persister->SaveRaftState(data); // 序列化后的 Raft 状态数据 写入 m_persister 所管理的持久化存储
 }
 
 
-// 读取持久化数据，恢复状态
-void Raft::readPersist(std::string data) 
-{
-  
-}
-
-
-
-// 获取当前应持久化的数据（状态序列化后的字符串）
+// 将需要持久化的状态打包为字符串（即序列化）
 std::string Raft::persistData() 
 {
-  
+	// 将状态封装到 BoostPersistRaftNode 中，然后使用 Boost 序列化为字符串
+	BoostPersistRaftNode boostPersistRaftNode; 
+	boostPersistRaftNode.m_currentTerm = m_currentTerm;
+	boostPersistRaftNode.m_votedFor = m_votedFor;
+	boostPersistRaftNode.m_lastSnapshotIncludeIndex = m_lastSnapshotIncludeIndex;
+	boostPersistRaftNode.m_lastSnapshotIncludeTerm = m_lastSnapshotIncludeTerm;
+	for (auto& item : m_logs) 
+	{
+		// 日志 m_logs 是 Protobuf 类型的，单独用 .SerializeAsString() 序列化成字符串加入
+		boostPersistRaftNode.m_logs.push_back(item.SerializeAsString());
+	}
+
+	// 最后统一使用 Boost::text_oarchive 序列化为文本格式的字符串，方便后续存储
+	std::stringstream ss;
+	boost::archive::text_oarchive oa(ss);
+	oa << boostPersistRaftNode;
+	return ss.str();
 }
 
 
-// 获取当前持久化状态的大小
+
+// 从持久化数据中恢复 Raft 状态（即反序列化）
+void Raft::readPersist(std::string data) 
+{
+    if (data.empty()) 
+	{
+    	return;
+  	}
+
+	// 使用 Boost 的 text_iarchive 对象反序列化数据
+  	std::stringstream iss(data);
+  	boost::archive::text_iarchive ia(iss);
+
+  	// 还原出当前任期、投票信息、快照元信息
+  	BoostPersistRaftNode boostPersistRaftNode;
+  	ia >> boostPersistRaftNode;
+
+  	m_currentTerm = boostPersistRaftNode.m_currentTerm;
+  	m_votedFor = boostPersistRaftNode.m_votedFor;
+  	m_lastSnapshotIncludeIndex = boostPersistRaftNode.m_lastSnapshotIncludeIndex;
+  	m_lastSnapshotIncludeTerm = boostPersistRaftNode.m_lastSnapshotIncludeTerm;
+  	m_logs.clear();
+  	for (auto& item : boostPersistRaftNode.m_logs)  
+	{
+  	  	raftRpcProctoc::LogEntry logEntry;
+  	  	logEntry.ParseFromString(item);// 对每条日志项再使用 Protobuf 的 ParseFromString() 恢复日志结构
+  	  	m_logs.emplace_back(logEntry);
+  	}
+}
+
+
+// 返回当前持久化状态的占用空间大小
 int Raft::GetRaftStateSize() 
 { 
 	return m_persister->RaftStateSize(); 
@@ -1323,14 +1385,53 @@ int Raft::GetRaftStateSize()
 
 
 
+///////////////////////////////////////////  leader 接收客户端命令  //////////////////////////////////////////
 
-/////////////////////////////////////////////  客户端命令提交  /////////////////////////////////////////////
-
-// 客户端调用提交新的命令，封装为日志条目
-void Raft::Start(Op command, int* newLogIndex, int* newLogTerm, bool* isLeader) 
+// Leader 节点接收上层（如 KVServer）客户端命令，生成日志项
+void Raft::Start(Op command, 						// 客户端提交的命令
+				 int* newLogIndex, int* newLogTerm, // 新日志的index和term
+				 bool* isLeader) 					// 返回是否是Leader（非Leader不能接收命令）
 {
+	/* 	
+		当上层（如 KVServer）调用 Start(command) 向 Raft 提交一个新命令时，
+		Leader 将该命令封装为日志项，追加到本地日志 m_logs 中，并返回该日志项的索引和任期。
+	*/
 
+	std::lock_guard<std::mutex> lg(m_mtx);
+
+	// 非 Leader 拒绝接收命令
+	if (m_status != Leader)
+	{
+		DPrintf("[func-Start-rf{%d}]  is not leader");
+		*newLogIndex = -1;
+		*newLogTerm = -1;
+		*isLeader = false;
+		return;
+	}
+
+	// 构造新日志项LogEntry 并追加到日志 m_logs
+	raftRpcProctoc::LogEntry newLogEntry;
+	newLogEntry.set_command(command.asString()); 	// 序列化命令内容
+	newLogEntry.set_logterm(m_currentTerm);			// 当前任期
+	newLogEntry.set_logindex(getNewCommandIndex());	// 新日志索引
+	m_logs.emplace_back(newLogEntry);				// 添加到日志数组 m_logs
+
+	//  获取最新日志索引，打印日志
+	int lastLogIndex = getLastLogIndex();
+	DPrintf("[func-Start-rf{%d}]  lastLogIndex:%d,command:%s\n", m_me, lastLogIndex, &command);
+
+	// 持久化日志状态
+	persist();
+
+	// 设置返回值，表示命令成功提交
+	*newLogIndex = newLogEntry.logindex();
+	*newLogTerm = newLogEntry.logterm();
+	*isLeader = true;
+
+	
+	/* 延迟同步，Leader 不会因新命令立即向 Follower 发送日志，而是等下一次定时心跳统一触发 AppendEntries */
 }
+
 
 
 
@@ -1356,11 +1457,52 @@ void Raft::applierTicker()
 
 
 
+
+
+/////////////////////////////////////////////  推送给KV服务层  /////////////////////////////////////////////
+
 // 将应用消息推送给KV服务层
 void Raft::pushMsgToKvServer(ApplyMsg msg) 
 { 
-	
+	applyChan->Push(msg);
 }
+
+
+
+
+//////////////////////////////////////////////  RPC 接口重写  //////////////////////////////////////////////
+
+// RPC接口重写，接收远程追加日志请求
+// 重写基类方法,因为rpc远程调用真正调用的是这个方法
+// 序列化，反序列化等操作rpc框架都已经做完了，因此这里只需要获取值然后真正调用本地方法即可。
+void Raft::AppendEntries(google::protobuf::RpcController* controller,
+                         const ::raftRpcProctoc::AppendEntriesArgs* request,
+                         ::raftRpcProctoc::AppendEntriesReply* response, 
+						 ::google::protobuf::Closure* done) 
+{
+
+}
+
+// RPC接口重写，用于接收其他节点发来的 “投票请求”
+void Raft::RequestVote(google::protobuf::RpcController* controller, 
+					   const ::raftRpcProctoc::RequestVoteArgs* request,
+					   ::raftRpcProctoc::RequestVoteReply* response, 
+					   ::google::protobuf::Closure* done) 
+{
+  RequestVote(request, response);
+  done->Run();
+}
+
+
+// RPC接口重写，接收远程快照安装请求
+void Raft::InstallSnapshot(google::protobuf::RpcController* controller,
+                           const ::raftRpcProctoc::InstallSnapshotRequest* request,
+                           ::raftRpcProctoc::InstallSnapshotResponse* response, 
+						   ::google::protobuf::Closure* done) 
+{
+
+}
+
 
 
 
