@@ -9,6 +9,8 @@
 #include <ratio>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <vector>
+#include "ApplyMsg.h"
 #include "config.h"
 #include "raftRPC.pb.h"
 #include "util.h"
@@ -38,7 +40,6 @@ void Raft::init(std::vector<std::shared_ptr<RaftRpcUtil>> peers,
 
 	// applier
 	this->applyChan = applyCh; // 保存应用层日志提交通道 (Raft会将已提交日志通过该队列发送给 KVServer 或上层状态机模块)
-	//    rf.ApplyMsgQueue = make(chan ApplyMsg)
 
 	m_currentTerm = 0;	// 当前任期
 	m_status = Follower;// 初始staus
@@ -68,9 +69,6 @@ void Raft::init(std::vector<std::shared_ptr<RaftRpcUtil>> peers,
 		m_lastApplied = m_lastSnapshotIncludeIndex;
 		// 既然快照中已经包含并应用了这些日志，所以恢复后无需再次 apply，从此索引继续处理。
 		// 这是典型的 快照恢复行为：Raft 不会重复向状态机 apply 快照前的日志。
-
-
-	  // rf.commitIndex = rf.lastSnapshotIncludeIndex   todo ：崩溃恢复为何不能读取commitIndex
 	}
 
 	// 打印调试信息（只在 Debug 模式下生效）
@@ -192,7 +190,7 @@ void Raft::electionTimeOutTicker()
 
 
 
-// 发起选举  （Candidate 角色的主要职责）
+// 发起选举  （Candidate）
 void Raft::doElection() 
 {
 	std::lock_guard<std::mutex> g(m_mtx); // 加锁
@@ -415,11 +413,11 @@ void Raft::RequestVote (const raftRpcProctoc::RequestVoteArgs *args, // 请求�
 }
 
 
-// 判断候选人日志是否不比自己旧（用于投票）
+// 判断候选人日志是否不落后于自己（用于投票）
 bool Raft::UpToDate(int index, int term) // 候选人最后一条日志的 Term 和 index
 {
 	/*
-	判断日志 “新不新” 的标准是：
+		判断日志 “新不新” 的标准是：
 		先比较最后一条日志的 Term
 		如果 Term 相同，再比较日志索引（Index）
 	*/
@@ -981,6 +979,155 @@ void Raft::leaderUpdateCommitIndex()
 
 
 
+///////////////////////////////////////////  leader 接收客户端命令  //////////////////////////////////////////
+
+// Leader 节点接收上层（KVServer）客户端命令，生成日志项
+void Raft::Start(Op command, 						// 客户端提交的命令
+				 int* newLogIndex, int* newLogTerm, // 新日志的index和term
+				 bool* isLeader) 					// 返回是否是Leader（非Leader不能接收命令）
+{
+	/* 	
+		当上层（如 KVServer）调用 Start(command) 向 Raft 提交一个新命令时，
+		Leader 将该命令封装为日志项，追加到本地日志 m_logs 中，并返回该日志项的索引和任期。
+	*/
+
+	std::lock_guard<std::mutex> lg(m_mtx);
+
+	// 非 Leader 拒绝接收命令
+	if (m_status != Leader)
+	{
+		DPrintf("[func-Start-rf{%d}]  is not leader");
+		*newLogIndex = -1;
+		*newLogTerm = -1;
+		*isLeader = false;
+		return;
+	}
+
+	// 构造新日志项LogEntry 并追加到日志 m_logs
+	raftRpcProctoc::LogEntry newLogEntry;
+	newLogEntry.set_command(command.asString()); 	// 序列化命令内容
+	newLogEntry.set_logterm(m_currentTerm);			// 当前任期
+	newLogEntry.set_logindex(getNewCommandIndex());	// 新日志索引
+	m_logs.emplace_back(newLogEntry);				// 添加到日志数组 m_logs
+
+	//  获取最新日志索引，打印日志
+	int lastLogIndex = getLastLogIndex();
+	DPrintf("[func-Start-rf{%d}]  lastLogIndex:%d,command:%s\n", m_me, lastLogIndex, &command);
+
+	// 持久化日志状态
+	persist();
+
+	// 设置返回值，表示命令成功提交
+	*newLogIndex = newLogEntry.logindex();
+	*newLogTerm = newLogEntry.logterm();
+	*isLeader = true;
+
+	
+	/* 延迟同步，Leader 不会因新命令立即向 Follower 发送日志，而是等下一次定时心跳统一触发 AppendEntries */
+}
+
+
+
+
+
+////////////////////////////////////////  ApplyMsg 推送到 KVServer  ////////////////////////////////////////
+
+// 提取已提交但未应用的日志封装成 ApplyMsg
+std::vector<ApplyMsg> Raft::getApplyLogs() 
+{
+	/* 从日志中提取 尚未应用到状态机 的日志条目，封装成 ApplyMsg 列表，供上层状态机（如 KV Server）处理 */
+	/* ApplyMsg 是用于 Raft 向状态机（KV 层）提交应用的消息结构 */
+
+	std::vector<ApplyMsg> applyMsgs;
+
+	// 断言检查：当前 commitIndex 不应该超过日志的实际最大 index
+	myAssert(m_commitIndex <= getLastLogIndex(), 
+			 format("[func-getApplyLogs-rf{%d}] commitIndex{%d} >getLastLogIndex{%d}",
+                    m_me, m_commitIndex, getLastLogIndex()));
+	
+	// 循环处理 未应用的日志
+	while (m_lastApplied < m_commitIndex)
+	{
+		m_lastApplied++; // 每次向前推进一个
+		
+		// 断言确保 实际获取到的日志条目的 logindex 应该与当前的 m_lastApplied 一致
+		myAssert(m_logs[getSlicesIndexFromLogIndex(m_lastApplied)].logindex() == m_lastApplied,
+             	 format("rf.logs[rf.getSlicesIndexFromLogIndex(rf.lastApplied)].LogIndex{%d} != rf.lastApplied{%d} ",
+                    	m_logs[getSlicesIndexFromLogIndex(m_lastApplied)].logindex(), m_lastApplied));
+
+		// 为当前 m_lastApplied 日志构造一条 ApplyMsg
+		ApplyMsg applyMsg;
+		applyMsg.CommandValid = true;  // 表示这是一个正常日志命令，而不是快照
+		applyMsg.SnapshotValid = false;
+		applyMsg.Command = m_logs[getSlicesIndexFromLogIndex(m_lastApplied)].command(); // 提取具体的日志命令
+		applyMsg.CommandIndex = m_lastApplied; // 该命令在 Raft 日志中的逻辑索引
+		
+		// 把构造好的消息加入 applyMsgs 列表，准备返回给上层状态机
+		applyMsgs.emplace_back(applyMsg);
+
+	}
+
+	// 返回这批待应用的日志命令，推送给 KV Server 执行
+	return applyMsgs;
+}
+
+
+// 周期性将已提交的日志推入 applyChan 通道 （正常日志命令）
+void Raft::applierTicker() 
+{
+	/* 周期性将已提交的日志应用到状态机（KVServer）的后台线程逻辑核心 */
+	/* 它保证状态机和 commitIndex 保持一致性，即 Raft 所提交的日志最终会被应用 */
+	/* 由独立线程或协程在 Raft 节点启动时启动 */
+
+	while (true)
+	{
+		m_mtx.lock();
+
+		// 当前节点是 Leader 时打印调试：当前已应用日志（m_lastApplied）与已提交日志（m_commitIndex）的差距
+		if (m_status == Leader)
+		{
+			DPrintf("[Raft::applierTicker() - raft{%d}]  m_lastApplied{%d}   m_commitIndex{%d}", 
+					m_me, m_lastApplied, m_commitIndex);
+		}
+
+		// 获取尚未应用但已提交的日志，封装成 ApplyMsg 列表
+		auto applyMsgs = getApplyLogs();
+
+		m_mtx.unlock(); // 后续将日志推送给 KVServer 时，不需要锁，避免阻塞主线程
+
+		
+		if (!applyMsgs.empty()) 
+		{
+			DPrintf("[func- Raft::applierTicker()-raft{%d}] 向kvserver报告的applyMsgs长度为：{%d}", 
+					m_me, applyMsgs.size());
+		}
+		
+		// 将所有待应用的 ApplyMsg 推入 applyChan 通道，上层状态机（KVServer）会监听该Channel，取出并执行 command
+		for (auto& message : applyMsgs)
+		{
+			applyChan->Push(message);
+		}
+
+
+		// 每轮应用检查结束后，等待一小段时间，防止 CPU 忙等
+		sleepNMilliseconds(ApplyInterval); // ApplyInterval - Apply 状态机的检查间隔
+	}
+  
+}
+
+
+// 将应用消息推送给KV服务层（快照）
+void Raft::pushMsgToKvServer(ApplyMsg msg) 
+{ 
+	/* Raft 向状态机（KVServer）推送应用消息（ApplyMsg） 的封装，是 Raft 与 KV 服务层之间通信的接口 */
+
+	/* 但是只在 InstallSnapshot() 处理逻辑中调用，所以主要用来将快照 ApplyMsg 推送给状态机 */
+	
+	applyChan->Push(msg);
+}
+
+
+
 
 
 ////////////////////////////////////////////  日志信息辅助获取  ////////////////////////////////////////////
@@ -1385,102 +1532,28 @@ int Raft::GetRaftStateSize()
 
 
 
-///////////////////////////////////////////  leader 接收客户端命令  //////////////////////////////////////////
-
-// Leader 节点接收上层（如 KVServer）客户端命令，生成日志项
-void Raft::Start(Op command, 						// 客户端提交的命令
-				 int* newLogIndex, int* newLogTerm, // 新日志的index和term
-				 bool* isLeader) 					// 返回是否是Leader（非Leader不能接收命令）
-{
-	/* 	
-		当上层（如 KVServer）调用 Start(command) 向 Raft 提交一个新命令时，
-		Leader 将该命令封装为日志项，追加到本地日志 m_logs 中，并返回该日志项的索引和任期。
-	*/
-
-	std::lock_guard<std::mutex> lg(m_mtx);
-
-	// 非 Leader 拒绝接收命令
-	if (m_status != Leader)
-	{
-		DPrintf("[func-Start-rf{%d}]  is not leader");
-		*newLogIndex = -1;
-		*newLogTerm = -1;
-		*isLeader = false;
-		return;
-	}
-
-	// 构造新日志项LogEntry 并追加到日志 m_logs
-	raftRpcProctoc::LogEntry newLogEntry;
-	newLogEntry.set_command(command.asString()); 	// 序列化命令内容
-	newLogEntry.set_logterm(m_currentTerm);			// 当前任期
-	newLogEntry.set_logindex(getNewCommandIndex());	// 新日志索引
-	m_logs.emplace_back(newLogEntry);				// 添加到日志数组 m_logs
-
-	//  获取最新日志索引，打印日志
-	int lastLogIndex = getLastLogIndex();
-	DPrintf("[func-Start-rf{%d}]  lastLogIndex:%d,command:%s\n", m_me, lastLogIndex, &command);
-
-	// 持久化日志状态
-	persist();
-
-	// 设置返回值，表示命令成功提交
-	*newLogIndex = newLogEntry.logindex();
-	*newLogTerm = newLogEntry.logterm();
-	*isLeader = true;
-
-	
-	/* 延迟同步，Leader 不会因新命令立即向 Follower 发送日志，而是等下一次定时心跳统一触发 AppendEntries */
-}
-
-
-
-
-
-/////////////////////////////////////////////  Apply 机制  /////////////////////////////////////////////
-
-// 获取所有已提交但尚未应用的日志
-std::vector<ApplyMsg> Raft::getApplyLogs() 
-{
-  
-
-}
-
-// 循环检查 commitIndex 并应用日志到状态机（独立线程或协程定时调用）
-void Raft::applierTicker() 
-{
-  
-  
-}
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////  推送给KV服务层  /////////////////////////////////////////////
-
-// 将应用消息推送给KV服务层
-void Raft::pushMsgToKvServer(ApplyMsg msg) 
-{ 
-	applyChan->Push(msg);
-}
-
-
-
 
 //////////////////////////////////////////////  RPC 接口重写  //////////////////////////////////////////////
 
+/* 
+	Raft 节点对外提供的 gRPC 服务接口 
+	是 Raft 节点作为 RPC 服务端 时处理 RPC 请求的入口函数
+	对应的 AppendEntries1(), InstallSnapshot(), RequestVote() 是核心的业务逻辑函数；
+	
+	done 是 protobuf/gRPC 框架传入的完成回调函数（Closure），
+	调用 done->Run() 表示通知框架 “本次 RPC 请求处理结束，可以将 response 返回给客户端”
+*/
+
+
 // RPC接口重写，接收远程追加日志请求
-// 重写基类方法,因为rpc远程调用真正调用的是这个方法
-// 序列化，反序列化等操作rpc框架都已经做完了，因此这里只需要获取值然后真正调用本地方法即可。
-void Raft::AppendEntries(google::protobuf::RpcController* controller,
+void Raft::AppendEntries(google::protobuf::RpcController* controller, // RPC 框架控制器
                          const ::raftRpcProctoc::AppendEntriesArgs* request,
                          ::raftRpcProctoc::AppendEntriesReply* response, 
-						 ::google::protobuf::Closure* done) 
+						 ::google::protobuf::Closure* done) // 表示“处理完了”的回调
 {
-
+	// 序列化，反序列化等操作rpc框架都已经做完了，因此这里只需要获取值然后真正调用本地方法即可
+	AppendEntries1(request, response); 
+	done->Run();
 }
 
 // RPC接口重写，用于接收其他节点发来的 “投票请求”
@@ -1489,8 +1562,8 @@ void Raft::RequestVote(google::protobuf::RpcController* controller,
 					   ::raftRpcProctoc::RequestVoteReply* response, 
 					   ::google::protobuf::Closure* done) 
 {
-  RequestVote(request, response);
-  done->Run();
+	RequestVote(request, response);
+	done->Run();
 }
 
 
@@ -1500,67 +1573,9 @@ void Raft::InstallSnapshot(google::protobuf::RpcController* controller,
                            ::raftRpcProctoc::InstallSnapshotResponse* response, 
 						   ::google::protobuf::Closure* done) 
 {
-
+	InstallSnapshot(request, response);
+	done->Run();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

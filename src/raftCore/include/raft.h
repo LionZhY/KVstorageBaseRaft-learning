@@ -95,6 +95,16 @@ public:
 	void leaderUpdateCommitIndex(); // leader 根据多数节点复制日志进度，更新提交索引 CommitIndex
 
 
+	
+	// 客户端命令提交 ---------------------------------------------------------------------------------
+	void Start(Op command, int *newLogIndex, int *newLogTerm, bool *isLeader); 
+
+
+	// ApplyMsg 推送到 KVServer ----------------------------------------------------------------------
+	std::vector<ApplyMsg> getApplyLogs(); // 提取已提交但未应用的日志封装成 ApplyMsg
+	void applierTicker(); 		 		  // 周期性将已提交的日志推入 applyChan 通道 （正常日志命令）
+	void pushMsgToKvServer(ApplyMsg msg); // 将应用消息推送给KV服务层（快照）
+
 
 
 
@@ -137,24 +147,6 @@ public:
 	int GetRaftStateSize();				// 获取当前持久化状态的大小
 
 	
-	
-	// 客户端命令提交 ---------------------------------------------------------------------------------
-	void Start(Op command, int *newLogIndex, int *newLogTerm, bool *isLeader); 
-
-
-
-
-	// 推送给KV服务层 ----------------------------------------------------------------------------
-
-	void pushMsgToKvServer(ApplyMsg msg); 	  // 将应用消息推送给KV服务层
-
-	
-
-	
-	// Apply机制 -------------------------------------------------------------------------------------
-	std::vector<ApplyMsg> getApplyLogs();// 获取所有已提交但尚未应用的日志
-	void applierTicker(); 		 // 循环检查 commitIndex 并应用日志到状态机（独立线程或协程定时调用）
-
 
 
 
