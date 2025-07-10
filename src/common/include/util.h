@@ -173,7 +173,6 @@ public:
 	std::string Value;		
 	std::string ClientId; // 发起请求的客户端id
 	int RequestId;        // 客户端号码请求的Request的序列号，即第几个请求
-                 //  IfDuplicate bool // Duplicate command can't be applied twice , but only for PUT and APPEND
 
 public:
 	// todo
@@ -198,7 +197,7 @@ public:
 		boost::archive::text_iarchive ia(iss);
 		// read class state from archive
 		ia >> *this;
-		return true; // todo : 解析失敗如何處理，要看一下boost庫了
+		return true; 
 	}
 
 public:
