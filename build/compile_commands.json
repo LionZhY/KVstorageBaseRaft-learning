@@ -85,6 +85,12 @@
 },
 {
   "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/raftCore/kvServer.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/kvServer.cpp",
+  "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/kvServer.cpp",
+  "output": "CMakeFiles/skip_list_on_raft.dir/src/raftCore/kvServer.cpp.o"
+},
+{
+  "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
   "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o CMakeFiles/skip_list_on_raft.dir/src/raftCore/raft.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/raft.cpp",
   "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/raft.cpp",
   "output": "CMakeFiles/skip_list_on_raft.dir/src/raftCore/raft.cpp.o"
