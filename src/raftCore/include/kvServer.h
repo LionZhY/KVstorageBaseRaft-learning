@@ -155,6 +155,7 @@ private:
     std::unordered_map<int, LockQueue<Op>*> waitApplyCh; // 通过日志索引等待 Raft commit 的 Clerk 通道
 
     std::unordered_map<std::string, int> m_lastRequestId;// 用于保证幂等性：记录每个客户端最后一次请求 ID
+    
 
     
 };

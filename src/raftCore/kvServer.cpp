@@ -108,10 +108,7 @@ void KvServer::DprintfKVDB()
     std::lock_guard<std::mutex> lg(m_mtx);
     DEFER 
     {
-        // for (const auto &item: m_kvDB) {
-        //     DPrintf("[DBInfo ----]Key : %s, Value : %s", &item.first, &item.second);
-        // }
-        m_skipList.display_list();
+        m_skipList.display_list(); // 输出当前跳表中所有键值对的结构
     };
 }
 
@@ -119,33 +116,94 @@ void KvServer::DprintfKVDB()
 
 ///////////////////////////////////////////  客户端请求执行  ///////////////////////////////////////////
 
-// 执行 append
-void KvServer::ExecuteAppendOpOnKVDB(Op op) 
-{
-
-}
-
-
-// 执行 get
+// 执行 Clerk 客户端提交的 Get 操作
 void KvServer::ExecuteGetOpOnKVDB(Op op, std::string *value, bool *exist) 
 {
+    /* 读取指定 key 的值 value，返回是否命中（exist） */
+    m_mtx.lock();
 
+    // 初始化返回值
+    *value = "";
+    *exist = false;
 
+    // 从跳表中查找 key
+    if (m_skipList.search_element(op.Key, *value))
+    {
+        *exist = true; // 如果找到了，将值写入 *value，并设置 *exist = true
+                       // value已经在 search_element() 完成赋值了
+    }
 
+    m_lastRequestId[op.ClientId] = op.RequestId; // 记录客户端最新请求 ID
+
+    m_mtx.unlock();
+    DprintfKVDB();
 }
 
-// 执行 put
+
+// 执行 Clerk 客户端提交的 Put 操作
 void KvServer::ExecutePutOpOnKVDB(Op op) 
 {
+    /* 将指定 op.Key 对应的值更新为 op.Value，如果 key 不存在就插入 */
+    m_mtx.lock();
 
+    m_skipList.insert_set_element(op.Key, op.Value); // 覆盖性插入跳表
+    m_lastRequestId[op.ClientId] = op.RequestId; // 记录客户端最新请求 ID
+    
+    m_mtx.unlock();
+    DprintfKVDB();
 }
+
+
+// 执行 Clerk 客户端提交的 Append 操作
+void KvServer::ExecuteAppendOpOnKVDB(Op op) 
+{
+    /* 在当前 Key 对应的旧值基础上追加拼接 op.Value */ 
+
+    m_mtx.lock();
+
+    // m_skipList.insert_set_element(op.Key, op.Value); // 覆盖性插入跳表
+    // m_lastRequestId[op.ClientId] = op.RequestId; // 记录客户端最新请求 ID（此客户端 ClientId 最后一个已成功执行的请求是 RequestId）
+    
+    // 原先上面那种写法和put实现的一样，应该是有问题，put是覆盖，append是追加拼接
+
+    std::string oldValue;
+    
+    if (m_skipList.search_element(op.Key, oldValue)) 
+    {
+        // key 已存在，执行追加 (拼接)
+        std::string newValue = oldValue + op.Value; // 新值
+        m_skipList.insert_set_element(op.Key, newValue); 
+    } 
+    else 
+    {
+        // key 不存在，等效于 put，插入
+        m_skipList.insert_set_element(op.Key, op.Value);
+    }
+
+    m_lastRequestId[op.ClientId] = op.RequestId; // 记录客户端最新请求 ID
+
+    m_mtx.unlock();
+    DprintfKVDB();
+}
+
+
+
+
 
 
 // 判断请求是否是重复提交，用于实现幂等性
 bool KvServer::ifRequestDuplicate(std::string ClientId, int RequestId)
 {
+    std::lock_guard<std::mutex> lg(m_mtx);
 
+    // 记录表中找不到这个客户端的 ID，说明这是该客户端第一次访问
+    if (m_lastRequestId.find(ClientId) == m_lastRequestId.end()) 
+    {
+        return false;
+    }
 
+    // 如果该客户端存在，进一步判断当前请求 RequestId 小于或等于记录中已处理的最大值
+    return RequestId <= m_lastRequestId[ClientId];
 }
 
 

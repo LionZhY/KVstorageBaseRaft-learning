@@ -22,39 +22,18 @@
 #include <thread>
 #include "config.h"
 
-// 延迟执行机制 --------------------------------------------------------------------------------
-template <class F>
-class DeferClass // 实现类似 Go 语言 defer 的功能，在作用域结束时自动执行指定代码
-{
-public:
-	// 构造
-	DeferClass(F &&f)      : m_func(std::forward<F>(f)) {}
-	DeferClass(const F &f) : m_func(f) {}
 
-	// 析构：延迟执行的关键，把代码封装进 m_func，当这个对象生命周期结束（比如函数体结束）时，会自动调用 m_func()
-	~DeferClass() { m_func(); } 
 
-	// 禁止拷贝构造和拷贝赋值 (保证每个延迟任务只执行一次)
-	DeferClass(const DeferClass &e) = delete;
-	DeferClass &operator=(const DeferClass &e) = delete;
-
-private:
-	F m_func; // 保存传进来的函数
-};
-
-#define _CONCAT(a, b) a##b // 宏拼接工具，a##b 表示将 a 和 b 拼接为一个新的名字
-#define _MAKE_DEFER_(line) DeferClass _CONCAT(defer_placeholder, line) = [&]() // 创建一个 DeferClass 对象并传入一个 lambda 表达式（延迟执行的代码）
-
-#undef DEFER // 先取消已有的 DEFER 定义（如果有）
-#define DEFER _MAKE_DEFER_(__LINE__) // 定义 DEFER 宏：展开后会调用 _MAKE_DEFER_(__LINE__) 
-									 // __LINE__ 是预定义宏，表示当前代码行号
+// 一些常量  是 KVServer 给客户端返回的操作结果状态码（reply）--------------------------------------
+const std::string OK = "OK"; 						 // 操作成功
+const std::string ErrNoKey = "ErrNoKey";			 // 对于get操作，请求的key不存在
+const std::string ErrWrongLeader = "ErrWrongLeader"; // 当前处理节点不是raft的leader，不能处理请求
 
 
 
 
 // 调试打印 ---------------------------------------------------------------------------------------
 void DPrintf(const char* format, ...); // 带时间戳的格式化调试打印，受全局 Debug 控制
-
 
 
 // 通用的字符串格式化函数模板 (类似于 printf) --------------------------------------------------------
@@ -86,9 +65,47 @@ void sleepNMilliseconds(int N);                           // 线程睡眠指定�
 
 
 
-// 线程安全队列 -------------------------------------------------------------------------------------
-// //////////////////////// 异步写日志的日志队列 ////////////////////////
-// read is blocking!!! LIKE  go chan
+// 端口检测与分配 --------------------------------------------------------------------------------
+bool isReleasePort(unsigned short usPort); // 检测端口是否空闲可用
+bool getReleasePort(short& port);          // 尝试获取一个空闲端口，最多尝试30次
+
+
+
+
+// 延迟执行机制 --------------------------------------------------------------------------------
+
+template <class F>
+class DeferClass // 实现类似 Go 语言 defer 的功能，在作用域结束时自动执行指定代码
+{
+public:
+	// 构造
+	DeferClass(F &&f)      : m_func(std::forward<F>(f)) {}
+	DeferClass(const F &f) : m_func(f) {}
+
+	// 析构：延迟执行的关键，把代码封装进 m_func，当这个对象生命周期结束（比如函数体结束）时，会自动调用 m_func()
+	~DeferClass() { m_func(); } 
+
+	// 禁止拷贝构造和拷贝赋值 (保证每个延迟任务只执行一次)
+	DeferClass(const DeferClass &e) = delete;
+	DeferClass &operator=(const DeferClass &e) = delete;
+
+private:
+	F m_func; // 保存传进来的函数
+};
+
+#define _CONCAT(a, b) a##b // 宏拼接工具，a##b 表示将 a 和 b 拼接为一个新的名字
+#define _MAKE_DEFER_(line) DeferClass _CONCAT(defer_placeholder, line) = [&]() // 创建一个 DeferClass 对象并传入一个 lambda 表达式（延迟执行的代码）
+
+#undef DEFER // 先取消已有的 DEFER 定义（如果有）
+#define DEFER _MAKE_DEFER_(__LINE__) // 定义 DEFER 宏：展开后会调用 _MAKE_DEFER_(__LINE__) 
+									 // __LINE__ 是预定义宏，表示当前代码行号
+
+
+
+
+
+// 线程安全队列 异步写日志的日志队列 --------------------------------------------------------------------
+
 template <typename T>
 class LockQueue // 基于互斥锁和条件变量实现的阻塞安全队列
 {
@@ -156,31 +173,20 @@ private:
 
 
 
-
-// 数据序列化与命令封装 ----------------------------------------------------------------------------------
+// command 命令封装 ----------------------------------------------------------------------------------
 class Op 
 {		 
-// 封装 [客户端对 kv 数据库的操作命令]，能变成字符串发给 Raft（序列化），还能还原回来执行（反序列化）
-// 用来描述单次 KV 操作请求（如 Get / Put / Append） 的类对象，是kv传递给raft的command
+	/* 封装 [客户端对 kv 数据库的操作命令]，能变成字符串发给 Raft（序列化），还能还原回来执行（反序列化）*/
+	/* 用来描述单次 KV 操作请求（如 Get / Put / Append） 的类对象，是kv传递给raft的command */
 
-// 简单来说，Op 就是一条客户端对键值数据库的操作指令
-public:
-	// Your definitions here.
-	// Field names must start with capital letters,
-	// otherwise RPC will break.
-	std::string Operation; // 操作类型"Get" "Put" "Append"
-	std::string Key;		
-	std::string Value;		
-	std::string ClientId; // 发起请求的客户端id
-	int RequestId;        // 客户端号码请求的Request的序列号，即第几个请求
+	/* 简单来说，Op 就是一条客户端对键值数据库的操作指令 */
 
 public:
-	// todo
-	// 为了协调raftRPC中的command只设置成了string,这个的限制就是正常字符中不能包含|
+	// todo：为了协调raftRPC中的command只设置成了string,这个的限制就是正常字符中不能包含|
 	// 当然后期可以换成更高级的序列化方法，比如protobuf
 
 	// 将当前 Op 对象序列化成字符串
-	std::string asString() const // 用于 在 KVServer 发送 command 给 Raft 时，把结构体变成字符串传入
+	std::string asString() const // 用于在 KVServer 发送 command 给 Raft 时，把结构体变成字符串传入
 	{
 		std::stringstream ss;
 		boost::archive::text_oarchive oa(ss);	
@@ -210,8 +216,10 @@ public:
 		return os;
 	}
 
+
 private:
-	friend class boost::serialization::access; // 友元，让 Boost 的序列化框架 boost::serialization::access 类 可以访问 Op 的私有
+	// 友元，让 Boost 的序列化框架 boost::serialization::access 类 可以访问 Op 的私有
+	friend class boost::serialization::access; 
 	
 	// Boost 序列化函数 （Boost 要求每个可序列化的类实现一个 serialize() 方法）
 	template <class Archive>
@@ -225,19 +233,17 @@ private:
 		ar & ClientId;
 		ar & RequestId;
 	}
+
+public:
+	std::string Operation; // 操作类型"Get" "Put" "Append"
+	std::string Key;		
+	std::string Value;		
+	std::string ClientId; // 发起请求的客户端id
+	int RequestId;        // 客户端号码请求的Request的序列号，即第几个请求
 };
 
 
-// 一些常量  是 KVServer 给客户端返回的操作结果状态码（reply）--------------------------------------
-const std::string OK = "OK"; 						// 操作成功
-const std::string ErrNoKey = "ErrNoKey";			// 对于get操作，请求的key不存在
-const std::string ErrWrongLeader = "ErrWrongLeader";// 当前处理节点不是raft的leader，不能处理请求
 
-
-
-// 端口检测与分配 --------------------------------------------------------------------------------
-bool isReleasePort(unsigned short usPort);// 检测端口是否空闲可用
-bool getReleasePort(short& port);         // 尝试获取一个空闲端口，最多尝试30次
 
 
 
