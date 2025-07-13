@@ -1,12 +1,18 @@
 #ifndef SKIPLIST_H
 #define SKIPLIST_H // 防止头文件多次包含
 
+#include <boost/serialization/vector.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 #include <cmath>   // 用于随机数生成 rand()
 #include <cstdlib> // 数学函数
 #include <cstring> // 处理C风格的字符串操作（memset()）
 #include <fstream> // 用于多线程同步
 #include <iostream>
 #include <mutex>
+#include <vector>
+
 
 #define STORE_FILE "store/dumpFile" // 定义跳表序列化数据的存储文件路径
 static std::string delimiter = ":"; // key 和 value 在序列化中使用的分隔符（例如 "100:abc"）

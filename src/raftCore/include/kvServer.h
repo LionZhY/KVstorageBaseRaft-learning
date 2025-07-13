@@ -152,12 +152,10 @@ private:
     SkipList<std::string, std::string> m_skipList; 		 // 实际存储的本地状态机
     std::unordered_map<std::string, std::string> m_kvDB; // 备用的哈希表实现，不使用
 
-    std::unordered_map<int, LockQueue<Op>*> waitApplyCh; // 通过日志索引等待 Raft commit 的 Clerk 通道
+    std::unordered_map<int, LockQueue<Op>*> waitApplyCh; // <日志索引, 等待 Raft commit 的 Clerk 通道>
 
     std::unordered_map<std::string, int> m_lastRequestId;// 用于保证幂等性：记录每个客户端最后一次请求 ID
-    
-
-    
+        
 };
 
 
