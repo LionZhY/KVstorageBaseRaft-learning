@@ -43,7 +43,7 @@ public:
 
 
 
-	///////////////////////////////////////////  客户端请求执行  ///////////////////////////////////////////
+	///////////////////////////////////////////  请求执行  ///////////////////////////////////////////
 
     void ExecuteAppendOpOnKVDB(Op op);								// 执行 append
     void ExecuteGetOpOnKVDB(Op op, std::string* value, bool* exist);// 执行 get，并返回是否存在
@@ -61,7 +61,7 @@ public:
 
 
 
-	/////////////////////////////////////////  Clerk 触发的远程请求  /////////////////////////////////////////
+	/////////////////////////////////////////  处理 Clerk请求的 RPC 接口  /////////////////////////////////////////
 	
 	// clerk 使用RPC远程调用 （	调用 Raft::Start 提交操作；收到 commit 后响应 Clerk ）
 	void PutAppend(const raftKVRpcProctoc::PutAppendArgs *args, 
@@ -74,8 +74,8 @@ public:
 	////////////////////////////////////////////  快照机制支持  ////////////////////////////////////////////
 
     void IfNeedToSendSnapShotCommand(int raftIndex, int proportion); // 判断是否需要触发快照，交由 Raft 层处理
-    std::string MakeSnapShot(); 					  // 调用序列化函数生成快照
-	void ReadSnapShotToInstall(std::string snapshot); // 从快照恢复本地状态机
+    std::string MakeSnapShot(); 					  // 生成当前状态的序列化快照 （状态 -> 快照）
+	void ReadSnapShotToInstall(std::string snapshot); // 从快照中反序列化，恢复本地状态 （快照 -> 状态）
     void GetSnapShotFromRaft(ApplyMsg message); 	  // Raft 层传来快照，判断是否安装并恢复
 
 

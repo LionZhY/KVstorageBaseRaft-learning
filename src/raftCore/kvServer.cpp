@@ -117,7 +117,7 @@ void KvServer::DprintfKVDB()
 
 
 
-///////////////////////////////////////////  客户端请求执行  ///////////////////////////////////////////
+///////////////////////////////////////////  请求执行  ///////////////////////////////////////////
 
 // 执行 Clerk 客户端提交的 Get 操作
 void KvServer::ExecuteGetOpOnKVDB(Op op, std::string *value, bool *exist) 
@@ -240,7 +240,7 @@ void KvServer::GetCommandFromRaft(ApplyMsg message)
     if (message.CommandIndex <= m_lastSnapShotRaftLogIndex) return;
 
 
-    // 如果请求不是重复的，执行具体操作
+    // 如果请求不是重复的，put Append 直接执行，get 跳过
     if (!ifRequestDuplicate(op.ClientId, op.RequestId))
     {
         // 根据操作类型，调用对应的逻辑
@@ -252,12 +252,12 @@ void KvServer::GetCommandFromRaft(ApplyMsg message)
     // 如果启用了日志上限（m_maxRaftState != -1）
     if (m_maxRaftState != -1)
     {
-        // 判断是否需要制作快照（例如 log 体积超过上限的 1/9）
-        IfNeedToSendSnapShotCommand(message.CommandIndex, 9);
+        // 判断是否需要制作快照（例如 log 体积超过阈值是 10%）
+        IfNeedToSendSnapShotCommand(message.CommandIndex, 10);
     }
 
-     // 通知等待的 Clerk 客户端
-     SendMessageToWaitChan(op, message.CommandIndex);
+    // 通知等待的 Clerk 客户端
+    SendMessageToWaitChan(op, message.CommandIndex);
 }
 
 
@@ -306,7 +306,7 @@ void KvServer::ReadRaftApplyCommandLoop()
         // 判断消息类型，调用处理
         if (message.CommandValid)
         {
-            GetCommandFromRaft(message);  // 如果是有效日志命令，则交给状态机处理
+            GetCommandFromRaft(message);  // 如果是有效日志命令，则交给状态机处理 --> put / append
         }
         if (message.SnapshotValid)
         {
@@ -319,7 +319,7 @@ void KvServer::ReadRaftApplyCommandLoop()
 
 
 
-/////////////////////////////////////////  Clerk请求的 RPC 接口  /////////////////////////////////////////
+/////////////////////////////////////////  处理 Clerk请求的 RPC 接口  /////////////////////////////////////////
 
 // 处理来自 clerk 的 Get RPC 请求
 void KvServer::Get(const raftKVRpcProctoc::GetArgs *args, // Get rpc 请求
@@ -367,12 +367,11 @@ void KvServer::Get(const raftKVRpcProctoc::GetArgs *args, // Get rpc 请求
 
 
 
-    // 阻塞等待 Raft 日志被 commit
+    // 阻塞等待 执行完的 op 传回 waitApplyCh (注意这里的传回op，代表这个op已经被共识且执行完了)
     Op raftCommitOp;
     if (!chForRaftIndex->timeOutPop(CONSENSUS_TIMEOUT, &raftCommitOp)) 
     {
-        // 如果超时没收到提交（即 Raft 共识失败或太慢），进入处理超时逻辑
-
+        // 如果超时没收到提交，进入处理超时逻辑
         int _ = -1;
         bool isLeader = false;
         m_raftNode->GetState(&_, &isLeader); // 只关注是不是Leader
@@ -380,7 +379,7 @@ void KvServer::Get(const raftKVRpcProctoc::GetArgs *args, // Get rpc 请求
         // 幂等重试：检查请求是否重复提交，以及是否是 leader
         if (ifRequestDuplicate(op.ClientId, op.RequestId) && isLeader)
         {
-            /* Raft 这次没有 commit 成功，但如果之前成功执行过同一个 Get 请求，是可以再执行的，不会违反一致性*/
+            /* 这次没有 commit 成功，但如果之前成功执行过同一个 Get 请求，是可以再执行的，不会违反一致性*/
             std::string value;
             bool exist = false;
             ExecuteGetOpOnKVDB(op, &value, &exist); // 再次执行Get
@@ -402,7 +401,7 @@ void KvServer::Get(const raftKVRpcProctoc::GetArgs *args, // Get rpc 请求
         }
 
     }
-    else // timeOutPop() 成功获取到了 Raft 通过 applyChan 提交的日志，共识成功，可以执行操作
+    else //  收到返回的成功执行的op
     {        
         // 验证：这个日志是否确实是我现在处理的 op，防止错响应
         if (raftCommitOp.ClientId == op.ClientId && raftCommitOp.RequestId == op.RequestId)
@@ -429,11 +428,11 @@ void KvServer::Get(const raftKVRpcProctoc::GetArgs *args, // Get rpc 请求
     }
 
 
-    // 清理资源
+    // 清理临时等待通道
     m_mtx.lock(); 
 
     auto tmp = waitApplyCh[raftIndex]; 
-    waitApplyCh.erase(raftIndex); // 删除临时等待通道
+    waitApplyCh.erase(raftIndex); 
     delete tmp;
 
     m_mtx.unlock();
@@ -446,9 +445,7 @@ void KvServer::Get(const raftKVRpcProctoc::GetArgs *args, // Get rpc 请求
 void KvServer::PutAppend(const raftKVRpcProctoc::PutAppendArgs *args, 
                          raftKVRpcProctoc::PutAppendReply *reply) 
 {
-    // get和put//append執行的具體細節是不一樣的
-    // PutAppend在收到raft消息之後執行，具體函數裏面只判斷冪等性（是否重複）
-    // get函數收到raft消息之後在，因爲get無論是否重複都可以再執行
+    // 封装请求 args 为 Op 命令对象
     Op op;
     op.Operation = args->op();
     op.Key = args->key();
@@ -456,13 +453,13 @@ void KvServer::PutAppend(const raftKVRpcProctoc::PutAppendArgs *args,
     op.ClientId = args->clientid();
     op.RequestId = args->requestid();
 
+    // start 提交到raft
     int raftIndex = -1;
     int _ = -1;
     bool isleader = false;
-
     m_raftNode->Start(op, &raftIndex, &_, &isleader);
 
-    if (!isleader) 
+    if (!isleader) // 若不是 Leader，直接返回错误，Clerk 会尝试请求其他节点
     {
         DPrintf("[func -KvServer::PutAppend -kvserver{%d}]From Client %s (Request %d) To Server %d, key %s, raftIndex %d , but "
                 "not leader",
@@ -472,12 +469,14 @@ void KvServer::PutAppend(const raftKVRpcProctoc::PutAppendArgs *args,
         return;
     }
 
+
     DPrintf("[func -KvServer::PutAppend -kvserver{%d}]From Client %s (Request %d) To Server %d, key %s, raftIndex %d , is "
             "leader ",
             m_me, &args->clientid(), args->requestid(), m_me, &op.Key, raftIndex);
     
 
 
+    // 创建对应 Raft Index 的等待通道 chForRaftIndex
     m_mtx.lock();
     if (waitApplyCh.find(raftIndex) == waitApplyCh.end()) 
     {
@@ -489,7 +488,7 @@ void KvServer::PutAppend(const raftKVRpcProctoc::PutAppendArgs *args,
 
 
 
-    // timeout
+    // 阻塞等待 执行完的 op 传回 waitApplyCh
     Op raftCommitOp;
     if (!chForRaftIndex->timeOutPop(CONSENSUS_TIMEOUT, &raftCommitOp)) 
     {
@@ -497,24 +496,25 @@ void KvServer::PutAppend(const raftKVRpcProctoc::PutAppendArgs *args,
                 "ClientId %s, RequestId %s, Opreation %s Key :%s, Value :%s",
                 m_me, m_me, raftIndex, &op.ClientId, op.RequestId, &op.Operation, &op.Key, &op.Value);
 
+        // 超时未提交，判断这个请求之前是否请求过
         if (ifRequestDuplicate(op.ClientId, op.RequestId)) 
         {
-            reply->set_err(OK);  // 超时了,但因为是重复的请求，返回ok，实际上就算没有超时，在真正执行的时候也要判断是否重复
+            reply->set_err(OK);  // 超时但因为是重复的请求，返回ok
         } 
         else 
         {
-            reply->set_err(ErrWrongLeader);  ///这里返回这个的目的让clerk重新尝试
+            reply->set_err(ErrWrongLeader); // 这里返回这个的目的让clerk重新尝试
         }
     } 
-    else 
+    else // 收到返回的成功执行的op
     {
         DPrintf("[func -KvServer::PutAppend -kvserver{%d}]WaitChanGetRaftApplyMessage<--Server %d , get Command <-- Index:%d , "
                 "ClientId %s, RequestId %d, Opreation %s, Key :%s, Value :%s",
                 m_me, m_me, raftIndex, &op.ClientId, op.RequestId, &op.Operation, &op.Key, &op.Value);
         
+        // 返回的命令和当前请求一致，说明成功 commit，可以返回 OK
         if (raftCommitOp.ClientId == op.ClientId && raftCommitOp.RequestId == op.RequestId) 
         {
-            //可能发生leader的变更导致日志被覆盖，因此必须检查
             reply->set_err(OK);
         } 
         else 
@@ -523,6 +523,7 @@ void KvServer::PutAppend(const raftKVRpcProctoc::PutAppendArgs *args,
         }
     }
 
+    // 清理通道资源
     m_mtx.lock();
     auto tmp = waitApplyCh[raftIndex];
     waitApplyCh.erase(raftIndex);
@@ -533,54 +534,26 @@ void KvServer::PutAppend(const raftKVRpcProctoc::PutAppendArgs *args,
 
 
 
-
-
-
-////////////////////////////////////////////  快照机制支持  ////////////////////////////////////////////
-
-void KvServer::IfNeedToSendSnapShotCommand(int raftIndex, int proportion)
-{
-
-
-}
-
-std::string KvServer::MakeSnapShot() 
-{
-
-}
-
-
-
-void KvServer::ReadSnapShotToInstall(std::string snapshot) 
-{
-
-}
-
-
-void KvServer::GetSnapShotFromRaft(ApplyMsg message) 
-{
-
-}
-
-
-
 //////////////////////////////////////////  RPC 对外接口重写  //////////////////////////////////////////
 
-// 对外接口（对clerk）  PutAppend / Get（重载版本，供 Protobuf RPC 调用）
-void KvServer::PutAppend(google::protobuf::RpcController *controller, 
-                         const ::raftKVRpcProctoc::PutAppendArgs *request,
-                         ::raftKVRpcProctoc::PutAppendReply *response, 
-                         ::google::protobuf::Closure *done) 
-{
-
-}
-
+// 对外 RPC 接口（对clerk）  PutAppend / Get（重载版本，供 Protobuf RPC 调用）
 void KvServer::Get(google::protobuf::RpcController *controller, 
                    const ::raftKVRpcProctoc::GetArgs *request,
                    ::raftKVRpcProctoc::GetReply *response, 
                    ::google::protobuf::Closure *done) 
 {
+    KvServer::Get(request, response);
+    done->Run();
+}
 
+
+void KvServer::PutAppend(google::protobuf::RpcController *controller, 
+                         const ::raftKVRpcProctoc::PutAppendArgs *request,
+                         ::raftKVRpcProctoc::PutAppendReply *response, 
+                         ::google::protobuf::Closure *done) 
+{
+    KvServer::PutAppend(request, response);
+    done->Run();
 }
 
 
@@ -588,7 +561,53 @@ void KvServer::Get(google::protobuf::RpcController *controller,
 
 
 
+////////////////////////////////////////////  快照机制支持  ////////////////////////////////////////////
 
+// 判断是否需要触发快照，交由 Raft 层处理
+void KvServer::IfNeedToSendSnapShotCommand(int raftIndex, int proportion) // proportion这里没用
+{
+    if (m_raftNode->GetRaftStateSize() > m_maxRaftState * proportion / 100.0) 
+    {
+        // 超出阈值的 (proportion%) ，则触发快照生成并调用，GetCommandFromRaft里传的是proportion=10，就是超出阈值的10%
+        auto snapshot = MakeSnapShot();
+        m_raftNode->Snapshot(raftIndex, snapshot); // 主动安装快照，丢弃旧日志
+    }
+}
+
+
+// 生成当前状态的序列化快照 （状态 -> 快照）
+std::string KvServer::MakeSnapShot() 
+{
+    std::lock_guard<std::mutex> lg(m_mtx);
+    std::string snapshotData = getSnapshotData(); // 将跳表、m_lastRequestId 打包为字符串
+    return snapshotData;
+}
+
+
+// 从快照中反序列化，恢复本地状态 （快照 -> 状态）
+void KvServer::ReadSnapShotToInstall(std::string snapshot) 
+{
+    if (snapshot.empty()) 
+    {
+        return;
+    }
+    parseFromString(snapshot); // 重建跳表、 m_lastRequestId
+}
+
+
+// Raft 层传来快照，判断是否安装并恢复 ( ReadRaftApplyCommandLoop() 中调用 )
+void KvServer::GetSnapShotFromRaft(ApplyMsg message) 
+{
+    /* ApplyMsg 是 Raft 日志/快照通过 applyChan 发给 KVServer 的数据结构，这里是快照 */
+    std::lock_guard<std::mutex> lg(m_mtx);
+
+    // 判断当前快照是否比当前日志更新，若是则返回 true
+    if (m_raftNode->CondInstallSnapshot(message.SnapshotTerm, message.SnapshotIndex, message.Snapshot)) 
+    {
+        ReadSnapShotToInstall(message.Snapshot); // 恢复本地状态
+        m_lastSnapShotRaftLogIndex = message.SnapshotIndex;
+    }
+}
 
 
 

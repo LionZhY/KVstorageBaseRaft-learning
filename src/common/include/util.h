@@ -134,7 +134,7 @@ public:
 		return data;
 	}
 
-	// 带超时的 pop
+	// 带超时的 pop （waitApplyCh 取返回的op）
 	bool timeOutPop(int timeout, T *ResData) // 添加一个超时时间参数，默认为 50 毫秒
 	{
 		std::unique_lock<std::mutex> lock(m_mutex);	

@@ -1326,6 +1326,7 @@ bool Raft::CondInstallSnapshot(int lastIncludedTerm, int lastIncludedIndex, std:
 }
 
 
+
 // leader 向落后follower发送快照
 void Raft::leaderSendSnapShot(int server) 
 {
