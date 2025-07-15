@@ -941,7 +941,7 @@ bool Raft::matchLog(int logIndex, int logTerm)
 }
 
 
-// leader 根据多数节点复制日志进度，更新 CommitIndex
+// leader 根据多数节点复制日志进度，更新 CommitIndex (好像没用上)
 void Raft::leaderUpdateCommitIndex() 
 {
 	/* Leader 根据每个 Follower 的 matchIndex[]，决定当前有哪些日志已经被「多数派节点」复制成功 */
