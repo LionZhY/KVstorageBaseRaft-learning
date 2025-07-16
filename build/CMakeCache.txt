@@ -370,7 +370,7 @@ src_common:INTERNAL=/home/zhangyan/projects/KVstorageBaseRaft-learning/src/commo
 //Description of the variable
 src_fiber:INTERNAL=/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fd_manager.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fiber.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/hook.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/iomanager.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/scheduler.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/thread.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/timer.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/utils.cpp
 //Description of the variable
-src_raftClerk:INTERNAL=
+src_raftClerk:INTERNAL=/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/clerk.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/raftServerRpcUtil.cpp
 //Description of the variable
 src_raftCore:INTERNAL=/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/Persister.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/kvServer.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/raft.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/raftRpcUtil.cpp
 //Description of the variable
