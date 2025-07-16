@@ -13,34 +13,36 @@
 #include "mprpcconfig.h"
 
 
-/* clerk相当于就是一个外部的客户端了，其作用就是向整个raft集群发起命令并接收响应。 */
+/* clerk相当于就是一个外部的客户端，其作用就是向整个raft集群发起命令并接收响应。 */
 
 
 class Clerk 
 {
 public:
     Clerk();
-
-    //对外暴露的三个功能和初始化
+    
+    // 初始化连接
     void Init(std::string configFileName);
-    std::string Get(std::string key);
 
+    // 对外暴露的三个功能
+    std::string Get(std::string key);
     void Put(std::string key, std::string value);
     void Append(std::string key, std::string value);
 
     
 private:
-    std::vector<std::shared_ptr<raftServerRpcUtil>> m_servers;  //保存所有raft节点的fd //todo：全部初始化为-1，表示没有连接上
-    std::string m_clientId;
-    int m_requestId;
-    int m_recentLeaderId;  //只是有可能是领导
+    std::vector<std::shared_ptr<raftServerRpcUtil>> m_servers; // 保存所有 Raft 节点 RPC 通信对象 (raftServerRpcUtil)
+    std::string m_clientId; // 随机生成的客户端id（用于幂等控制）
+    int m_requestId;		// 每次请求自增（区别不同请求）
+    int m_recentLeaderId;  	// 记录“上一次成功请求”的节点 id，作为当前可能的 Leader
 
+    // 随机生成ClientId
     std::string Uuid() 
     {
-      return std::to_string(rand()) + std::to_string(rand()) + std::to_string(rand()) + std::to_string(rand());
-    }  //用于返回随机的clientId
+        return std::to_string(rand()) + std::to_string(rand()) + std::to_string(rand()) + std::to_string(rand());
+    }  
 
-    //    MakeClerk  todo
+    // 统一处理Put/Append
     void PutAppend(std::string key, std::string value, std::string op);
 };
 
