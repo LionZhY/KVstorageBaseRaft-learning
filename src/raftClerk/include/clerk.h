@@ -34,7 +34,7 @@ private:
     std::vector<std::shared_ptr<raftServerRpcUtil>> m_servers; // 保存所有 Raft 节点 RPC 通信对象 (raftServerRpcUtil)
     std::string m_clientId; // 随机生成的客户端id（用于幂等控制）
     int m_requestId;		// 每次请求自增（区别不同请求）
-    int m_recentLeaderId;  	// 记录“上一次成功请求”的节点 id，作为当前可能的 Leader
+    int m_recentLeaderId;  	// 记录 “上一次成功请求” 的节点 id，作为当前可能的 Leader
 
     // 随机生成ClientId
     std::string Uuid() 
