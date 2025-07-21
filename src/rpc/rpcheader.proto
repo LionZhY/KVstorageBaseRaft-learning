@@ -1,10 +1,24 @@
 syntax = "proto3";
-
 package RPC;
+
+
+// 定义消息结构 RpcHeader 
+
+// RpcHeader 是 RPC 请求中附带的 “消息头” ，用于告诉服务端：
+//      调用哪个服务类；
+//      调用哪个方法；
+//      后面参数数据的长度是多少
+
+// 服务端解析这个头部后，就能反射式地调用对应的服务方法（通过 service_name + method_name），再从网络流中提取参数内容
+
 
 message RpcHeader
 {
     bytes service_name = 1;
     bytes method_name = 2;
-    uint32 args_size = 3; //这里虽然是uint32，但是protobuf编码的时候默认就是变长编码，可见：https://www.cnblogs.com/yangwenhuan/p/10328960.html
+    uint32 args_size = 3;   // 参数部分的长度
+    
+    // 这里虽然是uint32，但是protobuf编码的时候默认就是变长编码，可见：https://www.cnblogs.com/yangwenhuan/p/10328960.html
+    // args_size 使用的 uint32，虽然是定长类型，但 protobuf 会自动使用变长编码（Varint）进行压缩编码
+    // 比如小数字（如 17）只占用 1 字节，而不是固定的 4 字节，节省带宽
 }
