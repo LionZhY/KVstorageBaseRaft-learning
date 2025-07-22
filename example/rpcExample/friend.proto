@@ -2,27 +2,38 @@ syntax = "proto3";
 
 package fixbug;  //所在的命名空间
 
-option cc_generic_services = true;  //开启桩stub服务
+option cc_generic_services = true; // 开启桩stub服务 启用生成 C++ 的服务类（Stub 和 Service 类）代码
 
+
+// 定义了一个用于 好友列表查询功能的 RPC 接口和数据结构
+
+
+// 通用返回结果封装
 message ResultCode
 {
-    int32 errcode = 1;
-    bytes errmsg = 2;
+    int32 errcode = 1;  // errcode == 0 表示接口调用成功
+    bytes errmsg = 2;   // 失败原因
 }
 
-message GetFriendsListRequest  //请求，响应
+
+// 获取好友列表的请求
+message GetFriendsListRequest  
 {
-    uint32 userid = 1;
+    uint32 userid = 1; // 请求查询的用户 ID
 }
 
-message GetFriendsListResponse  //请求，响应
+// 返回好友列表响应
+message GetFriendsListResponse 
 {
-    ResultCode result = 1;
-    repeated bytes friends = 2;
+    ResultCode result = 1;      // 封装请求结果状态
+    repeated bytes friends = 2; // 好友列表，repeated 表示这是一个数组（可以有多个好友名），每个好友名是 bytes 类型
 }
 
-// 好友模块
-service FiendServiceRpc  //具体的服务模块和服务方法
+
+
+// 定义RPC服务 Service ：好友模块 FiendServiceRpc
+service FiendServiceRpc  
 {
+    // 包含一个 RPC 方法 : GetFriendsList 根据请求中的 userid 返回该用户的好友列表
     rpc GetFriendsList(GetFriendsListRequest) returns(GetFriendsListResponse);
 }

@@ -1,6 +1,8 @@
 1.库准备
 
 proctoc
+
+
 2.编写自己想要发送的rpc实例 参考friend.proto文件即可
 
 3.生成对应的pb.h和pb.cc文件
