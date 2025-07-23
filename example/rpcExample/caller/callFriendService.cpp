@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 {
 
 	// 设置远程服务的 ip 和 端口  
-	std::string ip = "127.0.1.1"; // 127.0.1.1 在某些 Linux 环境中被用作主机别名地址
+	std::string ip = "172.25.99.6"; // 127.0.1.1 在某些 Linux 环境中被用作主机别名地址
 	short port = 7788; // 表示客户端将连接运行在本地 127.0.1.1:7788 的 RPC 服务（即 FriendService 服务端）
 	
 

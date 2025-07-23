@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 {
 	// 创建客户端 stub（此处未用上） 只是示例代码
 	/* Client Stub 是用来发起请求调用别的节点的，实际服务端如果不用去调用别的节点，就不需要主动创建 Client Stub */
-	std::string ip = "127.0.0.1";
+	std::string ip = "172.25.99.6";
 	short port = 7788;
 	auto stub = new fixbug::FiendServiceRpc_Stub(new MprpcChannel(ip, port, false));
 	

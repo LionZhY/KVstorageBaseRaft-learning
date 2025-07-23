@@ -645,7 +645,463 @@ build example/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
 build example/rebuild_cache: phony example/CMakeFiles/rebuild_cache.util
 
 # =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /home/zhangyan/projects/KVstorageBaseRaft-learning/example/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target test_server
+
+
+#############################################
+# Order-only phony target for test_server
+
+build cmake_object_order_depends_target_test_server: phony || cmake_object_order_depends_target_fiber_lib
+
+build example/fiberExample/CMakeFiles/test_server.dir/server.cpp.o: CXX_COMPILER__test_server_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/fiberExample/server.cpp || cmake_object_order_depends_target_test_server
+  DEP_FILE = example/fiberExample/CMakeFiles/test_server.dir/server.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/fiberExample/CMakeFiles/test_server.dir
+  OBJECT_FILE_DIR = example/fiberExample/CMakeFiles/test_server.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target test_server
+
+
+#############################################
+# Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_server
+
+build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_server: CXX_EXECUTABLE_LINKER__test_server_Debug example/fiberExample/CMakeFiles/test_server.dir/server.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a
+  FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a  -lpthread  -ldl  -ldl
+  LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
+  OBJECT_DIR = example/fiberExample/CMakeFiles/test_server.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_server
+  TARGET_PDB = test_server.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target test_scheduler
+
+
+#############################################
+# Order-only phony target for test_scheduler
+
+build cmake_object_order_depends_target_test_scheduler: phony || cmake_object_order_depends_target_fiber_lib
+
+build example/fiberExample/CMakeFiles/test_scheduler.dir/test_scheduler.cpp.o: CXX_COMPILER__test_scheduler_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/fiberExample/test_scheduler.cpp || cmake_object_order_depends_target_test_scheduler
+  DEP_FILE = example/fiberExample/CMakeFiles/test_scheduler.dir/test_scheduler.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/fiberExample/CMakeFiles/test_scheduler.dir
+  OBJECT_FILE_DIR = example/fiberExample/CMakeFiles/test_scheduler.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target test_scheduler
+
+
+#############################################
+# Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_scheduler
+
+build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_scheduler: CXX_EXECUTABLE_LINKER__test_scheduler_Debug example/fiberExample/CMakeFiles/test_scheduler.dir/test_scheduler.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a
+  FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a  -lpthread  -ldl  -ldl
+  LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
+  OBJECT_DIR = example/fiberExample/CMakeFiles/test_scheduler.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_scheduler
+  TARGET_PDB = test_scheduler.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target test_iomanager
+
+
+#############################################
+# Order-only phony target for test_iomanager
+
+build cmake_object_order_depends_target_test_iomanager: phony || cmake_object_order_depends_target_fiber_lib
+
+build example/fiberExample/CMakeFiles/test_iomanager.dir/test_iomanager.cpp.o: CXX_COMPILER__test_iomanager_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/fiberExample/test_iomanager.cpp || cmake_object_order_depends_target_test_iomanager
+  DEP_FILE = example/fiberExample/CMakeFiles/test_iomanager.dir/test_iomanager.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/fiberExample/CMakeFiles/test_iomanager.dir
+  OBJECT_FILE_DIR = example/fiberExample/CMakeFiles/test_iomanager.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target test_iomanager
+
+
+#############################################
+# Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_iomanager
+
+build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_iomanager: CXX_EXECUTABLE_LINKER__test_iomanager_Debug example/fiberExample/CMakeFiles/test_iomanager.dir/test_iomanager.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a
+  FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a  -lpthread  -ldl  -ldl
+  LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
+  OBJECT_DIR = example/fiberExample/CMakeFiles/test_iomanager.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_iomanager
+  TARGET_PDB = test_iomanager.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target test_hook
+
+
+#############################################
+# Order-only phony target for test_hook
+
+build cmake_object_order_depends_target_test_hook: phony || cmake_object_order_depends_target_fiber_lib
+
+build example/fiberExample/CMakeFiles/test_hook.dir/test_hook.cpp.o: CXX_COMPILER__test_hook_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/fiberExample/test_hook.cpp || cmake_object_order_depends_target_test_hook
+  DEP_FILE = example/fiberExample/CMakeFiles/test_hook.dir/test_hook.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/fiberExample/CMakeFiles/test_hook.dir
+  OBJECT_FILE_DIR = example/fiberExample/CMakeFiles/test_hook.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target test_hook
+
+
+#############################################
+# Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_hook
+
+build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_hook: CXX_EXECUTABLE_LINKER__test_hook_Debug example/fiberExample/CMakeFiles/test_hook.dir/test_hook.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a
+  FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a  -lpthread  -ldl  -ldl
+  LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
+  OBJECT_DIR = example/fiberExample/CMakeFiles/test_hook.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_hook
+  TARGET_PDB = test_hook.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build example/fiberExample/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/fiberExample && /opt/cmake-3.26.4-linux-x86_64/bin/ccmake -S/home/zhangyan/projects/KVstorageBaseRaft-learning -B/home/zhangyan/projects/KVstorageBaseRaft-learning/build
+  DESC = Running CMake cache editor...
+  pool = console
+  restat = 1
+
+build example/fiberExample/edit_cache: phony example/fiberExample/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build example/fiberExample/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/fiberExample && /opt/cmake-3.26.4-linux-x86_64/bin/cmake --regenerate-during-build -S/home/zhangyan/projects/KVstorageBaseRaft-learning -B/home/zhangyan/projects/KVstorageBaseRaft-learning/build
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build example/fiberExample/rebuild_cache: phony example/fiberExample/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /home/zhangyan/projects/KVstorageBaseRaft-learning/example/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build example/rpcExample/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/rpcExample && /opt/cmake-3.26.4-linux-x86_64/bin/ccmake -S/home/zhangyan/projects/KVstorageBaseRaft-learning -B/home/zhangyan/projects/KVstorageBaseRaft-learning/build
+  DESC = Running CMake cache editor...
+  pool = console
+  restat = 1
+
+build example/rpcExample/edit_cache: phony example/rpcExample/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build example/rpcExample/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/rpcExample && /opt/cmake-3.26.4-linux-x86_64/bin/cmake --regenerate-during-build -S/home/zhangyan/projects/KVstorageBaseRaft-learning -B/home/zhangyan/projects/KVstorageBaseRaft-learning/build
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build example/rpcExample/rebuild_cache: phony example/rpcExample/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target provider
+
+
+#############################################
+# Order-only phony target for provider
+
+build cmake_object_order_depends_target_provider: phony || cmake_object_order_depends_target_rpc_lib
+
+build example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.o: CXX_COMPILER__provider_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/callee/friendService.cpp || cmake_object_order_depends_target_provider
+  DEP_FILE = example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/rpcExample/callee/CMakeFiles/provider.dir
+  OBJECT_FILE_DIR = example/rpcExample/callee/CMakeFiles/provider.dir
+
+build example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.o: CXX_COMPILER__provider_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/friend.pb.cc || cmake_object_order_depends_target_provider
+  DEP_FILE = example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/rpcExample/callee/CMakeFiles/provider.dir
+  OBJECT_FILE_DIR = example/rpcExample/callee/CMakeFiles/provider.dir/__
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target provider
+
+
+#############################################
+# Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/provider
+
+build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/provider: CXX_EXECUTABLE_LINKER__provider_Debug example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.o example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a
+  FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a  -lprotobuf  -lmuduo_net  -lmuduo_base  -lpthread  -lboost_serialization
+  LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
+  OBJECT_DIR = example/rpcExample/callee/CMakeFiles/provider.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/provider
+  TARGET_PDB = provider.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build example/rpcExample/callee/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/rpcExample/callee && /opt/cmake-3.26.4-linux-x86_64/bin/ccmake -S/home/zhangyan/projects/KVstorageBaseRaft-learning -B/home/zhangyan/projects/KVstorageBaseRaft-learning/build
+  DESC = Running CMake cache editor...
+  pool = console
+  restat = 1
+
+build example/rpcExample/callee/edit_cache: phony example/rpcExample/callee/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build example/rpcExample/callee/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/rpcExample/callee && /opt/cmake-3.26.4-linux-x86_64/bin/cmake --regenerate-during-build -S/home/zhangyan/projects/KVstorageBaseRaft-learning -B/home/zhangyan/projects/KVstorageBaseRaft-learning/build
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build example/rpcExample/callee/rebuild_cache: phony example/rpcExample/callee/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target consumer
+
+
+#############################################
+# Order-only phony target for consumer
+
+build cmake_object_order_depends_target_consumer: phony || cmake_object_order_depends_target_rpc_lib
+
+build example/rpcExample/caller/CMakeFiles/consumer.dir/callFriendService.cpp.o: CXX_COMPILER__consumer_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/caller/callFriendService.cpp || cmake_object_order_depends_target_consumer
+  DEP_FILE = example/rpcExample/caller/CMakeFiles/consumer.dir/callFriendService.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/rpcExample/caller/CMakeFiles/consumer.dir
+  OBJECT_FILE_DIR = example/rpcExample/caller/CMakeFiles/consumer.dir
+
+build example/rpcExample/caller/CMakeFiles/consumer.dir/__/friend.pb.cc.o: CXX_COMPILER__consumer_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/friend.pb.cc || cmake_object_order_depends_target_consumer
+  DEP_FILE = example/rpcExample/caller/CMakeFiles/consumer.dir/__/friend.pb.cc.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/rpcExample/caller/CMakeFiles/consumer.dir
+  OBJECT_FILE_DIR = example/rpcExample/caller/CMakeFiles/consumer.dir/__
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target consumer
+
+
+#############################################
+# Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/consumer
+
+build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/consumer: CXX_EXECUTABLE_LINKER__consumer_Debug example/rpcExample/caller/CMakeFiles/consumer.dir/callFriendService.cpp.o example/rpcExample/caller/CMakeFiles/consumer.dir/__/friend.pb.cc.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a
+  FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a  -lprotobuf  -lboost_serialization
+  LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
+  OBJECT_DIR = example/rpcExample/caller/CMakeFiles/consumer.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/consumer
+  TARGET_PDB = consumer.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build example/rpcExample/caller/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/rpcExample/caller && /opt/cmake-3.26.4-linux-x86_64/bin/ccmake -S/home/zhangyan/projects/KVstorageBaseRaft-learning -B/home/zhangyan/projects/KVstorageBaseRaft-learning/build
+  DESC = Running CMake cache editor...
+  pool = console
+  restat = 1
+
+build example/rpcExample/caller/edit_cache: phony example/rpcExample/caller/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build example/rpcExample/caller/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/rpcExample/caller && /opt/cmake-3.26.4-linux-x86_64/bin/cmake --regenerate-during-build -S/home/zhangyan/projects/KVstorageBaseRaft-learning -B/home/zhangyan/projects/KVstorageBaseRaft-learning/build
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build example/rpcExample/caller/rebuild_cache: phony example/rpcExample/caller/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /home/zhangyan/projects/KVstorageBaseRaft-learning/example/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target raftCoreRun
+
+
+#############################################
+# Order-only phony target for raftCoreRun
+
+build cmake_object_order_depends_target_raftCoreRun: phony || cmake_object_order_depends_target_rpc_lib cmake_object_order_depends_target_skip_list_on_raft
+
+build example/raftCoreExample/CMakeFiles/raftCoreRun.dir/raftKvDB.cpp.o: CXX_COMPILER__raftCoreRun_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/raftCoreExample/raftKvDB.cpp || cmake_object_order_depends_target_raftCoreRun
+  DEP_FILE = example/raftCoreExample/CMakeFiles/raftCoreRun.dir/raftKvDB.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/raftCoreExample/CMakeFiles/raftCoreRun.dir
+  OBJECT_FILE_DIR = example/raftCoreExample/CMakeFiles/raftCoreRun.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target raftCoreRun
+
+
+#############################################
+# Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/raftCoreRun
+
+build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/raftCoreRun: CXX_EXECUTABLE_LINKER__raftCoreRun_Debug example/raftCoreExample/CMakeFiles/raftCoreRun.dir/raftKvDB.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a
+  FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a  -lprotobuf  -lmuduo_net  -lmuduo_base  -lpthread  -ldl  -lboost_serialization
+  LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
+  OBJECT_DIR = example/raftCoreExample/CMakeFiles/raftCoreRun.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/raftCoreRun
+  TARGET_PDB = raftCoreRun.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target callerMain
+
+
+#############################################
+# Order-only phony target for callerMain
+
+build cmake_object_order_depends_target_callerMain: phony || cmake_object_order_depends_target_skip_list_on_raft
+
+build example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/clerk.cpp.o: CXX_COMPILER__callerMain_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/clerk.cpp || cmake_object_order_depends_target_callerMain
+  DEP_FILE = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/clerk.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
+  OBJECT_FILE_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk
+
+build example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/raftServerRpcUtil.cpp.o: CXX_COMPILER__callerMain_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/raftServerRpcUtil.cpp || cmake_object_order_depends_target_callerMain
+  DEP_FILE = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/raftServerRpcUtil.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
+  OBJECT_FILE_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk
+
+build example/raftCoreExample/CMakeFiles/callerMain.dir/caller.cpp.o: CXX_COMPILER__callerMain_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/raftCoreExample/caller.cpp || cmake_object_order_depends_target_callerMain
+  DEP_FILE = example/raftCoreExample/CMakeFiles/callerMain.dir/caller.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
+  OBJECT_FILE_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
+
+build example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/common/util.cpp.o: CXX_COMPILER__callerMain_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/util.cpp || cmake_object_order_depends_target_callerMain
+  DEP_FILE = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/common/util.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
+  OBJECT_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
+  OBJECT_FILE_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/common
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target callerMain
+
+
+#############################################
+# Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/callerMain
+
+build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/callerMain: CXX_EXECUTABLE_LINKER__callerMain_Debug example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/clerk.cpp.o example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/raftServerRpcUtil.cpp.o example/raftCoreExample/CMakeFiles/callerMain.dir/caller.cpp.o example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/common/util.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a
+  FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a  -lprotobuf  -lboost_serialization  -lmuduo_net  -lmuduo_base  -lpthread  -ldl
+  LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
+  OBJECT_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/callerMain
+  TARGET_PDB = callerMain.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build example/raftCoreExample/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/raftCoreExample && /opt/cmake-3.26.4-linux-x86_64/bin/ccmake -S/home/zhangyan/projects/KVstorageBaseRaft-learning -B/home/zhangyan/projects/KVstorageBaseRaft-learning/build
+  DESC = Running CMake cache editor...
+  pool = console
+  restat = 1
+
+build example/raftCoreExample/edit_cache: phony example/raftCoreExample/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build example/raftCoreExample/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/raftCoreExample && /opt/cmake-3.26.4-linux-x86_64/bin/cmake --regenerate-during-build -S/home/zhangyan/projects/KVstorageBaseRaft-learning -B/home/zhangyan/projects/KVstorageBaseRaft-learning/build
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build example/raftCoreExample/rebuild_cache: phony example/raftCoreExample/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
 # Target aliases.
+
+build callerMain: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/callerMain
+
+build consumer: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/consumer
 
 build fiber_lib: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a
 
@@ -655,9 +1111,21 @@ build librpc_lib.a: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/lib
 
 build libskip_list_on_raft.a: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a
 
+build provider: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/provider
+
+build raftCoreRun: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/raftCoreRun
+
 build rpc_lib: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a
 
 build skip_list_on_raft: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a
+
+build test_hook: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_hook
+
+build test_iomanager: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_iomanager
+
+build test_scheduler: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_scheduler
+
+build test_server: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_server
 
 # =============================================================================
 # Folder targets.
@@ -674,7 +1142,42 @@ build all: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_
 #############################################
 # Folder: /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example
 
-build example/all: phony
+build example/all: phony example/fiberExample/all example/rpcExample/all example/raftCoreExample/all
+
+# =============================================================================
+
+#############################################
+# Folder: /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/fiberExample
+
+build example/fiberExample/all: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_server /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_scheduler /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_iomanager /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_hook
+
+# =============================================================================
+
+#############################################
+# Folder: /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/raftCoreExample
+
+build example/raftCoreExample/all: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/raftCoreRun /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/callerMain
+
+# =============================================================================
+
+#############################################
+# Folder: /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/rpcExample
+
+build example/rpcExample/all: phony example/rpcExample/callee/all example/rpcExample/caller/all
+
+# =============================================================================
+
+#############################################
+# Folder: /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/rpcExample/callee
+
+build example/rpcExample/callee/all: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/provider
+
+# =============================================================================
+
+#############################################
+# Folder: /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/rpcExample/caller
+
+build example/rpcExample/caller/all: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/consumer
 
 # =============================================================================
 
@@ -739,14 +1242,14 @@ build src/skipList/all: phony
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /home/zhangyan/projects/KVstorageBaseRaft-learning/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/CMakeLists.txt /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCXXInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCommonLanguageInclude.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeGenericSystem.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeInitializeConfigs.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeLanguageInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeSystemSpecificInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeSystemSpecificInitialize.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU-C.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU-CXX.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU-C.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU-CXX.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.26.4/CMakeCCompiler.cmake CMakeFiles/3.26.4/CMakeCXXCompiler.cmake CMakeFiles/3.26.4/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /home/zhangyan/projects/KVstorageBaseRaft-learning/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/fiberExample/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/raftCoreExample/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/callee/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/caller/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/CMakeLists.txt /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCXXInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCommonLanguageInclude.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeGenericSystem.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeInitializeConfigs.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeLanguageInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeSystemSpecificInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeSystemSpecificInitialize.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU-C.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU-CXX.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU-C.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU-CXX.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.26.4/CMakeCCompiler.cmake CMakeFiles/3.26.4/CMakeCXXCompiler.cmake CMakeFiles/3.26.4/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /home/zhangyan/projects/KVstorageBaseRaft-learning/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/CMakeLists.txt /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCXXInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCommonLanguageInclude.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeGenericSystem.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeInitializeConfigs.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeLanguageInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeSystemSpecificInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeSystemSpecificInitialize.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU-C.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU-CXX.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU-C.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU-CXX.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.26.4/CMakeCCompiler.cmake CMakeFiles/3.26.4/CMakeCXXCompiler.cmake CMakeFiles/3.26.4/CMakeSystem.cmake: phony
+build /home/zhangyan/projects/KVstorageBaseRaft-learning/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/fiberExample/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/raftCoreExample/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/callee/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/caller/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/CMakeLists.txt /home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/CMakeLists.txt /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCXXInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeCommonLanguageInclude.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeGenericSystem.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeInitializeConfigs.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeLanguageInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeSystemSpecificInformation.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/CMakeSystemSpecificInitialize.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU-C.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU-CXX.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Compiler/GNU.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU-C.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU-CXX.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux-GNU.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/Linux.cmake /opt/cmake-3.26.4-linux-x86_64/share/cmake-3.26/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.26.4/CMakeCCompiler.cmake CMakeFiles/3.26.4/CMakeCXXCompiler.cmake CMakeFiles/3.26.4/CMakeSystem.cmake: phony
 
 
 #############################################

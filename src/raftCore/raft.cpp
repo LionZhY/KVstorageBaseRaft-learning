@@ -726,7 +726,7 @@ bool Raft::sendAppendEntries(int server,											// 目标follower的编号
 				m_commitIndex = std::max(m_commitIndex, args->prevlogindex() + args->entries_size());
 			}
 
-			myAssert(m_commitIndex < lastLogIndex, 
+			myAssert(m_commitIndex <= lastLogIndex, 
 					format("[func-sendAppendEntries,rf{%d}] lastLogIndex:%d  rf.commitIndex:%d\n", m_me, lastLogIndex, m_commitIndex));	
 		}
 	}
