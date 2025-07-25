@@ -13,12 +13,11 @@ cmake ..
 make
 ~~~
 
+编译之后的可执行文件都在目录 `bin`
+
 ## 启动 rpc
-
-之后在目录bin就有对应的可执行文件生成：
-
-- provider    （是 `rpcExample/callee/friendService.cpp` 构建的可执行文件）
-- consumer （是 `rpcExample/caller/callerFriendService.cpp` 构建的可执行文件）
+provider    是 `rpcExample/callee/friendService.cpp` 构建的可执行文件
+consumer 是 `rpcExample/caller/callerFriendService.cpp` 构建的可执行文件
 
 **先启动 RPC ：**
 
