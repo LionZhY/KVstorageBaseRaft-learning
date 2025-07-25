@@ -385,4 +385,6 @@ src_raftCore:INTERNAL=/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raf
 src_raftRpcPro:INTERNAL=/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/kvServerRPC.pb.cc;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/raftRPC.pb.cc
 //Description of the variable
 src_rpc:INTERNAL=/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpcchannel.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpcconfig.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpccontroller.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/rpcheader.pb.cc;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/rpcprovider.cpp
+//Description of the variable
+src_skiplist:INTERNAL=
 

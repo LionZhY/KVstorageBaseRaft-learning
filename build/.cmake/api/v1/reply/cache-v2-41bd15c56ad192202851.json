@@ -1244,6 +1244,18 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpcchannel.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpcconfig.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpccontroller.cpp;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/rpcheader.pb.cc;/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/rpcprovider.cpp"
+		},
+		{
+			"name" : "src_skiplist",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Description of the variable"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : ""
 		}
 	],
 	"kind" : "cache",
