@@ -98,5 +98,8 @@ service raftRpc
     rpc AppendEntries(AppendEntriesArgs) returns(AppendEntriesReply);               // 心跳 日志复制（leader -> follower）
     rpc InstallSnapshot (InstallSnapshotRequest) returns (InstallSnapshotResponse); // 快照同步 （leader -> 落后follower）
     rpc RequestVote (RequestVoteArgs) returns (RequestVoteReply);                   // 请求选票 （candidate -> 所有节点）
+
 }
+
+
 

@@ -844,45 +844,45 @@ build example/rpcExample/rebuild_cache: phony example/rpcExample/CMakeFiles/rebu
 # =============================================================================
 
 # =============================================================================
-# Object build statements for EXECUTABLE target provider
+# Object build statements for EXECUTABLE target rpcprovider
 
 
 #############################################
-# Order-only phony target for provider
+# Order-only phony target for rpcprovider
 
-build cmake_object_order_depends_target_provider: phony || cmake_object_order_depends_target_rpc_lib
+build cmake_object_order_depends_target_rpcprovider: phony || cmake_object_order_depends_target_rpc_lib
 
-build example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.o: CXX_COMPILER__provider_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/callee/friendService.cpp || cmake_object_order_depends_target_provider
-  DEP_FILE = example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.o.d
+build example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.o: CXX_COMPILER__rpcprovider_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/callee/friendService.cpp || cmake_object_order_depends_target_rpcprovider
+  DEP_FILE = example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.o.d
   FLAGS = -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
-  OBJECT_DIR = example/rpcExample/callee/CMakeFiles/provider.dir
-  OBJECT_FILE_DIR = example/rpcExample/callee/CMakeFiles/provider.dir
+  OBJECT_DIR = example/rpcExample/callee/CMakeFiles/rpcprovider.dir
+  OBJECT_FILE_DIR = example/rpcExample/callee/CMakeFiles/rpcprovider.dir
 
-build example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.o: CXX_COMPILER__provider_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/friend.pb.cc || cmake_object_order_depends_target_provider
-  DEP_FILE = example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.o.d
+build example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.o: CXX_COMPILER__rpcprovider_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/friend.pb.cc || cmake_object_order_depends_target_rpcprovider
+  DEP_FILE = example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.o.d
   FLAGS = -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
-  OBJECT_DIR = example/rpcExample/callee/CMakeFiles/provider.dir
-  OBJECT_FILE_DIR = example/rpcExample/callee/CMakeFiles/provider.dir/__
+  OBJECT_DIR = example/rpcExample/callee/CMakeFiles/rpcprovider.dir
+  OBJECT_FILE_DIR = example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target provider
+# Link build statements for EXECUTABLE target rpcprovider
 
 
 #############################################
-# Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/provider
+# Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/rpcprovider
 
-build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/provider: CXX_EXECUTABLE_LINKER__provider_Debug example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.o example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a
+build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/rpcprovider: CXX_EXECUTABLE_LINKER__rpcprovider_Debug example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.o example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a
   FLAGS = -g
   LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a  -lprotobuf  -lmuduo_net  -lmuduo_base  -lpthread  -lboost_serialization
   LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
-  OBJECT_DIR = example/rpcExample/callee/CMakeFiles/provider.dir
+  OBJECT_DIR = example/rpcExample/callee/CMakeFiles/rpcprovider.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/provider
-  TARGET_PDB = provider.dbg
+  TARGET_FILE = /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/rpcprovider
+  TARGET_PDB = rpcprovider.dbg
 
 
 #############################################
@@ -1111,11 +1111,11 @@ build librpc_lib.a: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/lib
 
 build libskip_list_on_raft.a: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a
 
-build provider: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/provider
-
 build raftCoreRun: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/raftCoreRun
 
 build rpc_lib: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a
+
+build rpcprovider: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/rpcprovider
 
 build skip_list_on_raft: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a
 
@@ -1170,7 +1170,7 @@ build example/rpcExample/all: phony example/rpcExample/callee/all example/rpcExa
 #############################################
 # Folder: /home/zhangyan/projects/KVstorageBaseRaft-learning/build/example/rpcExample/callee
 
-build example/rpcExample/callee/all: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/provider
+build example/rpcExample/callee/all: phony /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/rpcprovider
 
 # =============================================================================
 

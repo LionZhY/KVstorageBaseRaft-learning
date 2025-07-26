@@ -16,7 +16,7 @@ make
 编译之后的可执行文件都在目录 `bin`
 
 ## 启动 rpc
-provider    是 `rpcExample/callee/friendService.cpp` 构建的可执行文件
+rpcprovider    是 `rpcExample/callee/friendService.cpp` 构建的可执行文件
 consumer 是 `rpcExample/caller/callerFriendService.cpp` 构建的可执行文件
 
 **先启动 RPC ：**
@@ -25,7 +25,7 @@ consumer 是 `rpcExample/caller/callerFriendService.cpp` 构建的可执行文�
 
 ~~~shell
 cd bin
-./provider
+./rpcprovider
 ~~~
 
 

@@ -221,17 +221,17 @@ test_hook/fast:
 .PHONY : test_hook/fast
 
 #=============================================================================
-# Target rules for targets named provider
+# Target rules for targets named rpcprovider
 
 # Build rule for target.
-provider: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 provider
-.PHONY : provider
+rpcprovider: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 rpcprovider
+.PHONY : rpcprovider
 
 # fast build rule for target.
-provider/fast:
-	$(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/provider.dir/build.make example/rpcExample/callee/CMakeFiles/provider.dir/build
-.PHONY : provider/fast
+rpcprovider/fast:
+	$(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/rpcprovider.dir/build.make example/rpcExample/callee/CMakeFiles/rpcprovider.dir/build
+.PHONY : rpcprovider/fast
 
 #=============================================================================
 # Target rules for targets named consumer
@@ -740,9 +740,9 @@ help:
 	@echo "... callerMain"
 	@echo "... consumer"
 	@echo "... fiber_lib"
-	@echo "... provider"
 	@echo "... raftCoreRun"
 	@echo "... rpc_lib"
+	@echo "... rpcprovider"
 	@echo "... skip_list_on_raft"
 	@echo "... test_hook"
 	@echo "... test_iomanager"

@@ -30,6 +30,10 @@ int main(int argc, char **argv) // argc 参数数量，
     std::uniform_int_distribution<> dis(10000, 29999);
     unsigned short startPort = dis(gen);
 
+    
+    // unsigned short startPort = 23800; // 随便固定一个起始端口
+
+
 
     // 使用 getopt 解析参数： 如 "./raftKvDB -n 3 -f test.conf" （-n 节点数, -f 配置文件）
     int c = 0;
@@ -51,7 +55,7 @@ int main(int argc, char **argv) // argc 参数数量，
     }
 
 
-    // 初始化配置文件
+    // 初始化配置文件 test.conf
     std::ofstream file(configFileName, std::ios::out | std::ios::app); // 首先尝试以 append 模式打开文件，以保证其存在
     file.close();
     file = std::ofstream(configFileName, std::ios::out | std::ios::trunc);// 再以 truncate 模式清空文件内容，不保留旧信息，确保配置文件是干净的
@@ -72,14 +76,17 @@ int main(int argc, char **argv) // argc 参数数量，
                   << "    port:" << port 
                   << " pid:" << getpid() << std::endl;
         
-        // 创建新子进程，子进程执行 Raft 节点逻辑
+        // 创建新子进程，子进程执行 Raft 节点逻辑，每个子进程创建一个节点，实例化一个KvServer
         pid_t pid = fork();  
         if (pid == 0)    // 如果是子进程
         {
+
             // 子进程中创建并启动 KvServer 节点 （每个节点编号为 i，快照大小限制 500，配置文件，本节点监听端口 port）
             auto kvServer = new KvServer(i, 500, configFileName, port); // 在这里写入配置文件
+
             // 进程阻塞等待，不会退出，不会执行 return             
             pause();   
+
         } 
         else if (pid > 0)// 如果是父进程 等待 1 秒，避免端口冲突或竞争
         {

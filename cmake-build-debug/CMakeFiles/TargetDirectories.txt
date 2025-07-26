@@ -30,7 +30,7 @@
 /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug/example/fiberExample/CMakeFiles/rebuild_cache.dir
 /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug/example/rpcExample/CMakeFiles/edit_cache.dir
 /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug/example/rpcExample/CMakeFiles/rebuild_cache.dir
-/home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug/example/rpcExample/callee/CMakeFiles/provider.dir
+/home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug/example/rpcExample/callee/CMakeFiles/rpcprovider.dir
 /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug/example/rpcExample/callee/CMakeFiles/edit_cache.dir
 /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug/example/rpcExample/callee/CMakeFiles/rebuild_cache.dir
 /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug/example/rpcExample/caller/CMakeFiles/consumer.dir

@@ -223,15 +223,15 @@
 },
 {
   "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
-  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/callee/friendService.cpp",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/callee/friendService.cpp",
   "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/callee/friendService.cpp",
-  "output": "example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.o"
+  "output": "example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.o"
 },
 {
   "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",
-  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/friend.pb.cc",
+  "command": "/usr/bin/g++ -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include -g -std=gnu++20 -o example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.o -c /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/friend.pb.cc",
   "file": "/home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/friend.pb.cc",
-  "output": "example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.o"
+  "output": "example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.o"
 },
 {
   "directory": "/home/zhangyan/projects/KVstorageBaseRaft-learning/build",

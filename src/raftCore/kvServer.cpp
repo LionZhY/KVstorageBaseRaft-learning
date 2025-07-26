@@ -41,7 +41,7 @@ KvServer::KvServer(int me,                          // 当前节点的id
 
     /* 开启rpc远程调用能力，必须保证所有节点都开启rpc接受功能之后才能开启rpc远程调用能力，这里使用睡眠来保证 */ 
     std::cout << "raftServer node:" << m_me << " start to sleep to wait all ohter raftnode start!!!!" << std::endl;
-    sleep(6); // 睡眠固定时间（6秒），确保其他节点 RPC 服务已启动
+    sleep(10); // 睡眠固定时间（6秒），确保其他节点 RPC 服务已启动
     std::cout << "raftServer node:" << m_me << " wake up!!!! start to connect other raftnode" << std::endl;
 
 

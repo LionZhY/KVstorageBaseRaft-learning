@@ -465,7 +465,8 @@ void Raft::leaderHearBeatTicker()
 		// 如果当前距离下一次心跳还有较长时间（>1ms），sleep 等待，避免频繁切线程
 		if (std::chrono::duration<double, std::milli>(suitableSleepTime).count() > 1)
 		{
-			std::cout << atomicCount << "\033[1;35m leaderHearBeatTicker();函数设置睡眠时间为: "
+			std::cout << atomicCount 
+					  << "\033[1;33m leaderHearBeatTicker();函数设置睡眠时间为: "
 					  << std::chrono::duration_cast<std::chrono::milliseconds>(suitableSleepTime).count() << "毫秒\033[0m"
 					  << std::endl;
 			
@@ -479,7 +480,8 @@ void Raft::leaderHearBeatTicker()
 			// 计算sleep时长并打印（毫秒）
 			std::chrono::duration<double, std::milli> duration = end - start;
 
-			std::cout << atomicCount << "\033[1;35m leaderHearBeatTicker();函数实际睡眠时间为: " 
+			std::cout << atomicCount 
+					  << "\033[1;33m leaderHearBeatTicker();函数实际睡眠时间为: " 
 					  << duration.count() << " 毫秒\033[0m" << std::endl;
 			
 			// 心跳次数 + 1

@@ -117,25 +117,25 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-example/rpcExample/callee/CMakeFiles/provider.dir/rule:
-	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 example/rpcExample/callee/CMakeFiles/provider.dir/rule
-.PHONY : example/rpcExample/callee/CMakeFiles/provider.dir/rule
+example/rpcExample/callee/CMakeFiles/rpcprovider.dir/rule:
+	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 example/rpcExample/callee/CMakeFiles/rpcprovider.dir/rule
+.PHONY : example/rpcExample/callee/CMakeFiles/rpcprovider.dir/rule
 
 # Convenience name for target.
-provider: example/rpcExample/callee/CMakeFiles/provider.dir/rule
-.PHONY : provider
+rpcprovider: example/rpcExample/callee/CMakeFiles/rpcprovider.dir/rule
+.PHONY : rpcprovider
 
 # fast build rule for target.
-provider/fast:
-	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/provider.dir/build.make example/rpcExample/callee/CMakeFiles/provider.dir/build
-.PHONY : provider/fast
+rpcprovider/fast:
+	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/rpcprovider.dir/build.make example/rpcExample/callee/CMakeFiles/rpcprovider.dir/build
+.PHONY : rpcprovider/fast
 
 __/friend.pb.o: __/friend.pb.cc.o
 .PHONY : __/friend.pb.o
 
 # target to build an object file
 __/friend.pb.cc.o:
-	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/provider.dir/build.make example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.o
+	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/rpcprovider.dir/build.make example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.o
 .PHONY : __/friend.pb.cc.o
 
 __/friend.pb.i: __/friend.pb.cc.i
@@ -143,7 +143,7 @@ __/friend.pb.i: __/friend.pb.cc.i
 
 # target to preprocess a source file
 __/friend.pb.cc.i:
-	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/provider.dir/build.make example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.i
+	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/rpcprovider.dir/build.make example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.i
 .PHONY : __/friend.pb.cc.i
 
 __/friend.pb.s: __/friend.pb.cc.s
@@ -151,7 +151,7 @@ __/friend.pb.s: __/friend.pb.cc.s
 
 # target to generate assembly for a file
 __/friend.pb.cc.s:
-	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/provider.dir/build.make example/rpcExample/callee/CMakeFiles/provider.dir/__/friend.pb.cc.s
+	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/rpcprovider.dir/build.make example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.s
 .PHONY : __/friend.pb.cc.s
 
 friendService.o: friendService.cpp.o
@@ -159,7 +159,7 @@ friendService.o: friendService.cpp.o
 
 # target to build an object file
 friendService.cpp.o:
-	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/provider.dir/build.make example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.o
+	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/rpcprovider.dir/build.make example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.o
 .PHONY : friendService.cpp.o
 
 friendService.i: friendService.cpp.i
@@ -167,7 +167,7 @@ friendService.i: friendService.cpp.i
 
 # target to preprocess a source file
 friendService.cpp.i:
-	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/provider.dir/build.make example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.i
+	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/rpcprovider.dir/build.make example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.i
 .PHONY : friendService.cpp.i
 
 friendService.s: friendService.cpp.s
@@ -175,7 +175,7 @@ friendService.s: friendService.cpp.s
 
 # target to generate assembly for a file
 friendService.cpp.s:
-	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/provider.dir/build.make example/rpcExample/callee/CMakeFiles/provider.dir/friendService.cpp.s
+	cd /home/zhangyan/projects/KVstorageBaseRaft-learning/cmake-build-debug && $(MAKE) $(MAKESILENT) -f example/rpcExample/callee/CMakeFiles/rpcprovider.dir/build.make example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.s
 .PHONY : friendService.cpp.s
 
 # Help Target
@@ -186,7 +186,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... provider"
+	@echo "... rpcprovider"
 	@echo "... __/friend.pb.o"
 	@echo "... __/friend.pb.i"
 	@echo "... __/friend.pb.s"

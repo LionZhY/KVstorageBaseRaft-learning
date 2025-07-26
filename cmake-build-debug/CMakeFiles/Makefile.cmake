@@ -79,7 +79,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "example/fiberExample/CMakeFiles/test_scheduler.dir/DependInfo.cmake"
   "example/fiberExample/CMakeFiles/test_iomanager.dir/DependInfo.cmake"
   "example/fiberExample/CMakeFiles/test_hook.dir/DependInfo.cmake"
-  "example/rpcExample/callee/CMakeFiles/provider.dir/DependInfo.cmake"
+  "example/rpcExample/callee/CMakeFiles/rpcprovider.dir/DependInfo.cmake"
   "example/rpcExample/caller/CMakeFiles/consumer.dir/DependInfo.cmake"
   "example/raftCoreExample/CMakeFiles/raftCoreRun.dir/DependInfo.cmake"
   "example/raftCoreExample/CMakeFiles/callerMain.dir/DependInfo.cmake"
