@@ -10,6 +10,7 @@ option cc_generic_services = true;  // 开启stub服务 生成一个通用的 C+
 */
 
 
+
 // Raft 中的日志项结构
 message LogEntry 
 {
@@ -17,6 +18,7 @@ message LogEntry
 	int32 LogTerm  = 2; // 该日志写入时的leader任期
 	int32 LogIndex = 3; // 日志在整个日志序列中的位置
 }
+
 
 // 日志追加请求：用于Leader 向 Follower 发起日志追加请求或心跳
 message AppendEntriesArgs 
@@ -34,6 +36,7 @@ message AppendEntriesArgs
         Entries 为空：即心跳包（保持领导权）*/
 }
 
+
 // 日志追加响应：Follower 对追加的响应，反馈追加是否成功
 message AppendEntriesReply 
 {
@@ -43,6 +46,7 @@ message AppendEntriesReply
 	int32 AppState        = 4; // 节点状态：正常/网络异常/正在恢复等（可自定义使用）
 }
 
+
 // 选举请求：用于候选人向所有节点广播投票请求
 message RequestVoteArgs  
 {
@@ -51,6 +55,7 @@ message RequestVoteArgs
 	int32 LastLogIndex =3; // 候选人最后一条日志的索引
 	int32 LastLogTerm  =4; // 候选人最后一条日志的任期
 }
+
 
 // 投票响应：用于反馈投票结果，Leader 将统计获得多少投票
 // example RequestVote RPC reply structure. 示例 RequestVote RPC 回复结构。
@@ -63,6 +68,7 @@ message RequestVoteReply
 	int32 VoteState   =3; // 可选扩展字段，如记录原因或状态码
 }
 
+
 // 发送快照请求：某些 Follower 落后太多，日志无法覆盖时，Leader 会用快照同步整个状态
 message InstallSnapshotRequest  
 {
@@ -73,11 +79,16 @@ message InstallSnapshotRequest
 	bytes Data                     =5; // 快照内容，使用bytes类型
 }
 
+
 // 快照响应： 只用返回Term，因为对于快照只要Term是符合的就是无条件接受的
 message InstallSnapshotResponse  
 {
 	int32 Term  = 1; // 当前节点任期（用于验证）
 }
+
+
+
+
 
 
 // RPC 服务接口：只有raft节点之间才会涉及rpc通信
@@ -89,26 +100,3 @@ service raftRpc
     rpc RequestVote (RequestVoteArgs) returns (RequestVoteReply);                   // 请求选票 （candidate -> 所有节点）
 }
 
-
-// message ResultCode
-// {
-//     int32 errcode = 1;
-//     bytes errmsg = 2;
-// }
-
-// message GetFriendsListRequest  //请求，响应
-// {
-//     uint32 userid = 1;
-// }
-
-// message GetFriendsListResponse  //请求，响应
-// {
-//     ResultCode result = 1;
-//     repeated bytes friends = 2;
-// }
-
-// // 好友模块
-// service FiendServiceRpc  //具体的服务模块和服务方法
-// {
-//     rpc GetFriendsList(GetFriendsListRequest) returns(GetFriendsListResponse);
-// }

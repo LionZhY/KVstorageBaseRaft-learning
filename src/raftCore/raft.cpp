@@ -49,8 +49,8 @@ void Raft::init(std::vector<std::shared_ptr<RaftRpcUtil>> peers,
 
 	for (int i = 0; i < m_peers.size(); i++) 
 	{
-	  m_matchIndex.push_back(0); // matchIndex[i]: Leader 已知 follower 的最大匹配日志索引
-	  m_nextIndex.push_back(0);	 // nextIndex[i]:  Leader 要发送给第 i 个 follower 的下一个日志索引
+		m_matchIndex.push_back(0); // matchIndex[i]: Leader 已知 follower 的最大匹配日志索引
+		m_nextIndex.push_back(0);	 // nextIndex[i]:  Leader 要发送给第 i 个 follower 的下一个日志索引
 	}
 
 	m_votedFor = -1; // 当前任期内投给了谁
