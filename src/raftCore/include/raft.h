@@ -70,7 +70,7 @@ public:
 	
 	bool UpToDate(int index, int term); // 判断候选人日志是否更新（用于投票）
 	
-	
+
 
 
 

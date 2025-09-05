@@ -23,13 +23,16 @@ Scheduler::Scheduler(size_t threads, bool use_caller, const std::string &name) {
     --threads;
     // 初始化caller线程的主协程
     Fiber::GetThis();
-    std::cout << LOG_HEAD << "init caller thread's main fiber success" << std::endl;
+    std::cout << LOG_HEAD << "init caller thread's main fiber success"
+              << std::endl;
     CondPanic(GetThis() == nullptr, "GetThis err:cur scheduler is not nullptr");
     // 设置当前线程为调度器线程（caller thread）
     cur_scheduler = this;
-    // 初始化当前线程的调度协程 （该线程不会被调度器带哦都），调度结束后，返回主协程
+    // 初始化当前线程的调度协程
+    // （该线程不会被调度器带哦都），调度结束后，返回主协程
     rootFiber_.reset(new Fiber(std::bind(&Scheduler::run, this), 0, false));
-    std::cout << LOG_HEAD << "init caller thread's caller fiber success" << std::endl;
+    std::cout << LOG_HEAD << "init caller thread's caller fiber success"
+              << std::endl;
 
     Thread::SetName(name_);
     cur_scheduler_fiber = rootFiber_.get();
@@ -64,7 +67,8 @@ void Scheduler::start() {
   CondPanic(threadPool_.empty(), "thread pool is not empty");
   threadPool_.resize(threadCnt_);
   for (size_t i = 0; i < threadCnt_; i++) {
-    threadPool_[i].reset(new Thread(std::bind(&Scheduler::run, this), name_ + "_" + std::to_string(i)));
+    threadPool_[i].reset(new Thread(std::bind(&Scheduler::run, this),
+                                    name_ + "_" + std::to_string(i)));
     threadIds_.push_back(threadPool_[i]->getId());
   }
 }
@@ -101,7 +105,8 @@ void Scheduler::run() {
         }
         CondPanic(it->fiber_ || it->cb_, "task is nullptr");
         if (it->fiber_) {
-          CondPanic(it->fiber_->getState() == Fiber::READY, "fiber task state error");
+          CondPanic(it->fiber_->getState() == Fiber::READY,
+                    "fiber task state error");
         }
         // 找到一个可进行任务，准备开始调度，从任务队列取出，活动线程加1
         task = *it;
@@ -200,4 +205,4 @@ void Scheduler::stop() {
   }
 }
 
-}  // namespace monsoon
+} // namespace monsoon
