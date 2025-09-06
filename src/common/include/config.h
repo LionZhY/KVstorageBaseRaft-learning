@@ -14,11 +14,11 @@ const int debugMul = 1;  // 时间倍率系数，用于统一调整所有定时�
 
 // Raft 协议定时参数（ms）
 /* 如果多节点失败，可以调大这里的选举超时时间试试 */
-const int HeartBeatTimeout = 25 * debugMul;// 心跳发送间隔（= 25 × debugMul）(心跳时间一般要比选举超时小一个数量级)
+const int HeartBeatTimeout = 100 * debugMul;// 心跳发送间隔（= 25 × debugMul）(心跳时间一般要比选举超时小一个数量级)
 const int ApplyInterval = 10 * debugMul;   // Apply 状态机的检查间隔（= 10 × debugMul）
 
-const int minRandomizedElectionTime = 500 * debugMul;  // 选举超时最小值（= 500 × debugMul）
-const int maxRandomizedElectionTime = 800 * debugMul;  // 选举超时最大值（= 800 × debugMul）
+const int minRandomizedElectionTime = 300 * debugMul;  // 选举超时最小值（= 500 × debugMul）
+const int maxRandomizedElectionTime = 1000 * debugMul;  // 选举超时最大值（= 800 × debugMul）
 
 const int CONSENSUS_TIMEOUT = 500 * debugMul;  // 达成共识的超时时间（= 500 × debugMul）
 

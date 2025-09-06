@@ -8,6 +8,9 @@ project(KVRaftCpp)
 set(CMAKE_CXX_STANDARD 20) # 使用C++20标准
 set(CMAKE_BUILD_TYPE "Debug") # 设置构建类型为 Debug，可以进行gdb调试
 
+# 调试 火焰图
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -fno-omit-frame-pointer")
+
 
 # 输出路径
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin) # 可执行文件输出路径  ${项目根目录}/bin

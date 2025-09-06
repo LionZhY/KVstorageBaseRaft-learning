@@ -51,133 +51,133 @@ build cmake_object_order_depends_target_skip_list_on_raft: phony || CMakeFiles/s
 
 build CMakeFiles/skip_list_on_raft.dir/src/rpc/mprpcchannel.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpcchannel.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/rpc/mprpcchannel.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/rpc
 
 build CMakeFiles/skip_list_on_raft.dir/src/rpc/mprpcconfig.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpcconfig.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/rpc/mprpcconfig.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/rpc
 
 build CMakeFiles/skip_list_on_raft.dir/src/rpc/mprpccontroller.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpccontroller.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/rpc/mprpccontroller.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/rpc
 
 build CMakeFiles/skip_list_on_raft.dir/src/rpc/rpcheader.pb.cc.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/rpcheader.pb.cc || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/rpc/rpcheader.pb.cc.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/rpc
 
 build CMakeFiles/skip_list_on_raft.dir/src/rpc/rpcprovider.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/rpcprovider.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/rpc/rpcprovider.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/rpc
 
 build CMakeFiles/skip_list_on_raft.dir/src/fiber/fd_manager.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fd_manager.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/fiber/fd_manager.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/fiber
 
 build CMakeFiles/skip_list_on_raft.dir/src/fiber/fiber.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fiber.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/fiber/fiber.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/fiber
 
 build CMakeFiles/skip_list_on_raft.dir/src/fiber/hook.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/hook.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/fiber/hook.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/fiber
 
 build CMakeFiles/skip_list_on_raft.dir/src/fiber/iomanager.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/iomanager.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/fiber/iomanager.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/fiber
 
 build CMakeFiles/skip_list_on_raft.dir/src/fiber/scheduler.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/scheduler.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/fiber/scheduler.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/fiber
 
 build CMakeFiles/skip_list_on_raft.dir/src/fiber/thread.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/thread.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/fiber/thread.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/fiber
 
 build CMakeFiles/skip_list_on_raft.dir/src/fiber/timer.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/timer.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/fiber/timer.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/fiber
 
 build CMakeFiles/skip_list_on_raft.dir/src/fiber/utils.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/utils.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/fiber/utils.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/fiber
 
 build CMakeFiles/skip_list_on_raft.dir/src/raftCore/Persister.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/Persister.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/raftCore/Persister.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/raftCore
 
 build CMakeFiles/skip_list_on_raft.dir/src/raftCore/kvServer.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/kvServer.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/raftCore/kvServer.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/raftCore
 
 build CMakeFiles/skip_list_on_raft.dir/src/raftCore/raft.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/raft.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/raftCore/raft.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/raftCore
 
 build CMakeFiles/skip_list_on_raft.dir/src/raftCore/raftRpcUtil.cpp.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/raftRpcUtil.cpp || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/raftCore/raftRpcUtil.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/raftCore
 
 build CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/kvServerRPC.pb.cc.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/kvServerRPC.pb.cc || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/kvServerRPC.pb.cc.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro
 
 build CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/raftRPC.pb.cc.o: CXX_COMPILER__skip_list_on_raft_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/raftRPC.pb.cc || cmake_object_order_depends_target_skip_list_on_raft
   DEP_FILE = CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/raftRPC.pb.cc.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   OBJECT_FILE_DIR = CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro
@@ -191,7 +191,7 @@ build CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/raftRPC.pb.cc.o: CXX_COMPI
 # Link the static library /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a: CXX_STATIC_LIBRARY_LINKER__skip_list_on_raft_Debug CMakeFiles/skip_list_on_raft.dir/src/rpc/mprpcchannel.cpp.o CMakeFiles/skip_list_on_raft.dir/src/rpc/mprpcconfig.cpp.o CMakeFiles/skip_list_on_raft.dir/src/rpc/mprpccontroller.cpp.o CMakeFiles/skip_list_on_raft.dir/src/rpc/rpcheader.pb.cc.o CMakeFiles/skip_list_on_raft.dir/src/rpc/rpcprovider.cpp.o CMakeFiles/skip_list_on_raft.dir/src/fiber/fd_manager.cpp.o CMakeFiles/skip_list_on_raft.dir/src/fiber/fiber.cpp.o CMakeFiles/skip_list_on_raft.dir/src/fiber/hook.cpp.o CMakeFiles/skip_list_on_raft.dir/src/fiber/iomanager.cpp.o CMakeFiles/skip_list_on_raft.dir/src/fiber/scheduler.cpp.o CMakeFiles/skip_list_on_raft.dir/src/fiber/thread.cpp.o CMakeFiles/skip_list_on_raft.dir/src/fiber/timer.cpp.o CMakeFiles/skip_list_on_raft.dir/src/fiber/utils.cpp.o CMakeFiles/skip_list_on_raft.dir/src/raftCore/Persister.cpp.o CMakeFiles/skip_list_on_raft.dir/src/raftCore/kvServer.cpp.o CMakeFiles/skip_list_on_raft.dir/src/raftCore/raft.cpp.o CMakeFiles/skip_list_on_raft.dir/src/raftCore/raftRpcUtil.cpp.o CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/kvServerRPC.pb.cc.o CMakeFiles/skip_list_on_raft.dir/src/raftRpcPro/raftRPC.pb.cc.o
-  LANGUAGE_COMPILE_FLAGS = -g
+  LANGUAGE_COMPILE_FLAGS = -g -O2 -fno-omit-frame-pointer -g
   OBJECT_DIR = CMakeFiles/skip_list_on_raft.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -338,42 +338,42 @@ build cmake_object_order_depends_target_rpc_lib: phony || src/rpc/CMakeFiles/rpc
 
 build src/rpc/CMakeFiles/rpc_lib.dir/mprpcchannel.cpp.o: CXX_COMPILER__rpc_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpcchannel.cpp || cmake_object_order_depends_target_rpc_lib
   DEP_FILE = src/rpc/CMakeFiles/rpc_lib.dir/mprpcchannel.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/rpc/CMakeFiles/rpc_lib.dir
   OBJECT_FILE_DIR = src/rpc/CMakeFiles/rpc_lib.dir
 
 build src/rpc/CMakeFiles/rpc_lib.dir/mprpcconfig.cpp.o: CXX_COMPILER__rpc_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpcconfig.cpp || cmake_object_order_depends_target_rpc_lib
   DEP_FILE = src/rpc/CMakeFiles/rpc_lib.dir/mprpcconfig.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/rpc/CMakeFiles/rpc_lib.dir
   OBJECT_FILE_DIR = src/rpc/CMakeFiles/rpc_lib.dir
 
 build src/rpc/CMakeFiles/rpc_lib.dir/mprpccontroller.cpp.o: CXX_COMPILER__rpc_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/mprpccontroller.cpp || cmake_object_order_depends_target_rpc_lib
   DEP_FILE = src/rpc/CMakeFiles/rpc_lib.dir/mprpccontroller.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/rpc/CMakeFiles/rpc_lib.dir
   OBJECT_FILE_DIR = src/rpc/CMakeFiles/rpc_lib.dir
 
 build src/rpc/CMakeFiles/rpc_lib.dir/rpcheader.pb.cc.o: CXX_COMPILER__rpc_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/rpcheader.pb.cc || cmake_object_order_depends_target_rpc_lib
   DEP_FILE = src/rpc/CMakeFiles/rpc_lib.dir/rpcheader.pb.cc.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/rpc/CMakeFiles/rpc_lib.dir
   OBJECT_FILE_DIR = src/rpc/CMakeFiles/rpc_lib.dir
 
 build src/rpc/CMakeFiles/rpc_lib.dir/rpcprovider.cpp.o: CXX_COMPILER__rpc_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/rpcprovider.cpp || cmake_object_order_depends_target_rpc_lib
   DEP_FILE = src/rpc/CMakeFiles/rpc_lib.dir/rpcprovider.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/rpc/CMakeFiles/rpc_lib.dir
   OBJECT_FILE_DIR = src/rpc/CMakeFiles/rpc_lib.dir
 
 build src/rpc/CMakeFiles/rpc_lib.dir/__/common/util.cpp.o: CXX_COMPILER__rpc_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/util.cpp || cmake_object_order_depends_target_rpc_lib
   DEP_FILE = src/rpc/CMakeFiles/rpc_lib.dir/__/common/util.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/rpc/CMakeFiles/rpc_lib.dir
   OBJECT_FILE_DIR = src/rpc/CMakeFiles/rpc_lib.dir/__/common
@@ -387,7 +387,7 @@ build src/rpc/CMakeFiles/rpc_lib.dir/__/common/util.cpp.o: CXX_COMPILER__rpc_lib
 # Link the static library /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a: CXX_STATIC_LIBRARY_LINKER__rpc_lib_Debug src/rpc/CMakeFiles/rpc_lib.dir/mprpcchannel.cpp.o src/rpc/CMakeFiles/rpc_lib.dir/mprpcconfig.cpp.o src/rpc/CMakeFiles/rpc_lib.dir/mprpccontroller.cpp.o src/rpc/CMakeFiles/rpc_lib.dir/rpcheader.pb.cc.o src/rpc/CMakeFiles/rpc_lib.dir/rpcprovider.cpp.o src/rpc/CMakeFiles/rpc_lib.dir/__/common/util.cpp.o
-  LANGUAGE_COMPILE_FLAGS = -g
+  LANGUAGE_COMPILE_FLAGS = -g -O2 -fno-omit-frame-pointer -g
   OBJECT_DIR = src/rpc/CMakeFiles/rpc_lib.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -434,56 +434,56 @@ build cmake_object_order_depends_target_fiber_lib: phony || src/fiber/CMakeFiles
 
 build src/fiber/CMakeFiles/fiber_lib.dir/fd_manager.cpp.o: CXX_COMPILER__fiber_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fd_manager.cpp || cmake_object_order_depends_target_fiber_lib
   DEP_FILE = src/fiber/CMakeFiles/fiber_lib.dir/fd_manager.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/fiber/CMakeFiles/fiber_lib.dir
   OBJECT_FILE_DIR = src/fiber/CMakeFiles/fiber_lib.dir
 
 build src/fiber/CMakeFiles/fiber_lib.dir/fiber.cpp.o: CXX_COMPILER__fiber_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/fiber.cpp || cmake_object_order_depends_target_fiber_lib
   DEP_FILE = src/fiber/CMakeFiles/fiber_lib.dir/fiber.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/fiber/CMakeFiles/fiber_lib.dir
   OBJECT_FILE_DIR = src/fiber/CMakeFiles/fiber_lib.dir
 
 build src/fiber/CMakeFiles/fiber_lib.dir/hook.cpp.o: CXX_COMPILER__fiber_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/hook.cpp || cmake_object_order_depends_target_fiber_lib
   DEP_FILE = src/fiber/CMakeFiles/fiber_lib.dir/hook.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/fiber/CMakeFiles/fiber_lib.dir
   OBJECT_FILE_DIR = src/fiber/CMakeFiles/fiber_lib.dir
 
 build src/fiber/CMakeFiles/fiber_lib.dir/iomanager.cpp.o: CXX_COMPILER__fiber_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/iomanager.cpp || cmake_object_order_depends_target_fiber_lib
   DEP_FILE = src/fiber/CMakeFiles/fiber_lib.dir/iomanager.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/fiber/CMakeFiles/fiber_lib.dir
   OBJECT_FILE_DIR = src/fiber/CMakeFiles/fiber_lib.dir
 
 build src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o: CXX_COMPILER__fiber_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/scheduler.cpp || cmake_object_order_depends_target_fiber_lib
   DEP_FILE = src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/fiber/CMakeFiles/fiber_lib.dir
   OBJECT_FILE_DIR = src/fiber/CMakeFiles/fiber_lib.dir
 
 build src/fiber/CMakeFiles/fiber_lib.dir/thread.cpp.o: CXX_COMPILER__fiber_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/thread.cpp || cmake_object_order_depends_target_fiber_lib
   DEP_FILE = src/fiber/CMakeFiles/fiber_lib.dir/thread.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/fiber/CMakeFiles/fiber_lib.dir
   OBJECT_FILE_DIR = src/fiber/CMakeFiles/fiber_lib.dir
 
 build src/fiber/CMakeFiles/fiber_lib.dir/timer.cpp.o: CXX_COMPILER__fiber_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/timer.cpp || cmake_object_order_depends_target_fiber_lib
   DEP_FILE = src/fiber/CMakeFiles/fiber_lib.dir/timer.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/fiber/CMakeFiles/fiber_lib.dir
   OBJECT_FILE_DIR = src/fiber/CMakeFiles/fiber_lib.dir
 
 build src/fiber/CMakeFiles/fiber_lib.dir/utils.cpp.o: CXX_COMPILER__fiber_lib_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/utils.cpp || cmake_object_order_depends_target_fiber_lib
   DEP_FILE = src/fiber/CMakeFiles/fiber_lib.dir/utils.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = src/fiber/CMakeFiles/fiber_lib.dir
   OBJECT_FILE_DIR = src/fiber/CMakeFiles/fiber_lib.dir
@@ -497,7 +497,7 @@ build src/fiber/CMakeFiles/fiber_lib.dir/utils.cpp.o: CXX_COMPILER__fiber_lib_un
 # Link the static library /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a: CXX_STATIC_LIBRARY_LINKER__fiber_lib_Debug src/fiber/CMakeFiles/fiber_lib.dir/fd_manager.cpp.o src/fiber/CMakeFiles/fiber_lib.dir/fiber.cpp.o src/fiber/CMakeFiles/fiber_lib.dir/hook.cpp.o src/fiber/CMakeFiles/fiber_lib.dir/iomanager.cpp.o src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o src/fiber/CMakeFiles/fiber_lib.dir/thread.cpp.o src/fiber/CMakeFiles/fiber_lib.dir/timer.cpp.o src/fiber/CMakeFiles/fiber_lib.dir/utils.cpp.o
-  LANGUAGE_COMPILE_FLAGS = -g
+  LANGUAGE_COMPILE_FLAGS = -g -O2 -fno-omit-frame-pointer -g
   OBJECT_DIR = src/fiber/CMakeFiles/fiber_lib.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -660,7 +660,7 @@ build cmake_object_order_depends_target_test_server: phony || cmake_object_order
 
 build example/fiberExample/CMakeFiles/test_server.dir/server.cpp.o: CXX_COMPILER__test_server_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/fiberExample/server.cpp || cmake_object_order_depends_target_test_server
   DEP_FILE = example/fiberExample/CMakeFiles/test_server.dir/server.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/fiberExample/CMakeFiles/test_server.dir
   OBJECT_FILE_DIR = example/fiberExample/CMakeFiles/test_server.dir
@@ -674,7 +674,7 @@ build example/fiberExample/CMakeFiles/test_server.dir/server.cpp.o: CXX_COMPILER
 # Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_server
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_server: CXX_EXECUTABLE_LINKER__test_server_Debug example/fiberExample/CMakeFiles/test_server.dir/server.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a
-  FLAGS = -g
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g
   LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a  -lpthread  -ldl  -ldl
   LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
   OBJECT_DIR = example/fiberExample/CMakeFiles/test_server.dir
@@ -694,7 +694,7 @@ build cmake_object_order_depends_target_test_scheduler: phony || cmake_object_or
 
 build example/fiberExample/CMakeFiles/test_scheduler.dir/test_scheduler.cpp.o: CXX_COMPILER__test_scheduler_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/fiberExample/test_scheduler.cpp || cmake_object_order_depends_target_test_scheduler
   DEP_FILE = example/fiberExample/CMakeFiles/test_scheduler.dir/test_scheduler.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/fiberExample/CMakeFiles/test_scheduler.dir
   OBJECT_FILE_DIR = example/fiberExample/CMakeFiles/test_scheduler.dir
@@ -708,7 +708,7 @@ build example/fiberExample/CMakeFiles/test_scheduler.dir/test_scheduler.cpp.o: C
 # Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_scheduler
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_scheduler: CXX_EXECUTABLE_LINKER__test_scheduler_Debug example/fiberExample/CMakeFiles/test_scheduler.dir/test_scheduler.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a
-  FLAGS = -g
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g
   LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a  -lpthread  -ldl  -ldl
   LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
   OBJECT_DIR = example/fiberExample/CMakeFiles/test_scheduler.dir
@@ -728,7 +728,7 @@ build cmake_object_order_depends_target_test_iomanager: phony || cmake_object_or
 
 build example/fiberExample/CMakeFiles/test_iomanager.dir/test_iomanager.cpp.o: CXX_COMPILER__test_iomanager_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/fiberExample/test_iomanager.cpp || cmake_object_order_depends_target_test_iomanager
   DEP_FILE = example/fiberExample/CMakeFiles/test_iomanager.dir/test_iomanager.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/fiberExample/CMakeFiles/test_iomanager.dir
   OBJECT_FILE_DIR = example/fiberExample/CMakeFiles/test_iomanager.dir
@@ -742,7 +742,7 @@ build example/fiberExample/CMakeFiles/test_iomanager.dir/test_iomanager.cpp.o: C
 # Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_iomanager
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_iomanager: CXX_EXECUTABLE_LINKER__test_iomanager_Debug example/fiberExample/CMakeFiles/test_iomanager.dir/test_iomanager.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a
-  FLAGS = -g
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g
   LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a  -lpthread  -ldl  -ldl
   LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
   OBJECT_DIR = example/fiberExample/CMakeFiles/test_iomanager.dir
@@ -762,7 +762,7 @@ build cmake_object_order_depends_target_test_hook: phony || cmake_object_order_d
 
 build example/fiberExample/CMakeFiles/test_hook.dir/test_hook.cpp.o: CXX_COMPILER__test_hook_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/fiberExample/test_hook.cpp || cmake_object_order_depends_target_test_hook
   DEP_FILE = example/fiberExample/CMakeFiles/test_hook.dir/test_hook.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/fiberExample/CMakeFiles/test_hook.dir
   OBJECT_FILE_DIR = example/fiberExample/CMakeFiles/test_hook.dir
@@ -776,7 +776,7 @@ build example/fiberExample/CMakeFiles/test_hook.dir/test_hook.cpp.o: CXX_COMPILE
 # Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_hook
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/test_hook: CXX_EXECUTABLE_LINKER__test_hook_Debug example/fiberExample/CMakeFiles/test_hook.dir/test_hook.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a
-  FLAGS = -g
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g
   LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libfiber_lib.a  -lpthread  -ldl  -ldl
   LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
   OBJECT_DIR = example/fiberExample/CMakeFiles/test_hook.dir
@@ -854,14 +854,14 @@ build cmake_object_order_depends_target_rpcprovider: phony || cmake_object_order
 
 build example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.o: CXX_COMPILER__rpcprovider_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/callee/friendService.cpp || cmake_object_order_depends_target_rpcprovider
   DEP_FILE = example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/rpcExample/callee/CMakeFiles/rpcprovider.dir
   OBJECT_FILE_DIR = example/rpcExample/callee/CMakeFiles/rpcprovider.dir
 
 build example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.o: CXX_COMPILER__rpcprovider_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/friend.pb.cc || cmake_object_order_depends_target_rpcprovider
   DEP_FILE = example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/rpcExample/callee/CMakeFiles/rpcprovider.dir
   OBJECT_FILE_DIR = example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__
@@ -875,7 +875,7 @@ build example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.o: CX
 # Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/rpcprovider
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/rpcprovider: CXX_EXECUTABLE_LINKER__rpcprovider_Debug example/rpcExample/callee/CMakeFiles/rpcprovider.dir/friendService.cpp.o example/rpcExample/callee/CMakeFiles/rpcprovider.dir/__/friend.pb.cc.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a
-  FLAGS = -g
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g
   LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a  -lprotobuf  -lmuduo_net  -lmuduo_base  -lpthread  -lboost_serialization
   LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
   OBJECT_DIR = example/rpcExample/callee/CMakeFiles/rpcprovider.dir
@@ -924,14 +924,14 @@ build cmake_object_order_depends_target_consumer: phony || cmake_object_order_de
 
 build example/rpcExample/caller/CMakeFiles/consumer.dir/callFriendService.cpp.o: CXX_COMPILER__consumer_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/caller/callFriendService.cpp || cmake_object_order_depends_target_consumer
   DEP_FILE = example/rpcExample/caller/CMakeFiles/consumer.dir/callFriendService.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/rpcExample/caller/CMakeFiles/consumer.dir
   OBJECT_FILE_DIR = example/rpcExample/caller/CMakeFiles/consumer.dir
 
 build example/rpcExample/caller/CMakeFiles/consumer.dir/__/friend.pb.cc.o: CXX_COMPILER__consumer_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/rpcExample/friend.pb.cc || cmake_object_order_depends_target_consumer
   DEP_FILE = example/rpcExample/caller/CMakeFiles/consumer.dir/__/friend.pb.cc.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/rpcExample/caller/CMakeFiles/consumer.dir
   OBJECT_FILE_DIR = example/rpcExample/caller/CMakeFiles/consumer.dir/__
@@ -945,7 +945,7 @@ build example/rpcExample/caller/CMakeFiles/consumer.dir/__/friend.pb.cc.o: CXX_C
 # Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/consumer
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/consumer: CXX_EXECUTABLE_LINKER__consumer_Debug example/rpcExample/caller/CMakeFiles/consumer.dir/callFriendService.cpp.o example/rpcExample/caller/CMakeFiles/consumer.dir/__/friend.pb.cc.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a
-  FLAGS = -g
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g
   LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a  -lprotobuf  -lboost_serialization
   LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
   OBJECT_DIR = example/rpcExample/caller/CMakeFiles/consumer.dir
@@ -994,7 +994,7 @@ build cmake_object_order_depends_target_raftCoreRun: phony || cmake_object_order
 
 build example/raftCoreExample/CMakeFiles/raftCoreRun.dir/raftKvDB.cpp.o: CXX_COMPILER__raftCoreRun_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/raftCoreExample/raftKvDB.cpp || cmake_object_order_depends_target_raftCoreRun
   DEP_FILE = example/raftCoreExample/CMakeFiles/raftCoreRun.dir/raftKvDB.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/raftCoreExample/CMakeFiles/raftCoreRun.dir
   OBJECT_FILE_DIR = example/raftCoreExample/CMakeFiles/raftCoreRun.dir
@@ -1008,7 +1008,7 @@ build example/raftCoreExample/CMakeFiles/raftCoreRun.dir/raftKvDB.cpp.o: CXX_COM
 # Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/raftCoreRun
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/raftCoreRun: CXX_EXECUTABLE_LINKER__raftCoreRun_Debug example/raftCoreExample/CMakeFiles/raftCoreRun.dir/raftKvDB.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a
-  FLAGS = -g
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g
   LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/librpc_lib.a  -lprotobuf  -lmuduo_net  -lmuduo_base  -lpthread  -ldl  -lboost_serialization
   LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
   OBJECT_DIR = example/raftCoreExample/CMakeFiles/raftCoreRun.dir
@@ -1028,28 +1028,28 @@ build cmake_object_order_depends_target_callerMain: phony || cmake_object_order_
 
 build example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/clerk.cpp.o: CXX_COMPILER__callerMain_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/clerk.cpp || cmake_object_order_depends_target_callerMain
   DEP_FILE = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/clerk.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
   OBJECT_FILE_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk
 
 build example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/raftServerRpcUtil.cpp.o: CXX_COMPILER__callerMain_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/raftServerRpcUtil.cpp || cmake_object_order_depends_target_callerMain
   DEP_FILE = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/raftServerRpcUtil.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
   OBJECT_FILE_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk
 
 build example/raftCoreExample/CMakeFiles/callerMain.dir/caller.cpp.o: CXX_COMPILER__callerMain_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/example/raftCoreExample/caller.cpp || cmake_object_order_depends_target_callerMain
   DEP_FILE = example/raftCoreExample/CMakeFiles/callerMain.dir/caller.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
   OBJECT_FILE_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
 
 build example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/common/util.cpp.o: CXX_COMPILER__callerMain_unscanned_Debug /home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/util.cpp || cmake_object_order_depends_target_callerMain
   DEP_FILE = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/common/util.cpp.o.d
-  FLAGS = -g -std=gnu++20
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
   INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
   OBJECT_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir
   OBJECT_FILE_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/common
@@ -1063,7 +1063,7 @@ build example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/common/util.cp
 # Link the executable /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/callerMain
 
 build /home/zhangyan/projects/KVstorageBaseRaft-learning/bin/callerMain: CXX_EXECUTABLE_LINKER__callerMain_Debug example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/clerk.cpp.o example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/raftClerk/raftServerRpcUtil.cpp.o example/raftCoreExample/CMakeFiles/callerMain.dir/caller.cpp.o example/raftCoreExample/CMakeFiles/callerMain.dir/__/__/src/common/util.cpp.o | /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a || /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a
-  FLAGS = -g
+  FLAGS = -g -O2 -fno-omit-frame-pointer -g
   LINK_LIBRARIES = -Wl,-rpath,/home/zhangyan/projects/KVstorageBaseRaft-learning/lib  /home/zhangyan/projects/KVstorageBaseRaft-learning/lib/libskip_list_on_raft.a  -lprotobuf  -lboost_serialization  -lmuduo_net  -lmuduo_base  -lpthread  -ldl
   LINK_PATH = -L/home/zhangyan/projects/KVstorageBaseRaft-learning/lib
   OBJECT_DIR = example/raftCoreExample/CMakeFiles/callerMain.dir

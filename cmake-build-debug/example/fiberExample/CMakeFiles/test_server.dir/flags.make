@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/common/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/fiber/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/rpc/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/example -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftCore/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftRpcPro/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/raftClerk/include -I/home/zhangyan/projects/KVstorageBaseRaft-learning/src/skipList/include
 
-CXX_FLAGS = -g -std=gnu++20
+CXX_FLAGS =  -g -O2 -fno-omit-frame-pointer -g -std=gnu++20
 

@@ -79,6 +79,7 @@ src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/confname.h \
  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
+ /usr/include/x86_64-linux-gnu/bits/unistd.h \
  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
  /usr/include/linux/close_range.h /usr/include/syscall.h \
  /usr/include/x86_64-linux-gnu/sys/syscall.h \
@@ -100,6 +101,7 @@ src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
  /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
+ /usr/include/x86_64-linux-gnu/bits/wchar2.h \
  /usr/include/c++/11/stdexcept /usr/include/c++/11/exception \
  /usr/include/c++/11/bits/exception.h \
  /usr/include/c++/11/bits/exception_ptr.h \
@@ -141,7 +143,10 @@ src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o: \
  /usr/include/x86_64-linux-gnu/sys/select.h \
  /usr/include/x86_64-linux-gnu/bits/select.h \
  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
- /usr/include/alloca.h /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+ /usr/include/x86_64-linux-gnu/bits/select2.h /usr/include/alloca.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib.h \
  /usr/include/c++/11/bits/std_abs.h \
  /usr/include/c++/11/bits/algorithmfwd.h \
  /usr/include/c++/11/initializer_list /usr/include/c++/11/bits/stl_heap.h \
@@ -163,6 +168,8 @@ src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio2.h \
  /usr/include/c++/11/bits/charconv.h \
  /usr/include/c++/11/bits/basic_string.tcc \
  /usr/include/boost/type_index.hpp /usr/include/boost/config.hpp \
@@ -182,6 +189,8 @@ src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o: \
  /usr/include/boost/container_hash/hash_fwd.hpp \
  /usr/include/boost/config/workaround.hpp /usr/include/c++/11/cstring \
  /usr/include/string.h /usr/include/strings.h \
+ /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
+ /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
  /usr/include/boost/static_assert.hpp \
  /usr/include/boost/detail/workaround.hpp \
  /usr/include/boost/throw_exception.hpp \
@@ -277,6 +286,7 @@ src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
  /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
  /usr/include/x86_64-linux-gnu/bits/struct_stat.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl2.h \
  /usr/include/x86_64-linux-gnu/sys/ioctl.h \
  /usr/include/x86_64-linux-gnu/bits/ioctls.h \
  /usr/include/x86_64-linux-gnu/asm/ioctls.h \
@@ -299,4 +309,5 @@ src/fiber/CMakeFiles/fiber_lib.dir/scheduler.cpp.o: \
  /usr/include/asm-generic/bitsperlong.h \
  /usr/include/x86_64-linux-gnu/asm/sockios.h \
  /usr/include/asm-generic/sockios.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h
+ /usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h \
+ /usr/include/x86_64-linux-gnu/bits/socket2.h
