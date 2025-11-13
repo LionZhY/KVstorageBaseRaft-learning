@@ -17,8 +17,8 @@ const int debugMul = 1;  // 时间倍率系数，用于统一调整所有定时�
 const int HeartBeatTimeout = 100 * debugMul;// 心跳发送间隔（= 25 × debugMul）(心跳时间一般要比选举超时小一个数量级)
 const int ApplyInterval = 10 * debugMul;   // Apply 状态机的检查间隔（= 10 × debugMul）
 
-const int minRandomizedElectionTime = 300 * debugMul;  // 选举超时最小值（= 500 × debugMul）
-const int maxRandomizedElectionTime = 1000 * debugMul;  // 选举超时最大值（= 800 × debugMul）
+const int minRandomizedElectionTime = 300 * debugMul;  // 选举超时最小值（= 300 × debugMul）
+const int maxRandomizedElectionTime = 1000 * debugMul;  // 选举超时最大值（= 1000 × debugMul）
 
 const int CONSENSUS_TIMEOUT = 500 * debugMul;  // 达成共识的超时时间（= 500 × debugMul）
 
